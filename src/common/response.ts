@@ -1,3 +1,4 @@
+// TODO: 응답 타입 정리
 export type ApiResponse<T> = {
   success: boolean;
   data?: T;
