@@ -12,6 +12,6 @@ export const HTTP_STATUS = {
 } as const;
 
 export const JWT = {
-  ACCESS_EXPIRES_IN: "1h",
-  REFRESH_EXPIRES_IN: "7d",
-} as const;
+  ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN ?? "1h",
+  REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN ?? "7d",
+};

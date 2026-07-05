@@ -1,5 +1,5 @@
 // TODO: Prisma 설정 정리
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../generated/prisma/client.js";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
@@ -10,7 +10,7 @@ function createPrismaClient() {
     throw new Error("DATABASE_URL is not set");
   }
 
-  const adapter = new PrismaPg({ connectionString });
+  const adapter = new PrismaMariaDb(connectionString);
   return new PrismaClient({ adapter });
 }
 
