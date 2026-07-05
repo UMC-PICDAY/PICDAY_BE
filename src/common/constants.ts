@@ -1,3 +1,4 @@
+// TODO: 상수 정리
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,
