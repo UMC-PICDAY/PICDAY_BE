@@ -1,14 +1,29 @@
-// TODO: 응답 타입 정리
 export type ApiResponse<T> = {
   success: boolean;
-  data?: T;
-  message?: string;
+  code: string;
+  message: string;
+  data: T | null;
 };
 
-export function success<T>(data: T): ApiResponse<T> {
-  return { success: true, data };
+// 성공 응답
+export function success<T>(
+  data: T,
+  message: string = "요청에 성공했습니다.",
+): ApiResponse<T> {
+  return {
+    success: true,
+    code: "COMMON_200",
+    message,
+    data,
+  };
 }
 
-export function fail(message: string): ApiResponse<null> {
-  return { success: false, message };
+// 에러 응답
+export function fail(code: string, message: string): ApiResponse<null> {
+  return {
+    success: false,
+    code,
+    message,
+    data: null,
+  };
 }
