@@ -1,10 +1,23 @@
-// TODO: 에러 클래스 정리
+// error.ts
+
+import { ErrorCode, type ErrorCodeType } from "./errorCode.js";
+
 export class AppError extends Error {
+  public statusCode: number;
+  public code: string;
+
   constructor(
-    public statusCode: number,
-    message: string,
+    errorCodeType: ErrorCodeType,
+    overrideMessage?: string
   ) {
-    super(message);
+    const { status, code, message } = ErrorCode[errorCodeType];
+
+    super(overrideMessage ?? message);
     this.name = "AppError";
+    this.statusCode = status;
+    this.code = code;
+
+    Object.setPrototypeOf(this, AppError.prototype);
+
   }
 }
