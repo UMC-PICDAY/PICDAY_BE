@@ -40,7 +40,7 @@ model Reservation {
   studioConcept     StudioConcept     @relation(fields: [studioConceptId], references: [id])
 
   payments          Payment[]
-  reviews           Review[]
+  review            Review? // 예약당 리뷰 1개 (Review.reservationId UNIQUE)
   notifications     Notification[]
   reservationTerms  ReservationTerms[]
 
@@ -139,4 +139,78 @@ model ReservationTerms {
   // 복합 Primary Key 설정
   @@id([termsId, reservationId])
   @@map("reservation_terms")
+}
+
+// ==========================================
+// 리뷰 (Review) 모델
+// ==========================================
+model Review {
+  id            BigInt   @id @default(autoincrement())
+  reservationId BigInt   @unique @map("reservation_id") // 예약당 리뷰 1개
+  userId        BigInt   @map("user_id") // 본인 확인(403)용
+  studioId      BigInt   @map("studio_id") // 사진관별 리뷰 조회용
+  rating        Int // 1~5 (값 검증은 서비스 레이어)
+  content       String   @db.VarChar(500) // 10~500자 (값 검증은 서비스 레이어)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // 관계 설정
+  reservation Reservation @relation(fields: [reservationId], references: [id])
+  // user     User        @relation(fields: [userId], references: [id])   // User 모델(#16) 머지 후 주석 해제
+  // studio   Studio      @relation(fields: [studioId], references: [id]) // Studio 모델 추가 후 주석 해제
+
+  images ReviewImage[]
+  likes  ReviewLike[]
+
+  @@map("review")
+}
+
+// ==========================================
+// 리뷰 이미지 (ReviewImage) 모델
+// ==========================================
+model ReviewImage {
+  id       BigInt @id @default(autoincrement())
+  reviewId BigInt @map("review_id")
+  url      String @db.VarChar(500)
+
+  // 관계 설정
+  review Review @relation(fields: [reviewId], references: [id])
+
+  @@map("review_image")
+}
+
+// ==========================================
+// 리뷰 도움돼요 (ReviewLike) 모델
+// ==========================================
+model ReviewLike {
+  id        BigInt   @id @default(autoincrement())
+  reviewId  BigInt   @map("review_id")
+  userId    BigInt   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // 관계 설정
+  review Review @relation(fields: [reviewId], references: [id])
+  // user User   @relation(fields: [userId], references: [id]) // User 모델(#16) 머지 후 주석 해제
+
+  // 유저당 리뷰 1회 추천 (중복 추천 DB 레벨 차단)
+  @@unique([reviewId, userId])
+  @@map("review_like")
+}
+
+// ==========================================
+// 위시리스트 (Wishlist) 모델
+// ==========================================
+model Wishlist {
+  id        BigInt   @id @default(autoincrement())
+  userId    BigInt   @map("user_id")
+  studioId  BigInt   @map("studio_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // 관계 설정
+  // user   User   @relation(fields: [userId], references: [id])   // User 모델(#16) 머지 후 주석 해제
+  // studio Studio @relation(fields: [studioId], references: [id]) // Studio 모델 추가 후 주석 해제
+
+  // 중복 찜 DB 레벨 차단
+  @@unique([userId, studioId])
+  @@map("wishlist")
 }
