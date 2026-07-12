@@ -140,3 +140,34 @@ model ReservationTerms {
   @@id([termsId, reservationId])
   @@map("reservation_terms")
 }
+
+// ==========================================
+// Studio 모델
+// ==========================================
+enum ShootingCategory {
+  ID_PHOTO
+  PROFILE
+  PERSONAL_PORTRAIT
+  JOB_PHOTO
+  FAMILY
+  FRIENDSHIP
+}
+
+model StudioProduct {
+  id               BigInt           @id @default(autoincrement())
+  studioId         BigInt           @map("studio_id")
+  shootingCategory ShootingCategory @map("shooting_category")
+
+  name             String
+  price            Int
+  description      String?
+  shortDescription String?          @map("short_description")
+
+  studio           Studio           @relation(fields: [studioId], references: [id])
+  reservations     Reservation[]
+
+  @@index([studioId])
+  @@index([shootingCategory])
+  @@index([studioId, shootingCategory])
+  @@map("studio_product")
+}
