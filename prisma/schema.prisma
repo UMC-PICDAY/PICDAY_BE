@@ -140,3 +140,81 @@ model ReservationTerms {
   @@id([termsId, reservationId])
   @@map("reservation_terms")
 }
+
+
+
+// ==========================================
+// 사용자 (User) 모델 
+// ==========================================
+enum Provider {
+  LOCAL
+  KAKAO
+  GOOGLE
+}
+
+enum UserStatus {
+  ACTIVE
+  WITHDRAWN
+}
+
+
+model User {
+  id          BigInt     @id @default(autoincrement())
+  loginId     String?    @unique @map("login_id") @db.VarChar(12)
+  password    String?    @db.VarChar(255)
+  name        String     @db.VarChar(20)
+  nickname    String     @unique @db.VarChar(30)
+  email       String     @unique @db.VarChar(50)
+  phoneNumber String?    @map("phone_number") @db.VarChar(15)
+  provider    Provider   @default(LOCAL)
+  status      UserStatus @default(ACTIVE)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  deletedAt   DateTime?  @map("deleted_at")
+
+  // 지금 존재하는 모델과의 관계만
+  reservations   Reservation[]
+  userTerms      UserTerms[]
+  socialAccounts SocialAccount[]
+
+  // 아래는 해당 모델이 통합되면 추가 (Review/Wishlist/Notification 담당 작업 후)
+  // reviews        Review[]
+  // wishlists      Wishlist[]
+  // notifications  Notification[]
+
+  @@map("user")
+}
+
+// ==========================================
+// 소셜 계정 (SocialAccount) 모델
+// ==========================================
+model SocialAccount {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt   @map("user_id")
+  provider   Provider
+  providerId String   @map("provider_id") @db.VarChar(100)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // 관계 설정
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerId])
+  @@map("social_account")
+}
+
+// ==========================================
+// 사용자-약관 동의 (UserTerms) 모델
+// ==========================================
+model UserTerms {
+  termsId  BigInt   @map("terms_id")
+  userId   BigInt   @map("user_id")
+  isAgreed Boolean  @map("is_agreed")
+  agreedAt DateTime @default(now()) @map("agreed_at")
+
+  // 관계 설정
+  terms    Terms    @relation(fields: [termsId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@id([termsId, userId])
+  @@map("user_terms")
+}
