@@ -6,8 +6,9 @@
   "main": "dist/server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/server/server.ts",
-    "build": "tsc",
+    "tsoa:gen": "tsoa spec-and-routes",
+    "dev": "pnpm tsoa:gen && tsx watch src/server/server.ts",
+    "build": "pnpm tsoa:gen && tsc",
     "start": "node dist/server/server.js",
     "prisma:validate": "prisma validate",
     "prisma:format": "prisma format",
@@ -22,6 +23,7 @@
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@tsoa/runtime": "7.0.0-alpha.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
@@ -35,6 +37,7 @@
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.1",
     "prisma": "^7.8.0",
+    "tsoa": "7.0.0-alpha.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   }
