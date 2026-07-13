@@ -1,23 +1,38 @@
-import { Router } from "express";
+// reservation.controller.ts
+import { Controller, Route, Tags, Get, Post, Patch, Path, Body, SuccessResponse } from "tsoa";
+import {
+  //createReservationSchema,
+  reservationIdParamsSchema,
+  cancelReservationResponseSchema,
+} from "./reservation.dto.js";
+import * as reservationService from "./reservation.service.js";
 
-export const reservationRouter = Router();
+@Route("reservations")
+@Tags("Reservation")
+export class ReservationController extends Controller {
+  /** 예약 생성 */
+  @Post()
+  @SuccessResponse(201, "Created")
+  public async create(@Body() body: unknown) {
+    
+  }
 
-// 예약 생성
-reservationRouter.post("/", (req, res) => {
-  res.send("예약 생성 API 연결 성공");
-});
+  /** 내 예약 내역 목록 조회 */
+  @Get()
+  public async list() {
+    
+  }
 
-// 내 예약 내역 목록 조회
-reservationRouter.get("/", (req, res) => {
-  res.send("내 예약 내역 목록 조회 API 연결 성공");
-});
+  /** 예약 상세 조회 */
+  @Get("{reservationId}")
+  public async detail(@Path() reservationId: string) {
+    
+  }
 
-// 예약 상세
-reservationRouter.get("/:reservationId", (req, res) => {
-  res.send("예약 상세 조회 API 연결 성공");
-});
-
-// 예약 취소
-reservationRouter.patch("/:reservationId/cancel", (req, res) => {
-  res.send("예약 취소 API 연결 성공");
-});
+  /** 예약 취소 */
+  @Patch("{reservationId}/cancel")
+  public async cancel(@Path() reservationId: string) {
+    const { reservationId: id } = reservationIdParamsSchema.parse({ reservationId });
+    return reservationService.cancel(id);
+  }
+}
