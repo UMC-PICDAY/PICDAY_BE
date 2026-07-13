@@ -9,6 +9,9 @@
     "dev": "tsx watch src/server/server.ts",
     "build": "tsc",
     "start": "node dist/server/server.js",
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format",
+    "prisma:generate": "prisma generate",
     "format": "prettier --write .",
     "lint": "eslint ."
   },

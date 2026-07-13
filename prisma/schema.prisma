@@ -8,7 +8,6 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 // ==========================================
@@ -21,28 +20,29 @@ enum ReservationStatus {
 }
 
 model Reservation {
-  id                BigInt            @id @default(autoincrement())
-  userId            BigInt            @map("user_id")
-  timeSlotId        BigInt            @map("time_slot_id")
-  studioConceptId   BigInt            @map("studio_concept_id")
-  
-  reserveeName      String            @map("reservee_name") @db.VarChar(10)
-  phoneNumber       String            @map("phone_number") @db.VarChar(15)
-  totalPrice        Int               @map("total_price") 
-  
-  createdAt         DateTime          @default(now()) @map("created_at")
-  status            ReservationStatus @default(RESERVED)
-  canceledAt        DateTime?         @map("canceled_at") // 취소 안 된 예약은 null
+  id              BigInt @id @default(autoincrement())
+  userId          BigInt @map("user_id")
+  timeSlotId      BigInt @map("time_slot_id")
+  studioConceptId BigInt @map("studio_concept_id")
+
+  reserveeName String @map("reservee_name") @db.VarChar(50)
+  phoneNumber  String @map("phone_number") @db.VarChar(20)
+  totalPrice   Int    @map("total_price") @db.UnsignedInt
+
+  status     ReservationStatus @default(RESERVED)
+  createdAt  DateTime          @default(now()) @map("created_at")
+  updatedAt  DateTime          @updatedAt @map("updated_at")
+  canceledAt DateTime?         @map("canceled_at")
 
   // 관계 설정
   user              User              @relation(fields: [userId], references: [id])
-  timeSlot          TimeSlot          @relation(fields: [timeSlotId], references: [id])
-  studioConcept     StudioConcept     @relation(fields: [studioConceptId], references: [id])
+  timeSlot          TimeSlot          @relation(fields: [timeSlotId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  // studioConcept     StudioConcept     @relation(fields: [studioConceptId], references: [id])
 
-  payments          Payment[]
-  reviews           Review[]
-  notifications     Notification[]
-  reservationTerms  ReservationTerms[]
+  payment          Payment?
+  reservationTerms ReservationTerms[]
+  // reviews           Review[]
+  // notifications     Notification[]
 
   @@map("reservation")
 }
@@ -61,20 +61,21 @@ enum PaymentMethod {
 enum PaymentStatus {
   PENDING
   COMPLETED
-  FAILED
-  CANCELED
+  CANCELLED
 }
 
 model Payment {
   id            BigInt        @id @default(autoincrement())
-  reservationId BigInt        @map("reservation_id")
+  reservationId BigInt        @unique @map("reservation_id")
   method        PaymentMethod
-  amount        Int
+  amount        Int           @db.UnsignedInt
   status        PaymentStatus @default(PENDING)
   createdAt     DateTime      @default(now()) @map("created_at")
+  completedAt   DateTime?     @map("completed_at")
+  cancelledAt    DateTime?     @map("cancelled_at")
 
   // 관계 설정
-  reservation   Reservation   @relation(fields: [reservationId], references: [id])
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@map("payment")
 }
@@ -86,15 +87,15 @@ model TimeSlot {
   id          BigInt   @id @default(autoincrement())
   studioId    BigInt   @map("studio_id")
   date        DateTime @db.Date
-  startTime   DateTime @map("start_time") @db.Time
-  endTime     DateTime @map("end_time") @db.Time
+  startTime   DateTime @map("start_time") @db.Time(0)
+  endTime     DateTime @map("end_time") @db.Time(0)
   isAvailable Boolean  @default(true) @map("is_available")
 
-  // 관계 설정
-  studio      Studio   @relation(fields: [studioId], references: [id])
-  
+  // studio      Studio   @relation(fields: [studioId], references: [id])
+
   reservations Reservation[]
 
+  @@unique([studioId, date, startTime, endTime])
   @@map("time_slot")
 }
 
@@ -102,24 +103,25 @@ model TimeSlot {
 // 약관 (Terms) 모델
 // ==========================================
 enum TermsType {
-  REFUND_POLICY       
-  PRIVACY_COLLECTION  
-  THIRD_PARTY         
+  REFUND_POLICY
+  PRIVACY_COLLECTION
+  THIRD_PARTY
   PAYMENT_AGENCY
 }
 
 model Terms {
   id         BigInt    @id @default(autoincrement())
   type       TermsType
-  version    String    @db.VarChar(10)
-  content    String    @db.Text
+  version    String    @db.VarChar(30)
+  content    String    @db.LongText
   isRequired Boolean   @map("is_required")
   createdAt  DateTime  @default(now()) @map("created_at")
 
   // 관계 설정 
   reservationTerms ReservationTerms[]
-  userTerms        UserTerms[] 
+  userTerms        UserTerms[]
 
+  @@unique([type, version])
   @@map("terms")
 }
 
@@ -127,16 +129,91 @@ model Terms {
 // 예약-약관 매핑 (ReservationTerms) 모델
 // ==========================================
 model ReservationTerms {
-  termsId       BigInt   @map("terms_id")
-  reservationId BigInt   @map("reservation_id")
-  isAgreed      Boolean  @map("is_agreed")
-  agreedAt      DateTime @default(now()) @map("agreed_at")
+  reservationId BigInt    @map("reservation_id")
+  termsId       BigInt    @map("terms_id")
+  isAgreed      Boolean   @map("is_agreed")
+  agreedAt      DateTime? @map("agreed_at")
 
   // 관계 설정
-  terms         Terms       @relation(fields: [termsId], references: [id])
-  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  terms       Terms       @relation(fields: [termsId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   // 복합 Primary Key 설정
-  @@id([termsId, reservationId])
+  @@id([reservationId, termsId])
   @@map("reservation_terms")
+}
+
+// ==========================================
+// 사용자 (User) 모델
+// ==========================================
+enum Provider {
+  LOCAL
+  KAKAO
+  GOOGLE
+}
+
+enum UserStatus {
+  ACTIVE
+  WITHDRAWN
+}
+
+model User {
+  id          BigInt     @id @default(autoincrement())
+  loginId     String?    @unique @map("login_id") @db.VarChar(12)
+  password    String?    @db.VarChar(255)
+  name        String     @db.VarChar(20)
+  nickname    String     @unique @db.VarChar(30)
+  email       String     @unique @db.VarChar(50)
+  phoneNumber String?    @map("phone_number") @db.VarChar(15)
+  provider    Provider   @default(LOCAL)
+  status      UserStatus @default(ACTIVE)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  deletedAt   DateTime?  @map("deleted_at")
+
+  // 지금 존재하는 모델과의 관계만
+  reservations   Reservation[]
+  userTerms      UserTerms[]
+  socialAccounts SocialAccount[]
+
+  // 아래는 해당 모델이 통합되면 추가 (Review/Wishlist/Notification 담당 작업 후)
+  // reviews        Review[]
+  // wishlists      Wishlist[]
+  // notifications  Notification[]
+
+  @@map("user")
+}
+
+// ==========================================
+// 소셜 계정 (SocialAccount) 모델
+// ==========================================
+model SocialAccount {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt   @map("user_id")
+  provider   Provider
+  providerId String   @map("provider_id") @db.VarChar(100)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // 관계 설정
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerId])
+  @@map("social_account")
+}
+
+// ==========================================
+// 사용자-약관 동의 (UserTerms) 모델
+// ==========================================
+model UserTerms {
+  termsId  BigInt   @map("terms_id")
+  userId   BigInt   @map("user_id")
+  isAgreed Boolean  @map("is_agreed")
+  agreedAt DateTime @default(now()) @map("agreed_at")
+
+  // 관계 설정
+  terms Terms @relation(fields: [termsId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@id([termsId, userId])
+  @@map("user_terms")
 }
