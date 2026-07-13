@@ -144,6 +144,30 @@ model ReservationTerms {
 // ==========================================
 // Studio (Studio 단위) 모델
 // ==========================================
+model Studio {
+  id                  BigInt        @id @default(autoincrement())
+  name                String        @db.VarChar(50)
+  description         String?       @db.Text
+  facilityDescription String?       @map("facility_description") @db.Text
+
+  images              StudioImage[]
+
+  @@map("studio")
+}
+model StudioImage {
+  id           BigInt   @id @default(autoincrement())
+  studioId     BigInt   @map("studio_id")
+  url          String   @db.VarChar(500)
+  order Int      @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  studio       Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
+
+  @@index([studioId])
+  @@unique([studioId, order])
+  @@map("studio_image")
+}
+
 enum LocationCategory {
   HONGDAE
   GANGNAM
@@ -156,7 +180,6 @@ enum LocationCategory {
   HYEHWA
   JONGNO
 }
-
 
 model StudioLocation {
   id               BigInt @id @default(autoincrement())
