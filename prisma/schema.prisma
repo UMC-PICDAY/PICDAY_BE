@@ -110,12 +110,12 @@ enum TermsType {
 }
 
 model Terms {
-  id         BigInt     @id @default(autoincrement())
-  type       TermsType?
-  version    String?    @db.VarChar(10)
-  content    String?    @db.Text
-  isRequired Boolean?   @map("is_required")
-  createdAt  DateTime?  @default(now()) @map("created_at")
+  id         BigInt    @id @default(autoincrement())
+  type       TermsType
+  version    String    @db.VarChar(10)
+  content    String    @db.Text
+  isRequired Boolean   @map("is_required")
+  createdAt  DateTime  @default(now()) @map("created_at")
 
   // 관계 설정 
   reservationTerms ReservationTerms[]
