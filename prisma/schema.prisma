@@ -23,7 +23,7 @@ model Reservation {
   id              BigInt @id @default(autoincrement())
   userId          BigInt @map("user_id")
   timeSlotId      BigInt @map("time_slot_id")
-  studioConceptId BigInt @map("studio_concept_id")
+  studioProductId BigInt @map("studio_product_id")
 
   reserveeName String @map("reservee_name") @db.VarChar(50)
   phoneNumber  String @map("phone_number") @db.VarChar(20)
@@ -37,7 +37,7 @@ model Reservation {
   // 관계 설정
   user              User              @relation(fields: [userId], references: [id])
   timeSlot          TimeSlot          @relation(fields: [timeSlotId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  // studioConcept     StudioConcept     @relation(fields: [studioConceptId], references: [id])
+  studioProduct    StudioProduct    @relation(fields: [studioProductId], references: [id])
 
   payment          Payment?
   reservationTerms ReservationTerms[]
@@ -91,7 +91,7 @@ model TimeSlot {
   endTime     DateTime @map("end_time") @db.Time(0)
   isAvailable Boolean  @default(true) @map("is_available")
 
-  // studio      Studio   @relation(fields: [studioId], references: [id])
+  studio      Studio   @relation(fields: [studioId], references: [id])
 
   reservations Reservation[]
 
@@ -231,23 +231,12 @@ model Studio {
 
   location            StudioLocation?
   products            StudioProduct[]
-  // images              StudioImage[]
+  timeSlots           TimeSlot[]
+  reviews             Review[]
+  wishlists           Wishlist[]
 
   @@map("studio")
 }
-// model StudioImage {
-//   id           BigInt   @id @default(autoincrement())
-//   studioId     BigInt   @map("studio_id")
-//   url          String   @db.VarChar(500)
-//   order Int      @map("display_order")
-//   createdAt    DateTime @default(now()) @map("created_at")
-
-//   studio       Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
-
-//   @@index([studioId])
-//   @@unique([studioId, order])
-//   @@map("studio_image")
-// }
 
 enum LocationCategory {
   HONGDAE
@@ -321,7 +310,7 @@ model StudioProduct {
 
 model ProductImage {
   id                   BigInt   @id @default(autoincrement())
-  productId            BigInt   @map("product_id")
+  studioProductId            BigInt   @map("studio_product_id")
 
   url                  String   @db.VarChar(500)
   order                Int      @map("order")
@@ -329,11 +318,11 @@ model ProductImage {
 
   studioThumbnailOrder Int?     @map("studio_thumbnail_order")
 
-  studioProduct        StudioProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  studioProduct        StudioProduct @relation(fields: [studioProductId], references: [id], onDelete: Cascade)
 
-  @@index([productId])
+  @@index([studioProductId])
   @@index([studioThumbnailOrder])
-  @@unique([productId, order])
+  @@unique([studioProductId, order])
   @@map("product_image")
 }
 
@@ -353,7 +342,7 @@ model Review {
   // 관계 설정
   reservation Reservation @relation(fields: [reservationId], references: [id])
   user        User        @relation(fields: [userId], references: [id])
-  // studio   Studio      @relation(fields: [studioId], references: [id]) // Studio 모델 추가 후 주석 해제
+  studio      Studio      @relation(fields: [studioId], references: [id]) // Studio 모델 추가 후 주석 해제
 
   images ReviewImage[]
   likes  ReviewLike[]
