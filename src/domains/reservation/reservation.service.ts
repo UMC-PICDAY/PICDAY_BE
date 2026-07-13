@@ -8,7 +8,7 @@ import { cancelReservationResponseSchema } from "./reservation.dto.js";
 // 예약 취소
 // ===============
 
-export async function cancel(reservationId: string) {
+export async function cancel(reservationId: bigint) {
   
   // 예약이 존재하는지 확인
   const reservation = await getReservationById(reservationId);
@@ -26,6 +26,17 @@ export async function cancel(reservationId: string) {
   }
 
   // 촬영 당일 취소 시 로직
+  const today = new Date();
+  const shootingDate = reservation.timeSlot.date;
+
+  const isSameDay =
+    today.getFullYear() === shootingDate.getFullYear() &&
+    today.getMonth() === shootingDate.getMonth() &&
+    today.getDate() === shootingDate.getDate();
+
+  if (isSameDay) {
+    throw new AppError("RESERVATION_4002");
+  }
 
   const updated = await cancelReservation(reservationId);
 
