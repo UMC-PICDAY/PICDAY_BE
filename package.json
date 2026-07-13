@@ -10,6 +10,9 @@
     "dev": "pnpm tsoa:gen && tsx watch src/server/server.ts",
     "build": "pnpm tsoa:gen && tsc",
     "start": "node dist/server/server.js",
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format",
+    "prisma:generate": "prisma generate",
     "format": "prettier --write .",
     "lint": "eslint ."
   },
