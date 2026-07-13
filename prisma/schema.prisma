@@ -150,23 +150,23 @@ model Studio {
   description         String?       @db.Text
   facilityDescription String?       @map("facility_description") @db.Text
 
-  images              StudioImage[]
+  // images              StudioImage[]
 
   @@map("studio")
 }
-model StudioImage {
-  id           BigInt   @id @default(autoincrement())
-  studioId     BigInt   @map("studio_id")
-  url          String   @db.VarChar(500)
-  order Int      @map("display_order")
-  createdAt    DateTime @default(now()) @map("created_at")
+// model StudioImage {
+//   id           BigInt   @id @default(autoincrement())
+//   studioId     BigInt   @map("studio_id")
+//   url          String   @db.VarChar(500)
+//   order Int      @map("display_order")
+//   createdAt    DateTime @default(now()) @map("created_at")
 
-  studio       Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
+//   studio       Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
 
-  @@index([studioId])
-  @@unique([studioId, order])
-  @@map("studio_image")
-}
+//   @@index([studioId])
+//   @@unique([studioId, order])
+//   @@map("studio_image")
+// }
 
 enum LocationCategory {
   HONGDAE
@@ -235,4 +235,22 @@ model StudioProduct {
   @@index([shootingCategory])
   @@index([studioId, shootingCategory])
   @@map("studio_product")
+}
+
+model ProductImage {
+  id                   BigInt   @id @default(autoincrement())
+  ProductId            BigInt   @map("product_id")
+
+  url                  String   @db.VarChar(500)
+  order                Int      @map("order")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  studioThumbnailOrder Int?     @map("studio_thumbnail_order")
+
+  studioProduct        StudioProduct @relation(fields: [ProductId], references: [id], onDelete: Cascade)
+
+  @@index([ProductId])
+  @@index([studioThumbnailOrder])
+  @@unique([ProductId, order])
+  @@map("product_image")
 }
