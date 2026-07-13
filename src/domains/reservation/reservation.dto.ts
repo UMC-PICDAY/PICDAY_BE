@@ -11,4 +11,5 @@ export const cancelReservationResponseSchema = z.object({
   status: z.literal("CANCELLED"),
   canceledAt: z.date().transform((date) => date.toISOString()),
 });
+
 export type CancelReservationResponseDto = z.infer<typeof cancelReservationResponseSchema>;
