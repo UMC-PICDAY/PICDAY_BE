@@ -42,7 +42,7 @@ model Reservation {
   payment          Payment?
   reservationTerms ReservationTerms[]
   review           Review?
-  notifications    Notification[]
+  // notifications Notification[] // Notification 모델 추가 후 주석 해제
 
   @@map("reservation")
 }
@@ -253,7 +253,7 @@ enum LocationCategory {
 
 model StudioLocation {
   id               BigInt @id @default(autoincrement())
-  studioId         BigInt @unique@map("studio_id")
+  studioId         BigInt @unique @map("studio_id")
 
   mainAddress      String  @map("main_address") @db.VarChar(100)
   subAddress       String  @map("sub_address") @db.VarChar(255)
@@ -393,7 +393,7 @@ model Wishlist {
 
   // 관계 설정
   user      User   @relation(fields: [userId], references: [id])
-  // studio Studio @relation(fields: [studioId], references: [id]) // Studio 모델 추가 후 주석 해제
+  studio Studio @relation(fields: [studioId], references: [id])
 
   // 중복 찜 DB 레벨 차단
   @@unique([userId, studioId])
