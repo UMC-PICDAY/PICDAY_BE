@@ -142,7 +142,49 @@ model ReservationTerms {
 }
 
 // ==========================================
-// Studio 모델
+// Studio (Studio 단위) 모델
+// ==========================================
+enum LocationCategory {
+  HONGDAE
+  GANGNAM
+  SEONGSU
+  YEONNAM
+  KONDAE
+  SINCHON
+  JAMSIL
+  APGUJEONG
+  HYEHWA
+  JONGNO
+}
+
+
+model StudioLocation {
+  id               BigInt @id @default(autoincrement())
+  studioId         BigInt @map("studio_id")
+
+  mainAddress      String  @map("main_address") @db.VarChar(100)
+  subAddress       String  @map("sub_address") @db.VarChar(255)
+  // detailAddress    String? @map("detail_address") @db.VarChar(255)
+
+  locationCategory LocationCategory @map("location_category")
+
+  latitude         Decimal? @db.Decimal(10, 7)
+  longitude        Decimal? @db.Decimal(10, 7)
+
+  nearestStation   String  @map("nearest_station") @db.VarChar(50)
+  walkingMinutes   Int     @map("walking_minutes")
+  stationDetail    String? @map("station_detail") @db.VarChar(150)
+
+  studio           Studio @relation(fields: [studioId], references: [id])
+
+  @@index([studioId])
+  @@index([locationCategory])
+  @@map("studio_location")
+}
+
+
+// ==========================================
+// Studio (Product 단위) 모델
 // ==========================================
 enum ShootingCategory {
   ID_PHOTO
