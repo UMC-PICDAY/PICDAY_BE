@@ -42,7 +42,7 @@ model Reservation {
   payment          Payment?
   reservationTerms ReservationTerms[]
   review           Review?
-  // notifications Notification[] // Notification 모델 추가 후 주석 해제
+  // notifications    Notification[] // Notification 모델 추가 후 주석 해제
 
   @@map("reservation")
 }
@@ -112,8 +112,8 @@ enum TermsType {
 model Terms {
   id         BigInt    @id @default(autoincrement())
   type       TermsType
-  version    String    @db.VarChar(30)
-  content    String    @db.LongText
+  version    String    @db.VarChar(10)
+  content    String    @db.Text
   isRequired Boolean   @map("is_required")
   createdAt  DateTime  @default(now()) @map("created_at")
 
@@ -158,18 +158,18 @@ enum UserStatus {
 }
 
 model User {
-  id          BigInt     @id @default(autoincrement())
-  loginId     String?    @unique @map("login_id") @db.VarChar(12)
-  password    String?    @db.VarChar(255)
-  name        String     @db.VarChar(20)
-  nickname    String     @unique @db.VarChar(30)
-  email       String     @unique @db.VarChar(50)
-  phoneNumber String?    @map("phone_number") @db.VarChar(15)
-  provider    Provider   @default(LOCAL)
-  status      UserStatus @default(ACTIVE)
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
-  deletedAt   DateTime?  @map("deleted_at")
+  id          BigInt      @id @default(autoincrement())
+  loginId     String?     @unique @map("login_id") @db.VarChar(12)
+  password    String?     @db.VarChar(255)
+  name        String?     @db.VarChar(10)
+  nickname    String?     @unique @db.VarChar(30)
+  email       String?     @unique @db.VarChar(50)
+  phoneNumber String?     @map("phone_number") @db.VarChar(15)
+  provider    Provider?   @default(LOCAL)
+  status      UserStatus? @default(ACTIVE)
+  createdAt   DateTime?   @default(now()) @map("created_at")
+  updatedAt   DateTime?   @updatedAt @map("updated_at")
+  deletedAt   DateTime?   @map("deleted_at")
 
   // 지금 존재하는 모델과의 관계만
   reservations   Reservation[]
@@ -194,7 +194,6 @@ model SocialAccount {
   userId     BigInt   @map("user_id")
   provider   Provider
   providerId String   @map("provider_id") @db.VarChar(100)
-  createdAt  DateTime @default(now()) @map("created_at")
 
   // 관계 설정
   user User @relation(fields: [userId], references: [id])
@@ -207,10 +206,10 @@ model SocialAccount {
 // 사용자-약관 동의 (UserTerms) 모델
 // ==========================================
 model UserTerms {
-  termsId  BigInt   @map("terms_id")
-  userId   BigInt   @map("user_id")
-  isAgreed Boolean  @map("is_agreed")
-  agreedAt DateTime @default(now()) @map("agreed_at")
+  termsId  BigInt    @map("terms_id")
+  userId   BigInt    @map("user_id")
+  isAgreed Boolean?  @map("is_agreed")
+  agreedAt DateTime? @map("agreed_at")
 
   // 관계 설정
   terms Terms @relation(fields: [termsId], references: [id])

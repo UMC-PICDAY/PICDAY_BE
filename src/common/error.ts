@@ -1,5 +1,3 @@
-// error.ts
-
 import { ErrorCode, type ErrorCodeType } from "./errorCode.js";
 
 export class AppError extends Error {
