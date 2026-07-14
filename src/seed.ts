@@ -38,13 +38,10 @@ async function main() {
   });
 
   // 오늘 날짜 타임슬롯 (당일취소 테스트용)
-const now = new Date();
-const todayDateOnly = new Date(Date.UTC(
-now.getFullYear(),
-now.getMonth(),
-now.getDate(),
-12, 0, 0
-));
+  const now = new Date();
+  const todayDateOnly = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0),
+  );
   const todaySlot = await prisma.timeSlot.create({
     data: {
       studioId: studio.id,
@@ -58,7 +55,7 @@ now.getDate(),
     userId: user.id,
     studioProductId: product.id,
     reserveeName: "홍길동",
-    phoneNumber: "01012345678",
+    reserveePhone: "01012345678",
     totalPrice: 50000,
   };
 
@@ -96,5 +93,10 @@ now.getDate(),
 }
 
 main()
-  .catch((e) => { console.error(e); process.exit(1); })
-  .finally(async () => { await prisma.$disconnect(); });
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

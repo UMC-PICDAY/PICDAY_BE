@@ -52,6 +52,21 @@ export const ErrorCode = {
     code: "RESERVATION_4004",
     message: "지난 시간대는 예약할 수 없어요.",
   },
+  RESERVATION_4005: {
+    status: 400,
+    code: "RESERVATION_4005",
+    message: "예약 생성 요청 형식 또는 입력값이 올바르지 않습니다.",
+  },
+  RESERVATION_4006: {
+    status: 400,
+    code: "RESERVATION_4006",
+    message: "사진관, 상품, 슬롯의 소속 관계가 일치하지 않습니다.",
+  },
+  RESERVATION_4007: {
+    status: 400,
+    code: "RESERVATION_4007",
+    message: "필수 약관 동의가 누락되었습니다.",
+  },
   RESERVATION_4041: {
     status: 404,
     code: "RESERVATION_4041",
@@ -61,6 +76,11 @@ export const ErrorCode = {
     status: 404,
     code: "RESERVATION_4042",
     message: "해당 예약 내역을 찾을 수 없거나 접근 권한이 없습니다.",
+  },
+  RESERVATION_4043: {
+    status: 404,
+    code: "RESERVATION_4043",
+    message: "사진관, 상품 또는 슬롯을 찾을 수 없습니다.",
   },
   RESERVATION_4091: {
     status: 409,

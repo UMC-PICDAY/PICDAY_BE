@@ -1,17 +1,54 @@
-// reservation.controller.ts
-import { Controller, Route, Patch, Path } from "tsoa";
-import * as reservationService from "./reservation.service.js";
-import { cancelReservationResponseSchema, reservationIdParamsSchema } from "./reservation.dto.js";
-import { resourceLimits } from "node:worker_threads";
+import {
+  Body,
+  Controller,
+  Patch,
+  Path,
+  Post,
+  Request,
+  Route,
+  SuccessResponse,
+  Tags,
+} from "tsoa";
 import { success } from "../../common/response.js";
+import {
+  cancelReservationResponseSchema,
+  reservationIdParamsSchema,
+  type CreateReservationRequestDto,
+  type CreateReservationSuccessResponseDto,
+} from "./reservation.dto.js";
+import * as reservationService from "./reservation.service.js";
+
+type AuthenticatedRequest = { userId: bigint };
 
 @Route("reservations")
+@Tags("Reservation")
 export class ReservationController extends Controller {
-  @Patch("{reservationId}/cancel")
-  public async cancel(@Path() reservationId: string) {
-    const {reservationId: id} = reservationIdParamsSchema.parse({reservationId});
+  @Post()
+  @SuccessResponse(201, "Created")
+  public async create(
+    @Body() body: CreateReservationRequestDto,
+    @Request() request: any,
+  ): Promise<CreateReservationSuccessResponseDto> {
+    const { userId } = request as AuthenticatedRequest;
+    const data = await reservationService.createReservation(body, userId);
 
-    const result = await reservationService.cancel(id);
+    this.setStatus(201);
+    return {
+      success: true,
+      code: "COMMON_201",
+      message: "예약이 성공적으로 완료되었습니다.",
+      data,
+    };
+  }
+
+  @Patch("{reservationId}/cancel")
+  @SuccessResponse(200, "OK")
+  public async cancel(@Path() reservationId: string) {
+    const { reservationId: id } = reservationIdParamsSchema.parse({
+      reservationId,
+    });
+
+    const result = await reservationService.cancel(BigInt(id));
 
     return success(result);
   }

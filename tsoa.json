@@ -8,6 +8,9 @@
     "basePath": "/api/v1"
   },
   "routes": {
-    "routesDir": "src/generated"
+    "routesDir": "src/generated",
+    "basePath": "/api/v1",
+    "esm": true,
+    "noWriteIfUnchanged": true
   }
 }
