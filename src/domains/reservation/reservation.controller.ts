@@ -9,9 +9,12 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
-import type {
-  CreateReservationRequestDto,
-  CreateReservationSuccessResponseDto,
+import { success } from "../../common/response.js";
+import {
+  cancelReservationResponseSchema,
+  reservationIdParamsSchema,
+  type CreateReservationRequestDto,
+  type CreateReservationSuccessResponseDto,
 } from "./reservation.dto.js";
 import * as reservationService from "./reservation.service.js";
 
@@ -41,6 +44,12 @@ export class ReservationController extends Controller {
   @Patch("{reservationId}/cancel")
   @SuccessResponse(200, "OK")
   public async cancel(@Path() reservationId: string) {
-    return reservationService.cancel(reservationId);
+    const { reservationId: id } = reservationIdParamsSchema.parse({
+      reservationId,
+    });
+
+    const result = await reservationService.cancel(BigInt(id));
+
+    return success(result);
   }
 }
