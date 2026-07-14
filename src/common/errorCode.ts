@@ -103,6 +103,28 @@ export const ErrorCode = {
     message: "예약 처리 중 오류가 발생했어요.",
   },
 
+  // Studio
+  STUDIO_4001: {
+    status: 400,
+    code: "STUDIO_4001",
+    message: "사진관 ID 또는 날짜 입력값이 올바르지 않습니다.",
+  },
+  STUDIO_4002: {
+    status: 400,
+    code: "STUDIO_4002",
+    message: "과거 날짜의 예약 가능 시간은 조회할 수 없습니다.",
+  },
+  STUDIO_4041: {
+    status: 404,
+    code: "STUDIO_4041",
+    message: "존재하지 않는 사진관입니다.",
+  },
+  STUDIO_5001: {
+    status: 500,
+    code: "STUDIO_5001",
+    message: "예약 가능 시간 조회 중 오류가 발생했습니다.",
+  },
+
   // Auth
   AUTH_4001: {
     status: 400,

@@ -7,3 +7,97 @@ export const createStudioSchema = z.object({
 });
 
 export type CreateStudioDto = z.infer<typeof createStudioSchema>;
+
+// 예약 가능 시간 조회 API
+const studioIdSchema = z
+  .string()
+  .regex(/^\d+$/, "사진관 ID는 양의 정수여야 합니다.")
+  .transform((id) => BigInt(id))
+  .refine((id) => id > 0n, "사진관 ID는 양의 정수여야 합니다.");
+
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+function toDbDate(dateText: string) {
+  const [year, month, day] = dateText.split("-").map(Number);
+  const date = new Date(0);
+  date.setUTCFullYear(year!, month! - 1, day!);
+  return date;
+}
+
+function isRealDate(dateText: string) {
+  if (!datePattern.test(dateText)) {
+    return false;
+  }
+
+  const [year, month, day] = dateText.split("-").map(Number);
+  const date = toDbDate(dateText);
+
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month! - 1 &&
+    date.getUTCDate() === day
+  );
+}
+
+const studioSlotsDateSchema = z
+  .string()
+  .regex(datePattern, "날짜는 YYYY-MM-DD 형식이어야 합니다.")
+  .refine(isRealDate, "실제 존재하는 날짜를 입력해 주세요.");
+
+export const getStudioSlotsRequestSchema = z
+  .object({
+    studioId: studioIdSchema,
+    date: studioSlotsDateSchema,
+  })
+  .transform(({ studioId, date }) => ({
+    studioId,
+    dateText: date,
+    dbDate: toDbDate(date),
+  }));
+
+export type GetStudioSlotsRequestDto = {
+  studioId: string;
+  date: string | undefined;
+};
+
+export type GetStudioSlotsQuery = z.output<typeof getStudioSlotsRequestSchema>;
+
+export function parseGetStudioSlotsRequest(
+  input: GetStudioSlotsRequestDto,
+): GetStudioSlotsQuery {
+  return getStudioSlotsRequestSchema.parse(input);
+}
+
+function formatTime(date: Date) {
+  const hours = date.getUTCHours().toString().padStart(2, "0");
+  const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+export const studioSlotResponseSchema = z.object({
+  slotId: z.bigint().transform((id) => id.toString()),
+  startTime: z.date().transform(formatTime),
+  endTime: z.date().transform(formatTime),
+  isAvailable: z.boolean(),
+});
+
+export type StudioSlotResponseInputDto = z.input<
+  typeof studioSlotResponseSchema
+>;
+
+export type StudioSlotResponseDto = z.output<typeof studioSlotResponseSchema>;
+
+export const studioSlotsResponseSchema = z.array(studioSlotResponseSchema);
+
+export type StudioSlotsResponseDto = z.output<typeof studioSlotsResponseSchema>;
+
+export const getStudioSlotsSuccessResponseSchema = z.object({
+  success: z.literal(true),
+  code: z.literal("COMMON_200"),
+  message: z.literal("예약 가능 시간 조회에 성공했습니다."),
+  data: studioSlotsResponseSchema,
+});
+
+export type GetStudioSlotsSuccessResponseDto = z.output<
+  typeof getStudioSlotsSuccessResponseSchema
+>;
