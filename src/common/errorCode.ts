@@ -125,6 +125,38 @@ export const ErrorCode = {
     message: "예약 가능 시간 조회 중 오류가 발생했습니다.",
   },
 
+  // Wishlist
+  WISHLIST_4001: {
+    status: 400,
+    code: "WISHLIST_4001",
+    message: "page/size 형식이 올바르지 않습니다.",
+  },
+  WISHLIST_4002: {
+    status: 400,
+    code: "WISHLIST_4002",
+    message: "studioId가 올바르지 않습니다.",
+  },
+  WISHLIST_4041: {
+    status: 404,
+    code: "WISHLIST_4041",
+    message: "존재하지 않는 사진관입니다.",
+  },
+  WISHLIST_4042: {
+    status: 404,
+    code: "WISHLIST_4042",
+    message: "위시리스트에 없는 사진관입니다.",
+  },
+  WISHLIST_4091: {
+    status: 409,
+    code: "WISHLIST_4091",
+    message: "이미 위시리스트에 추가된 사진관입니다.",
+  },
+  WISHLIST_5001: {
+    status: 500,
+    code: "WISHLIST_5001",
+    message: "위시리스트 처리 중 오류가 발생했어요.",
+  },
+
   // Auth
   AUTH_4001: {
     status: 400,
