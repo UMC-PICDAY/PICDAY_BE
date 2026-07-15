@@ -1,41 +1,60 @@
+import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
-import { HTTP_STATUS } from "../../common/constants.js";
-import { loginSchema, registerSchema } from "./auth.dto.js";
 import * as authRepository from "./auth.repository.js";
+import type { SignupRequestDto } from "./auth.dto.js";
+import {
+  NICKNAME_ADJECTIVES,
+  NICKNAME_NOUNS,
+} from "./auth.nickname.constants.js";
 
-export async function register(body: unknown) {
-  const parsed = registerSchema.safeParse(body);
-  if (!parsed.success) {
-    throw new AppError(HTTP_STATUS.BAD_REQUEST, parsed.error.message);
-  }
-
-  const existing = await authRepository.findUserByEmail(parsed.data.email);
-  if (existing) {
-    throw new AppError(HTTP_STATUS.CONFLICT, "Email already in use");
-  }
-
-  const user = await authRepository.createUser(parsed.data);
-  if (!user) {
-    throw new AppError(
-      HTTP_STATUS.NOT_IMPLEMENTED,
-      "Registration not implemented yet",
-    );
-  }
-
-  return user;
+function pickRandom<T extends readonly string[]>(items: T): T[number] {
+  return items[Math.floor(Math.random() * items.length)]!;
 }
 
-export async function login(body: unknown) {
-  const parsed = loginSchema.safeParse(body);
-  if (!parsed.success) {
-    throw new AppError(HTTP_STATUS.BAD_REQUEST, parsed.error.message);
+function randomFourDigits(): string {
+  return String(Math.floor(Math.random() * 10_000)).padStart(4, "0");
+}
+
+async function generateUniqueNickname(): Promise<string> {
+  const adjective = pickRandom(NICKNAME_ADJECTIVES);
+  const noun = pickRandom(NICKNAME_NOUNS);
+  let nickname = `${adjective}${noun}${randomFourDigits()}`;
+
+  while (await authRepository.findUserByNickname(nickname)) {
+    nickname = `${adjective}${noun}${randomFourDigits()}`;
   }
 
-  const user = await authRepository.findUserByEmail(parsed.data.email);
-  if (!user) {
-    throw new AppError(HTTP_STATUS.UNAUTHORIZED, "Invalid credentials");
+  return nickname;
+}
+
+export async function register(dto: SignupRequestDto) {
+  const existingLoginId = await authRepository.findUserByLoginId(dto.loginId);
+  if (existingLoginId) {
+    throw new AppError("AUTH_4093");
   }
 
-  // TODO: 비밀번호 검증 및 JWT 발급
-  throw new AppError(HTTP_STATUS.NOT_IMPLEMENTED, "Login not implemented yet");
+  const existingEmail = await authRepository.findUserByEmail(dto.email);
+  if (existingEmail) {
+    throw new AppError("AUTH_4092");
+  }
+
+  const hashedPassword = await bcrypt.hash(dto.password, 10);
+  const nickname = await generateUniqueNickname();
+
+  // TODO: agreedTermsIds(dto.agreedTermsIds)를 UserTerms로 저장하는 로직 추가
+  const user = await authRepository.createUser({
+    loginId: dto.loginId,
+    password: hashedPassword,
+    name: dto.name,
+    nickname,
+    email: dto.email,
+    phoneNumber: dto.phoneNumber,
+  });
+
+  const { password: _password, ...userWithoutPassword } = user;
+
+  return {
+    ...userWithoutPassword,
+    id: user.id.toString(),
+  };
 }
