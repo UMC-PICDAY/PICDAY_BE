@@ -226,14 +226,16 @@ model UserTerms {
 model Studio {
   id                  BigInt  @id @default(autoincrement())
   name                String  @db.VarChar(50)
-  description         String? @db.Text
-  facilityDescription String? @map("facility_description") @db.Text
+  introduction String? @map("introduction") @db.Text // 사진관 소개
+  notice       String? @map("notice") @db.Text  // 공지사항
 
   location  StudioLocation?
   products  StudioProduct[]
   timeSlots TimeSlot[]
   reviews   Review[]
   wishlists Wishlist[]
+  studioServices StudioService[]
+  studioInfoItems StudioInfoItem[]
 
   @@map("studio")
 }
