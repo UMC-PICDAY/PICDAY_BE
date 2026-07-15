@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import "dotenv/config";
 import { errorHandler } from "../common/errorHandler.js";
 import { success } from "../common/response.js";
@@ -9,7 +9,9 @@ app.use(express.json());
 
 app.get("/health", (_req, res) => res.json(success("ok")));
 
-RegisterRoutes(app);
+const apiRouter = Router();
+RegisterRoutes(apiRouter);
+app.use("/api/v1", apiRouter);
 
 app.use(errorHandler);
 
