@@ -28,6 +28,24 @@ export async function findUserByNickname(nickname: string) {
   });
 }
 
+/** 로컬 로그인용: ACTIVE 상태의 LOCAL 유저를 loginId로 조회 */
+export async function findActiveLocalUserByLoginId(loginId: string) {
+  return prisma.user.findFirst({
+    where: { loginId, provider: "LOCAL", status: "ACTIVE" },
+  });
+}
+
+/** 로그인/로그아웃 시 refreshToken 저장 또는 삭제(null) */
+export async function updateRefreshToken(
+  userId: bigint,
+  refreshToken: string | null,
+) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: { refreshToken },
+  });
+}
+
 export async function createUser(data: CreateUserData) {
   return prisma.user.create({
     data: {

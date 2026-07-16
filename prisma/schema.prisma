@@ -167,6 +167,7 @@ model User {
   phoneNumber String?     @map("phone_number") @db.VarChar(15)
   provider    Provider?   @default(LOCAL)
   status      UserStatus? @default(ACTIVE)
+  refreshToken String?    @map("refresh_token") @db.VarChar(512)
   createdAt   DateTime?   @default(now()) @map("created_at")
   updatedAt   DateTime?   @updatedAt @map("updated_at")
   deletedAt   DateTime?   @map("deleted_at")
