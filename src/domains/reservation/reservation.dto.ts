@@ -90,11 +90,13 @@ export type CreateReservationSuccessResponseDto = z.output<
   typeof createReservationSuccessResponseSchema
 >;
 
-// 예약 취소 API
 export const reservationIdParamsSchema = z.object({
   reservationId: z.string().regex(/^\d+$/, "유효하지 않은 예약 ID입니다."),
 });
 export type ReservationIdParams = z.infer<typeof reservationIdParamsSchema>;
+
+
+// 예약 취소 API
 
 export const cancelReservationResponseSchema = z.object({
   reservationId: z.bigint().transform((id) => id.toString()),
@@ -104,3 +106,30 @@ export const cancelReservationResponseSchema = z.object({
 export type CancelReservationResponseDto = z.infer<
   typeof cancelReservationResponseSchema
 >;
+
+// 예약 상세조회 API
+export const getReservationDetailResponseSchema = z.object({
+  reservationId: z.bigint().transform((id) => id.toString()),
+  status: z.enum(["RESERVED", "COMPLETED", "CANCELLED"]),
+  reserveeName: z.string(),
+  reserveePhone: z.string(),
+  totalPrice: z.number().int().nonnegative(),
+  studio: z.object({
+    id: z.bigint().transform((id)=>id.toString()),
+    name: z.string(),
+  }),
+  studioProduct: z.object({
+    id: z.bigint().transform((id) => id.toString()),
+    name: z.string(),
+    price: z.number().int().nonnegative(),
+  }),
+  timeSlot: z.object({
+    date: z.date().transform((date) => date.toISOString().slice(0,10)),
+    startTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
+    endTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
+  }),
+  createdAt: z.date().transform((date) => date.toISOString()),
+  canceledAt: z.date().nullable().transform((date) => date?.toISOString() ?? null),
+});
+
+export type GetReservationDetailDto = z.output<typeof getReservationDetailResponseSchema>;

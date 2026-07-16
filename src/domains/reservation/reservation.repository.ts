@@ -231,7 +231,9 @@ export const getReservationById = async (reservationId: bigint) => {
     where: { id: reservationId },
     include: {
       timeSlot: true,
-      studioProduct: true,
+      studioProduct: {
+        include: { studio: true }
+      }
     },
   });
 };
@@ -246,3 +248,4 @@ export const cancelReservation = async (reservationId: bigint) => {
     },
   });
 };
+
