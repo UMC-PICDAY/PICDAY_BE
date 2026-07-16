@@ -24,3 +24,11 @@ export const signupRequestSchema = z.object({
 });
 
 export type SignupRequestDto = z.infer<typeof signupRequestSchema>;
+
+// 로그인은 필수 여부만 검증 (형식 오류도 인증 실패와 동일하게 AUTH_4015로 수렴)
+export const loginRequestSchema = z.object({
+  loginId: z.string().min(1, "아이디를 입력해 주세요."),
+  password: z.string().min(1, "비밀번호를 입력해 주세요."),
+});
+
+export type LoginRequestDto = z.infer<typeof loginRequestSchema>;
