@@ -9,7 +9,7 @@ import {
   Tags,
 } from "tsoa";
 import { success } from "../../common/response.js";
-import { loginRequestSchema, signupRequestSchema } from "./auth.dto.js";
+import { parseLogin, parseSignup } from "./auth.dto.js";
 import * as authService from "./auth.service.js";
 
 @Route("auth")
@@ -19,7 +19,7 @@ export class AuthController extends Controller {
   @Post("signup")
   @SuccessResponse(201, "Created")
   public async signup(@Body() body: unknown) {
-    const dto = signupRequestSchema.parse(body);
+    const dto = parseSignup(body);
     const user = await authService.register(dto);
     this.setStatus(201);
     return success(user);
@@ -29,7 +29,7 @@ export class AuthController extends Controller {
   @Post("login")
   @SuccessResponse(200, "OK")
   public async login(@Body() body: unknown) {
-    const dto = loginRequestSchema.parse(body);
+    const dto = parseLogin(body);
     const result = await authService.login(dto);
     return success(result);
   }

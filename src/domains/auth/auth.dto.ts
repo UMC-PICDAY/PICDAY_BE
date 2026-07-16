@@ -1,4 +1,6 @@
-import { z } from "zod";
+import { z, ZodError } from "zod";
+import { AppError } from "../../common/error.js";
+import type { ErrorCodeType } from "../../common/errorCode.js";
 
 export const signupRequestSchema = z.object({
   loginId: z
@@ -32,3 +34,38 @@ export const loginRequestSchema = z.object({
 });
 
 export type LoginRequestDto = z.infer<typeof loginRequestSchema>;
+
+function parseOrThrow<T>(
+  schema: z.ZodType<T>,
+  body: unknown,
+  map: Record<string, ErrorCodeType>,
+): T {
+  try {
+    return schema.parse(body);
+  } catch (err) {
+    if (err instanceof ZodError) {
+      const field = err.issues[0]?.path[0];
+      const code = typeof field === "string" ? map[field] : undefined;
+      throw new AppError(code ?? "COMMON_400");
+    }
+    throw err;
+  }
+}
+
+const SIGNUP_FIELD_ERROR: Record<string, ErrorCodeType> = {
+  loginId: "AUTH_4006",
+  password: "AUTH_4005",
+  email: "AUTH_4004",
+  phoneNumber: "AUTH_4007",
+};
+
+// 로그인은 필드 누락도 계정 정보 노출 방지를 위해 AUTH_4015로 수렴
+const LOGIN_FIELD_ERROR: Record<string, ErrorCodeType> = {
+  loginId: "AUTH_4015",
+  password: "AUTH_4015",
+};
+
+export const parseSignup = (body: unknown) =>
+  parseOrThrow(signupRequestSchema, body, SIGNUP_FIELD_ERROR);
+export const parseLogin = (body: unknown) =>
+  parseOrThrow(loginRequestSchema, body, LOGIN_FIELD_ERROR);
