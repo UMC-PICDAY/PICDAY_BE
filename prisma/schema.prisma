@@ -268,7 +268,7 @@ model StudioLocation {
 
   nearestStation String  @map("nearest_station") @db.VarChar(50)
   walkingMinutes Int     @map("walking_minutes")
-  stationDetail  String? @map("station_detail") @db.VarChar(150)
+  stationDetail  Json? @map("station_detail")
 
   studio Studio @relation(fields: [studioId], references: [id])
 
