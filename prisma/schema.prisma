@@ -281,12 +281,12 @@ model StudioLocation {
 // Studio (Product 단위) 모델
 // ==========================================
 enum ShootingCategory {
-  ID_PHOTO
-  PROFILE
-  PERSONAL_PORTRAIT
-  JOB_PHOTO
-  FAMILY
-  FRIENDSHIP
+  ID_PHOTO            // 증명
+  PROFILE             // 프로필
+  PERSONAL_PORTRAIT   // 개인화보
+  JOB_PHOTO           // 취업
+  FAMILY              // 가족
+  FRIENDSHIP          // 우정
 }
 
 model StudioProduct {
@@ -296,6 +296,7 @@ model StudioProduct {
 
   name             String  @db.VarChar(50)
   price            Int
+  basePeople       Int     @map("base_people")
   description      String? @db.Text
   shortDescription String? @map("short_description") @db.Text
 
