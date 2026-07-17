@@ -1,9 +1,10 @@
 import {
   Body,
   Controller,
-  Patch,
   Path,
   Post,
+  Patch,
+  Get,
   Request,
   Route,
   SuccessResponse,
@@ -43,13 +44,32 @@ export class ReservationController extends Controller {
 
   @Patch("{reservationId}/cancel")
   @SuccessResponse(200, "OK")
-  public async cancel(@Path() reservationId: string) {
+  public async cancel(
+    @Path() reservationId: string,
+    @Request() request: any,
+  ) {
     const { reservationId: id } = reservationIdParamsSchema.parse({
       reservationId,
     });
 
-    const result = await reservationService.cancel(BigInt(id));
+    const { userId } = request as AuthenticatedRequest;
 
+    const result = await reservationService.cancel(BigInt(id), userId);
+
+    return success(result);
+  }
+
+  @Get("{reservationId}")
+  @SuccessResponse(200, "OK")
+  public async detail(
+    @Path() reservationId: string,
+    @Request() request: any
+  ){
+    const { reservationId: id } = reservationIdParamsSchema.parse({ reservationId });
+    const { userId } = request as AuthenticatedRequest;
+
+    const result = await reservationService.getDetail(BigInt(id), userId);
+    
     return success(result);
   }
 }

@@ -2,8 +2,11 @@ import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
   createReservationResponseSchema,
+  getReservationDetailResponseSchema,
   parseCreateReservationRequest,
+  type CancelReservationResponseDto,
   type CreateReservationResponseDto,
+  type GetReservationDetailDto
 } from "./reservation.dto.js";
 import * as reservationRepository from "./reservation.repository.js";
 import {
@@ -11,6 +14,7 @@ import {
   cancelReservation,
 } from "./reservation.repository.js";
 import { cancelReservationResponseSchema } from "./reservation.dto.js";
+import type { Reservation } from "../../generated/prisma/client.js";
 
 // ====== 예약 생성 ======
 const REQUIRED_RESERVEE_FIELDS = new Set(["reserveeName", "reserveePhone"]);
@@ -141,13 +145,21 @@ export async function createReservation(
 }
 
 // ====== 예약 취소 ======
-export async function cancel(reservationId: bigint) {
+export async function cancel(
+  reservationId: bigint,
+  userId: bigint
+): Promise<CancelReservationResponseDto> {
   // 예약이 존재하는지 확인
   const reservation = await getReservationById(reservationId);
 
   if (!reservation) {
     // 예약이 존재하지 않는다면
     throw new AppError("RESERVATION_4041");
+  }
+
+  if(reservation.userId !== userId){
+    // 내 예약이 아니라면
+    throw new AppError("RESERVATION_4042");
   }
 
   if (reservation.status == "CANCELLED") {
@@ -179,5 +191,45 @@ export async function cancel(reservationId: bigint) {
     reservationId: updated.id,
     status: updated.status,
     canceledAt: updated.canceledAt,
+  });
+}
+
+// ===== 예약 상세조회 =====
+export async function getDetail(
+  reservationId: bigint,
+  userId: bigint
+): Promise<GetReservationDetailDto> {
+  const reservation = await getReservationById(reservationId);
+
+  if(!reservation){
+    throw new AppError("RESERVATION_4041");
+  }
+
+  if(reservation.userId !== userId){
+    throw new AppError("RESERVATION_4042");
+  }
+
+  return getReservationDetailResponseSchema.parse({
+    reservationId: reservation.id,
+    status: reservation.status,
+    reserveeName: reservation.reserveeName,
+    reserveePhone: reservation.reserveePhone,
+    totalPrice: reservation.totalPrice,
+    studio: {
+      id: reservation.studioProduct.studio.id,
+      name: reservation.studioProduct.studio.name,
+    },
+    studioProduct: {
+      id: reservation.studioProduct.id,
+      name: reservation.studioProduct.name,
+      price: reservation.studioProduct.price,
+    },
+    timeSlot: {
+      date: reservation.timeSlot.date,
+      startTime: reservation.timeSlot.startTime,
+      endTime: reservation.timeSlot.endTime,
+    },
+    createdAt: reservation.createdAt,
+    canceledAt: reservation.canceledAt,
   });
 }
