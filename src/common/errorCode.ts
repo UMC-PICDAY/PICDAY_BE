@@ -114,18 +114,6 @@ export const ErrorCode = {
     code: "STUDIO_4002",
     message: "과거 날짜의 예약 가능 시간은 조회할 수 없습니다.",
   },
-<<<<<<< HEAD
-  STUDIO_40011: {
-    status: 400,
-    code: "STUDIO_40011",
-    message: "올바르지 않은 사진관 ID입니다.",
-  },
-  STUDIO_40012: {
-    status: 400,
-    code: "STUDIO_40012",
-    message:
-      "검색 조건은 location, date, concept, name 중 최소 1개 이상 필요합니다.",
-  },
   STUDIO_4003: {
     status: 400,
     code: "STUDIO_4003",
@@ -160,12 +148,27 @@ export const ErrorCode = {
     status: 400,
     code: "STUDIO_4009",
     message: "올바르지 않은 서비스 태그입니다.",
-=======
+  },
+  STUDIO_40011: {
+    status: 400,
+    code: "STUDIO_40011",
+    message: "올바르지 않은 사진관 ID입니다.",
+  },
+  STUDIO_40012: {
+    status: 400,
+    code: "STUDIO_40012",
+    message:
+      "검색 조건은 location, date, concept, name 중 최소 1개 이상 필요합니다.",
+  },
   STUDIO_40013: {
     status: 400,
     code: "STUDIO_40013",
     message: "비교할 사진관 목록이 올바르지 않습니다.",
->>>>>>> 8dceb5b (feat: errorcode STUDIO_40013 추가)
+  },
+  STUDIO_40014: {
+    status: 400,
+    code: "STUDIO_40014",
+    message: "올바르지 않은 정렬 기준입니다.",
   },
   STUDIO_4041: {
     status: 404,
