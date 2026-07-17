@@ -5,12 +5,33 @@
   "spec": {
     "outputDirectory": "dist",
     "specVersion": 3,
-    "basePath": "/api/v1"
+    "basePath": "/api/v1",
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Access Token"
+      },
+      "refresh": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Refresh Token (토큰 재발급)"
+      },
+      "signup": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Signup Token (소셜 회원가입 완료)"
+      }
+    }
   },
   "routes": {
     "routesDir": "src/generated",
     "basePath": "/api/v1",
     "esm": true,
-    "noWriteIfUnchanged": true
+    "noWriteIfUnchanged": true,
+    "authenticationModule": "src/server/authentication.ts"
   }
 }
