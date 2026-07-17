@@ -114,10 +114,66 @@ export const ErrorCode = {
     code: "STUDIO_4002",
     message: "과거 날짜의 예약 가능 시간은 조회할 수 없습니다.",
   },
+  STUDIO_40011: {
+    status: 400,
+    code: "STUDIO_40011",
+    message: "올바르지 않은 사진관 ID입니다.",
+  },
+  STUDIO_40012: {
+    status: 400,
+    code: "STUDIO_40012",
+    message:
+      "검색 조건은 location, date, concept, name 중 최소 1개 이상 필요합니다.",
+  },
+  STUDIO_4003: {
+    status: 400,
+    code: "STUDIO_4003",
+    message: "잘못된 필터 조건입니다.",
+  },
+  STUDIO_4004: {
+    status: 400,
+    code: "STUDIO_4004",
+    message: "날짜 형식이 올바르지 않습니다.",
+  },
+  STUDIO_4005: {
+    status: 400,
+    code: "STUDIO_4005",
+    message: "시간 형식이 올바르지 않습니다.",
+  },
+  STUDIO_4006: {
+    status: 400,
+    code: "STUDIO_4006",
+    message: "올바르지 않은 상품 ID입니다.",
+  },
+  STUDIO_4007: {
+    status: 400,
+    code: "STUDIO_4007",
+    message: "올바르지 않은 촬영 컨셉입니다.",
+  },
+  STUDIO_4008: {
+    status: 400,
+    code: "STUDIO_4008",
+    message: "올바르지 않은 지역입니다.",
+  },
+  STUDIO_4009: {
+    status: 400,
+    code: "STUDIO_4009",
+    message: "올바르지 않은 서비스 태그입니다.",
+  },
   STUDIO_4041: {
     status: 404,
     code: "STUDIO_4041",
     message: "존재하지 않는 사진관입니다.",
+  },
+  STUDIO_4043: {
+    status: 404,
+    code: "STUDIO_4043",
+    message: "존재하지 않는 상품입니다.",
+  },
+  STUDIO_4044: {
+    status: 404,
+    code: "STUDIO_4044",
+    message: "해당 사진관의 상품을 찾을 수 없습니다.",
   },
   STUDIO_5001: {
     status: 500,
