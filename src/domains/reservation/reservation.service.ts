@@ -2,11 +2,14 @@ import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
   createReservationResponseSchema,
+  getMyReservationListResponseSchema,
   getReservationDetailResponseSchema,
   parseCreateReservationRequest,
   type CancelReservationResponseDto,
   type CreateReservationResponseDto,
-  type GetReservationDetailDto
+  type GetReservationDetailResponseDto,
+  reservationStatusEnum,
+  type ReservationStatus
 } from "./reservation.dto.js";
 import * as reservationRepository from "./reservation.repository.js";
 import {
@@ -198,7 +201,7 @@ export async function cancel(
 export async function getDetail(
   reservationId: bigint,
   userId: bigint
-): Promise<GetReservationDetailDto> {
+): Promise<GetReservationDetailResponseDto> {
   const reservation = await getReservationById(reservationId);
 
   if(!reservation){
@@ -232,4 +235,24 @@ export async function getDetail(
     createdAt: reservation.createdAt,
     canceledAt: reservation.canceledAt,
   });
+}
+
+// ====== 내 예약 조회 ======
+export async function list(userId: bigint, status?: ReservationStatus){
+  const reservations = await reservationRepository.getReservationsByUserId(
+    userId,
+    status
+  );
+
+  const data = reservations.map((reservation)=>({
+    reservationId: reservation.id,
+    studioName: reservation.studioProduct.studio.name,
+    conceptName: reservation.studioProduct.name,
+    reservationDate: reservation.timeSlot.date,
+    reservationTime: reservation.timeSlot.startTime.toISOString().slice(11,16),
+    totalPrice: reservation.totalPrice,
+    status: reservation.status
+  }));
+
+  return getMyReservationListResponseSchema.parse(data);
 }

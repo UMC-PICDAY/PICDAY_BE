@@ -3,6 +3,8 @@ import type { PaymentMethod } from "../../generated/prisma/client.js";
 import { PaymentStatus } from "../../generated/prisma/client.js";
 import type { CreateReservationCommand } from "./reservation.dto.js";
 
+import { type ReservationStatus } from "./reservation.dto.js";
+
 type ReservationReferenceIds = Pick<
   CreateReservationCommand,
   "studioId" | "studioProductId" | "timeSlotId"
@@ -249,3 +251,22 @@ export const cancelReservation = async (reservationId: bigint) => {
   });
 };
 
+// 내 예약 조회
+export const getReservationsByUserId = async (
+  userId: bigint,
+  status?: ReservationStatus,
+) => {
+  return await prisma.reservation.findMany({
+    where: {
+      userId,
+      ... (status && { status })
+    },
+    include: {
+      studioProduct: {
+        include: { studio: true },
+      },
+      timeSlot: true,
+    },
+    orderBy: {createdAt: "desc"},
+  });
+};
