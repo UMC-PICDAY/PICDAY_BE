@@ -8,6 +8,7 @@ import {
   Query,
   Request,
   Route,
+  Security,
   SuccessResponse,
   Tags,
 } from "tsoa";
@@ -19,10 +20,12 @@ import type {
 } from "./wishlist.dto.js";
 import * as wishlistService from "./wishlist.service.js";
 
+// 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다
 type AuthenticatedRequest = { userId: bigint };
 
 @Route("wishlists")
 @Tags("Wishlist")
+@Security("jwt")
 export class WishlistController extends Controller {
   /** 위시리스트 목록 조회 */
   @Get()
