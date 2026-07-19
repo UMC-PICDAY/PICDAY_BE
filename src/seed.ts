@@ -1,4 +1,4 @@
-// src/scripts/seed.ts
+// src/seed.ts
 import "dotenv/config";
 import { prisma } from "./config/prisma.js";
 
@@ -23,24 +23,36 @@ async function main() {
   });
 
   const product = await prisma.studioProduct.create({
-  data: {
-    studioId: studio.id,
-    shootingCategory: "PROFILE",
-    name: "프로필 촬영 패키지",
-    price: 50000,
-    basePeople: 1,   // 추가
-  },
-});
+    data: {
+      studioId: studio.id,
+      shootingCategory: "PROFILE",
+      name: "프로필 촬영 패키지",
+      price: 50000,
+      basePeople: 1,
+    },
+  });
 
-const product2 = await prisma.studioProduct.create({
-  data: {
-    studioId: studio2.id,
-    shootingCategory: "PERSONAL_PORTRAIT",
-    name: "개인화보",
-    price: 150000,
-    basePeople: 1,   // 추가
-  },
-});
+  const product2 = await prisma.studioProduct.create({
+    data: {
+      studioId: studio2.id,
+      shootingCategory: "PERSONAL_PORTRAIT",
+      name: "개인화보",
+      price: 150000,
+      basePeople: 1,
+    },
+  });
+
+  // 필수 약관 (예약 생성 API 테스트용 — agreedTermIds에 필요)
+  // NOTE: 기존 seed에 Terms가 없어서 POST /reservations 호출 시
+  // TERMS_INVALID → RESERVATION_4005로 항상 실패하던 문제를 수정
+  const requiredTerm = await prisma.terms.create({
+    data: {
+      type: "REFUND_POLICY",
+      version: "1.0",
+      isRequired: true,
+      content: "예약 확정 후 촬영 당일 취소 시 환불이 불가합니다.", // 임시 약관 내용
+    },
+  });
 
   // 미래 타임슬롯 (정상 취소/목록 테스트용)
   const futureSlot = await prisma.timeSlot.create({
@@ -58,6 +70,18 @@ const product2 = await prisma.studioProduct.create({
       date: new Date("2026-07-15"),
       startTime: new Date("1970-01-01T14:00:00Z"),
       endTime: new Date("1970-01-01T15:00:00Z"),
+    },
+  });
+
+  // 신규 예약 생성(POST /reservations) 테스트 전용 타임슬롯
+  // futureSlot/futureSlot2는 아래에서 이미 예약이 걸려 isAvailable=false가 되므로
+  // 별도의 빈 슬롯을 하나 더 마련해둠 (SLOT_CONFLICT 방지)
+  const openSlot = await prisma.timeSlot.create({
+    data: {
+      studioId: studio.id,
+      date: new Date("2026-08-01"),
+      startTime: new Date("1970-01-01T13:00:00Z"),
+      endTime: new Date("1970-01-01T14:00:00Z"),
     },
   });
 
@@ -171,6 +195,11 @@ const product2 = await prisma.studioProduct.create({
   });
 
   console.log("✅ 시드 완료");
+  console.log("--- 예약 생성(POST) API 테스트용 ---");
+  console.log("studioId          :", studio.id.toString());
+  console.log("studioProductId   :", product.id.toString());
+  console.log("timeSlotId (빈 슬롯):", openSlot.id.toString());
+  console.log("requiredTermId    :", requiredTerm.id.toString());
   console.log("--- 취소 API 테스트용 ---");
   console.log("정상 취소용 id     :", normal.id.toString());
   console.log("이미 취소됨 id     :", cancelled.id.toString());

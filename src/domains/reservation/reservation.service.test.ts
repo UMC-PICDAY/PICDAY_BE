@@ -97,11 +97,11 @@ mock.module("./reservation.repository.js", {
   },
 });
 
-const { createReservation } = await import("./reservation.service.js");
+const { create } = await import("./reservation.service.js");
 
 async function assertAppError(body: unknown, expectedCode: string) {
   await assert.rejects(
-    () => createReservation(body, 9n),
+    () => create(body, 9n),
     (error: unknown) => {
       assert.ok(error instanceof AppError);
       assert.equal(error.code, expectedCode);
@@ -114,7 +114,7 @@ test("reservation creation service", async (t) => {
   await t.test("creates a reservation normally", async () => {
     resetRepositoryMock();
 
-    const result = await createReservation(validBody, 9n);
+    const result = await create(validBody, 9n);
 
     assert.deepEqual(result, {
       reservationId: "105",
@@ -227,7 +227,7 @@ test("reservation creation service", async (t) => {
 
   await t.test("serializes reservation id and createdAt", async () => {
     resetRepositoryMock();
-    const result = await createReservation(validBody, 9n);
+    const result = await create(validBody, 9n);
 
     assert.equal(typeof result.reservationId, "string");
     assert.equal(typeof result.createdAt, "string");
