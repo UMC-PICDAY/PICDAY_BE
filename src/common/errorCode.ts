@@ -223,6 +223,78 @@ export const ErrorCode = {
     message: "위시리스트 처리 중 오류가 발생했어요.",
   },
 
+  // Review (이미지 업로드 관련 IMAGE 코드는 업로드 API 구현 시 추가)
+  REVIEW_4001: {
+    status: 400,
+    code: "REVIEW_4001",
+    message: "rating은 1~5 사이여야 합니다.",
+  },
+  REVIEW_4002: {
+    status: 400,
+    code: "REVIEW_4002",
+    message: "content는 10~500자여야 합니다.",
+  },
+  REVIEW_4003: {
+    status: 400,
+    code: "REVIEW_4003",
+    message: "이미지는 최대 5개까지 가능합니다.",
+  },
+  REVIEW_4004: {
+    status: 400,
+    code: "REVIEW_4004",
+    message: "완료된 예약만 리뷰 작성이 가능합니다.",
+  },
+  REVIEW_4005: {
+    status: 400,
+    code: "REVIEW_4005",
+    message: "page/size/sort 형식이 올바르지 않습니다.",
+  },
+  REVIEW_4031: {
+    status: 403,
+    code: "REVIEW_4031",
+    message: "본인의 예약만 리뷰를 작성할 수 있습니다.",
+  },
+  REVIEW_4032: {
+    status: 403,
+    code: "REVIEW_4032",
+    message: "본인의 리뷰만 수정/삭제할 수 있습니다.",
+  },
+  REVIEW_4041: {
+    status: 404,
+    code: "REVIEW_4041",
+    message: "존재하지 않는 예약입니다.",
+  },
+  REVIEW_4042: {
+    status: 404,
+    code: "REVIEW_4042",
+    message: "존재하지 않는 리뷰입니다.",
+  },
+  REVIEW_4043: {
+    status: 404,
+    code: "REVIEW_4043",
+    message: "추천한 적 없는 리뷰입니다.",
+  },
+  REVIEW_4044: {
+    status: 404,
+    code: "REVIEW_4044",
+    message: "존재하지 않는 사진관입니다.",
+  },
+  REVIEW_4091: {
+    status: 409,
+    code: "REVIEW_4091",
+    message: "이미 리뷰가 작성된 예약입니다.",
+  },
+  REVIEW_4092: {
+    status: 409,
+    code: "REVIEW_4092",
+    message: "이미 추천한 리뷰입니다.",
+  },
+  REVIEW_5001: {
+    status: 500,
+    code: "REVIEW_5001",
+    message: "리뷰 처리 중 오류가 발생했어요.",
+  },
+
   // Auth
   AUTH_4001: {
     status: 400,
