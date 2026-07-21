@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ShootingCategory } from "../../generated/prisma/enums.js";
 
 export const createStudioSchema = z.object({
   name: z.string().min(1),
@@ -8,19 +9,22 @@ export const createStudioSchema = z.object({
 
 export type CreateStudioDto = z.infer<typeof createStudioSchema>;
 
-// 예약 가능 시간 조회 API
+// 공통 사진관 ID 검증
 const studioIdSchema = z
   .string()
   .regex(/^\d+$/, "사진관 ID는 양의 정수여야 합니다.")
   .transform((id) => BigInt(id))
   .refine((id) => id > 0n, "사진관 ID는 양의 정수여야 합니다.");
 
+// 예약 가능 시간 조회 API
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
 function toDbDate(dateText: string) {
   const [year, month, day] = dateText.split("-").map(Number);
   const date = new Date(0);
+
   date.setUTCFullYear(year!, month! - 1, day!);
+
   return date;
 }
 
@@ -60,7 +64,9 @@ export type GetStudioSlotsRequestDto = {
   date: string | undefined;
 };
 
-export type GetStudioSlotsQuery = z.output<typeof getStudioSlotsRequestSchema>;
+export type GetStudioSlotsQuery = z.output<
+  typeof getStudioSlotsRequestSchema
+>;
 
 export function parseGetStudioSlotsRequest(
   input: GetStudioSlotsRequestDto,
@@ -68,12 +74,74 @@ export function parseGetStudioSlotsRequest(
   return getStudioSlotsRequestSchema.parse(input);
 }
 
+// 컨셉 사진 상세 조회 API
+const studioProductIdSchema = z
+  .string()
+  .regex(/^\d+$/, "상품 ID는 양의 정수여야 합니다.")
+  .transform((id) => BigInt(id))
+  .refine((id) => id > 0n, "상품 ID는 양의 정수여야 합니다.");
+
+export const getStudioProductDetailRequestSchema = z.object({
+  studioId: studioIdSchema,
+  studioProductId: studioProductIdSchema,
+});
+
+export type GetStudioProductDetailRequestDto = z.input<
+  typeof getStudioProductDetailRequestSchema
+>;
+
+export type GetStudioProductDetailQuery = z.output<
+  typeof getStudioProductDetailRequestSchema
+>;
+
+export function parseGetStudioProductDetailRequest(
+  input: GetStudioProductDetailRequestDto,
+): GetStudioProductDetailQuery {
+  return getStudioProductDetailRequestSchema.parse(input);
+}
+
+// 컨셉 목록 조회 API
+const timeSlotIdSchema = z
+  .string()
+  .regex(/^\d+$/, "시간 슬롯 ID는 양의 정수여야 합니다.")
+  .transform((id) => BigInt(id))
+  .refine((id) => id > 0n, "시간 슬롯 ID는 양의 정수여야 합니다.");
+
+export const getStudioProductsRequestSchema = z.object({
+  studioId: studioIdSchema,
+  timeSlotId: timeSlotIdSchema.optional(),
+});
+
+export type GetStudioProductsRequestDto = z.input<
+  typeof getStudioProductsRequestSchema
+>;
+
+export type GetStudioProductsQuery = z.output<
+  typeof getStudioProductsRequestSchema
+>;
+
+export function parseGetStudioProductsRequest(
+  input: GetStudioProductsRequestDto,
+): GetStudioProductsQuery {
+  return getStudioProductsRequestSchema.parse(input);
+}
+
 function formatTime(date: Date) {
   const hours = date.getUTCHours().toString().padStart(2, "0");
   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
+
   return `${hours}:${minutes}`;
 }
 
+function formatDate(date: Date) {
+  return [
+    date.getUTCFullYear().toString().padStart(4, "0"),
+    (date.getUTCMonth() + 1).toString().padStart(2, "0"),
+    date.getUTCDate().toString().padStart(2, "0"),
+  ].join("-");
+}
+
+// 예약 가능 시간 조회 응답
 export const studioSlotResponseSchema = z.object({
   slotId: z.bigint().transform((id) => id.toString()),
   startTime: z.date().transform(formatTime),
@@ -85,11 +153,15 @@ export type StudioSlotResponseInputDto = z.input<
   typeof studioSlotResponseSchema
 >;
 
-export type StudioSlotResponseDto = z.output<typeof studioSlotResponseSchema>;
+export type StudioSlotResponseDto = z.output<
+  typeof studioSlotResponseSchema
+>;
 
 export const studioSlotsResponseSchema = z.array(studioSlotResponseSchema);
 
-export type StudioSlotsResponseDto = z.output<typeof studioSlotsResponseSchema>;
+export type StudioSlotsResponseDto = z.output<
+  typeof studioSlotsResponseSchema
+>;
 
 export const getStudioSlotsSuccessResponseSchema = z.object({
   success: z.literal(true),
@@ -101,3 +173,74 @@ export const getStudioSlotsSuccessResponseSchema = z.object({
 export type GetStudioSlotsSuccessResponseDto = z.output<
   typeof getStudioSlotsSuccessResponseSchema
 >;
+
+// 컨셉 사진 상세 조회 응답
+export const studioProductDetailResponseSchema = z
+  .object({
+    studioId: z.bigint().transform((id) => id.toString()),
+    studioName: z.string(),
+    studioProductId: z.bigint().transform((id) => id.toString()),
+    productName: z.string(),
+    imageUrls: z.array(z.url()),
+  })
+  .transform((detail) => ({
+    ...detail,
+    imageCount: detail.imageUrls.length,
+  }));
+
+export type StudioProductDetailResponseInputDto = z.input<
+  typeof studioProductDetailResponseSchema
+>;
+
+export type StudioProductDetailResponseDto = z.output<
+  typeof studioProductDetailResponseSchema
+>;
+
+// 컨셉 목록 조회 응답
+export const studioProductsSelectedSlotSchema = z.object({
+  timeSlotId: z.bigint().transform((id) => id.toString()),
+  date: z.date().transform(formatDate),
+  startTime: z.date().transform(formatTime),
+  endTime: z.date().transform(formatTime),
+  isAvailable: z.boolean(),
+});
+
+export const studioProductListItemSchema = z
+  .object({
+    studioProductId: z.bigint().transform((id) => id.toString()),
+    productName: z.string(),
+    imageUrls: z.array(z.url()),
+    price: z.number().int().nonnegative(),
+    basePeople: z.number().int().min(1),
+    shortDescription: z.string().nullable(),
+  })
+  .transform((product) => ({
+    ...product,
+    imageCount: product.imageUrls.length,
+  }));
+
+export const studioProductGroupSchema = z.object({
+  shootingCategory: z.enum(ShootingCategory),
+  products: z.array(studioProductListItemSchema),
+});
+
+export const studioProductsResponseSchema = z.object({
+  studioId: z.bigint().transform((id) => id.toString()),
+  studioName: z.string(),
+  selectedSlot: studioProductsSelectedSlotSchema.nullable(),
+  productGroups: z.array(studioProductGroupSchema),
+});
+
+export type StudioProductsResponseInputDto = z.input<
+  typeof studioProductsResponseSchema
+>;
+
+export type StudioProductsResponseDto = z.output<
+  typeof studioProductsResponseSchema
+>;
+
+export function createStudioProductsResponse(
+  input: StudioProductsResponseInputDto,
+): StudioProductsResponseDto {
+  return studioProductsResponseSchema.parse(input);
+}

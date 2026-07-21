@@ -296,7 +296,7 @@ model StudioProduct {
 
   name             String  @db.VarChar(50)
   price            Int
-  basePeople       Int     @map("base_people")
+  basePeople       Int     @map("base_people") @db.UnsignedInt
   description      String? @db.Text
   shortDescription String? @map("short_description") @db.Text
 

@@ -3,6 +3,8 @@ import type { PaymentMethod } from "../../generated/prisma/client.js";
 import { PaymentStatus } from "../../generated/prisma/client.js";
 import type { CreateReservationCommand } from "./reservation.dto.js";
 
+import { type ReservationStatus } from "./reservation.dto.js";
+
 type ReservationReferenceIds = Pick<
   CreateReservationCommand,
   "studioId" | "studioProductId" | "timeSlotId"
@@ -42,11 +44,11 @@ export type CreateReservationOutcome =
       };
     };
 
-export async function findReservationCreationReferences({
+export const findReservationCreationReferences = async ({
   studioId,
   studioProductId,
   timeSlotId,
-}: ReservationReferenceIds) {
+}: ReservationReferenceIds) => {
   const [studio, studioProduct, timeSlot, requiredTerms] = await Promise.all([
     prisma.studio.findUnique({
       where: { id: studioId },
@@ -82,12 +84,12 @@ export async function findReservationCreationReferences({
   ]);
 
   return { studio, studioProduct, timeSlot, requiredTerms };
-}
+};
 
 // 예약 생성
-export async function createReservation(
+export const createReservation = async (
   input: CreateReservationRepositoryInput,
-): Promise<CreateReservationOutcome> {
+): Promise<CreateReservationOutcome> => {
   return prisma.$transaction(async (tx) => {
     const studio = await tx.studio.findUnique({
       where: { id: input.studioId },
@@ -223,7 +225,7 @@ export async function createReservation(
       },
     };
   });
-}
+};
 
 // 예약 ID를 통한 예약 정보 가져오기
 export const getReservationById = async (reservationId: bigint) => {
@@ -232,8 +234,8 @@ export const getReservationById = async (reservationId: bigint) => {
     include: {
       timeSlot: true,
       studioProduct: {
-        include: { studio: true }
-      }
+        include: { studio: true },
+      },
     },
   });
 };
@@ -249,3 +251,22 @@ export const cancelReservation = async (reservationId: bigint) => {
   });
 };
 
+// 내 예약 조회
+export const getReservationsByUserId = async (
+  userId: bigint,
+  status?: ReservationStatus,
+) => {
+  return await prisma.reservation.findMany({
+    where: {
+      userId,
+      ...(status && { status }),
+    },
+    include: {
+      studioProduct: {
+        include: { studio: true },
+      },
+      timeSlot: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+};

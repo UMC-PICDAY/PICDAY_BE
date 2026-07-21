@@ -1,20 +1,19 @@
 import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
+  cancelReservationResponseSchema,
   createReservationResponseSchema,
+  getMyReservationListResponseSchema,
   getReservationDetailResponseSchema,
   parseCreateReservationRequest,
+  reservationStatusEnum,
   type CancelReservationResponseDto,
   type CreateReservationResponseDto,
-  type GetReservationDetailDto
+  type GetReservationDetailResponseDto,
+  type GetMyReservationListResponseDto,
+  type ReservationStatus,
 } from "./reservation.dto.js";
 import * as reservationRepository from "./reservation.repository.js";
-import {
-  getReservationById,
-  cancelReservation,
-} from "./reservation.repository.js";
-import { cancelReservationResponseSchema } from "./reservation.dto.js";
-import type { Reservation } from "../../generated/prisma/client.js";
 
 // ====== 예약 생성 ======
 const REQUIRED_RESERVEE_FIELDS = new Set(["reserveeName", "reserveePhone"]);
@@ -53,7 +52,7 @@ function isPastTimeSlot(date: Date, startTime: Date, now = new Date()) {
   return slotStart.getTime() < now.getTime();
 }
 
-export async function createReservation(
+export async function create(
   body: unknown,
   userId: bigint,
 ): Promise<CreateReservationResponseDto> {
@@ -147,27 +146,28 @@ export async function createReservation(
 // ====== 예약 취소 ======
 export async function cancel(
   reservationId: bigint,
-  userId: bigint
+  userId: bigint,
 ): Promise<CancelReservationResponseDto> {
   // 예약이 존재하는지 확인
-  const reservation = await getReservationById(reservationId);
+  const reservation =
+    await reservationRepository.getReservationById(reservationId);
 
   if (!reservation) {
     // 예약이 존재하지 않는다면
     throw new AppError("RESERVATION_4041");
   }
 
-  if(reservation.userId !== userId){
+  if (reservation.userId !== userId) {
     // 내 예약이 아니라면
     throw new AppError("RESERVATION_4042");
   }
 
-  if (reservation.status == "CANCELLED") {
+  if (reservation.status === "CANCELLED") {
     // 이미 취소된 예약이라면
     throw new AppError("RESERVATION_4092");
   }
 
-  if (reservation.status == "COMPLETED") {
+  if (reservation.status === "COMPLETED") {
     // 이미 진행된 예약이라면
     throw new AppError("RESERVATION_4093");
   }
@@ -185,7 +185,7 @@ export async function cancel(
     throw new AppError("RESERVATION_4002");
   }
 
-  const updated = await cancelReservation(reservationId);
+  const updated = await reservationRepository.cancelReservation(reservationId);
 
   return cancelReservationResponseSchema.parse({
     reservationId: updated.id,
@@ -197,15 +197,16 @@ export async function cancel(
 // ===== 예약 상세조회 =====
 export async function getDetail(
   reservationId: bigint,
-  userId: bigint
-): Promise<GetReservationDetailDto> {
-  const reservation = await getReservationById(reservationId);
+  userId: bigint,
+): Promise<GetReservationDetailResponseDto> {
+  const reservation =
+    await reservationRepository.getReservationById(reservationId);
 
-  if(!reservation){
+  if (!reservation) {
     throw new AppError("RESERVATION_4041");
   }
 
-  if(reservation.userId !== userId){
+  if (reservation.userId !== userId) {
     throw new AppError("RESERVATION_4042");
   }
 
@@ -232,4 +233,27 @@ export async function getDetail(
     createdAt: reservation.createdAt,
     canceledAt: reservation.canceledAt,
   });
+}
+
+// ====== 내 예약 조회 ======
+export async function list(
+  userId: bigint,
+  status?: ReservationStatus
+): Promise<GetMyReservationListResponseDto> {
+  const reservations = await reservationRepository.getReservationsByUserId(
+    userId,
+    status,
+  );
+
+  const data = reservations.map((reservation) => ({
+    reservationId: reservation.id,
+    studioName: reservation.studioProduct.studio.name,
+    conceptName: reservation.studioProduct.name,
+    reservationDate: reservation.timeSlot.date,
+    reservationTime: reservation.timeSlot.startTime.toISOString().slice(11, 16),
+    totalPrice: reservation.totalPrice,
+    status: reservation.status,
+  }));
+
+  return getMyReservationListResponseSchema.parse(data);
 }

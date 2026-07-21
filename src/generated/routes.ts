@@ -73,6 +73,7 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"output_typeofgetStudioSlotsSuccessResponseSchema_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+<<<<<<< HEAD
     "CreateReviewSuccessResponseDto": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"nestedObjectLiteral","nestedProperties":{"reviewId":{"dataType":"double","required":true}},"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"enum","enums":["COMMON_201"],"required":true},"success":{"dataType":"enum","enums":[true],"required":true}},"validators":{}},
@@ -106,6 +107,26 @@ const models: TsoaRoute.Models = {
     "DeleteReviewSuccessResponseDto": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"enum","enums":[null],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"enum","enums":["COMMON_200"],"required":true},"success":{"dataType":"enum","enums":[true],"required":true}},"validators":{}},
+=======
+    "output_typeofstudioProductsResponseSchema_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"selectedSlot":{"dataType":"nestedObjectLiteral","nestedProperties":{"endTime":{"dataType":"string"},"startTime":{"dataType":"string"},"date":{"dataType":"string"},"timeSlotId":{"dataType":"string"},"isAvailable":{"dataType":"boolean","required":true}}},"studioId":{"dataType":"string"},"productGroups":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"products":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"shortDescription":{"dataType":"string"},"studioProductId":{"dataType":"string"},"basePeople":{"dataType":"double","required":true},"price":{"dataType":"double","required":true},"imageUrls":{"dataType":"array","array":{"dataType":"string"},"required":true},"productName":{"dataType":"string","required":true},"imageCount":{"dataType":"double","required":true}}},"required":true},"shootingCategory":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["ID_PHOTO"]},{"dataType":"enum","enums":["PROFILE"]},{"dataType":"enum","enums":["PERSONAL_PORTRAIT"]},{"dataType":"enum","enums":["JOB_PHOTO"]},{"dataType":"enum","enums":["FAMILY"]},{"dataType":"enum","enums":["FRIENDSHIP"]}],"required":true}}},"required":true},"studioName":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StudioProductsResponseDto": {
+        "dataType": "refAlias",
+        "type": {"ref":"output_typeofstudioProductsResponseSchema_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetStudioProductsSuccessResponseDto": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"StudioProductsResponseDto","required":true},"message":{"dataType":"enum","enums":["사진관 컨셉 목록 조회에 성공했습니다."],"required":true},"code":{"dataType":"enum","enums":["COMMON_200"],"required":true},"success":{"dataType":"enum","enums":[true],"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AppErrorResponse": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"enum","enums":[null],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"enum","enums":[false],"required":true}},"validators":{}},
+>>>>>>> dev
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "output_typeofcreateReservationSuccessResponseSchema_": {
@@ -136,6 +157,11 @@ const models: TsoaRoute.Models = {
     "ApiResponse__status-RESERVED-or-CANCELLED-or-COMPLETED--reserveeName-string--reserveePhone-string--totalPrice-number--studio_58__name-string--id_63_-string_--studioProduct_58__name-string--price-number--id_63_-string_--timeSlot_58__date_63_-string--startTime_63_-string--endTime_63_-string_--reservationId_63_-string--createdAt_63_-string--canceledAt_63_-string__": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"canceledAt":{"dataType":"string"},"createdAt":{"dataType":"string"},"reservationId":{"dataType":"string"},"timeSlot":{"dataType":"nestedObjectLiteral","nestedProperties":{"endTime":{"dataType":"string"},"startTime":{"dataType":"string"},"date":{"dataType":"string"}},"required":true},"studioProduct":{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string"},"price":{"dataType":"double","required":true},"name":{"dataType":"string","required":true}},"required":true},"studio":{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"string"},"name":{"dataType":"string","required":true}},"required":true},"totalPrice":{"dataType":"double","required":true},"reserveePhone":{"dataType":"string","required":true},"reserveeName":{"dataType":"string","required":true},"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["RESERVED"]},{"dataType":"enum","enums":["CANCELLED"]},{"dataType":"enum","enums":["COMPLETED"]}],"required":true}}},{"dataType":"enum","enums":[null]}],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"boolean","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse__studioName-string--conceptName-string--reservationTime-string--totalPrice-number--status-RESERVED-or-CANCELLED-or-COMPLETED--reservationId_63_-string--reservationDate_63_-string_-Array_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"reservationDate":{"dataType":"string"},"reservationId":{"dataType":"string"},"status":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["RESERVED"]},{"dataType":"enum","enums":["CANCELLED"]},{"dataType":"enum","enums":["COMPLETED"]}],"required":true},"totalPrice":{"dataType":"double","required":true},"reservationTime":{"dataType":"string","required":true},"conceptName":{"dataType":"string","required":true},"studioName":{"dataType":"string","required":true}}}},{"dataType":"enum","enums":[null]}],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"boolean","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserStatus": {
@@ -308,6 +334,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+<<<<<<< HEAD
         const argsReviewController_create: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"CreateReviewRequestDto"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
@@ -318,11 +345,23 @@ export function RegisterRoutes(app: Router) {
             ...(fetchMiddlewares<RequestHandler>(ReviewController.prototype.create)),
 
             async function ReviewController_create(request: ExRequest, response: ExResponse, next: any) {
+=======
+        const argsStudioController_getStudioProducts: Record<string, TsoaRoute.ParameterSchema> = {
+                studioId: {"in":"path","name":"studioId","required":true,"dataType":"string"},
+                timeSlotId: {"in":"query","name":"timeSlotId","dataType":"string"},
+        };
+        app.get('/api/v1/studios/:studioId/products',
+            ...(fetchMiddlewares<RequestHandler>(StudioController)),
+            ...(fetchMiddlewares<RequestHandler>(StudioController.prototype.getStudioProducts)),
+
+            async function StudioController_getStudioProducts(request: ExRequest, response: ExResponse, next: any) {
+>>>>>>> dev
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
+<<<<<<< HEAD
                 validatedArgs = templateService.getValidatedArgs({ args: argsReviewController_create, request, response });
 
                 const controller = new ReviewController();
@@ -394,6 +433,14 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'remove',
+=======
+                validatedArgs = templateService.getValidatedArgs({ args: argsStudioController_getStudioProducts, request, response });
+
+                const controller = new StudioController();
+
+              await templateService.apiHandler({
+                methodName: 'getStudioProducts',
+>>>>>>> dev
                 controller,
                 response,
                 next,
@@ -490,6 +537,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'detail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsReservationController_list: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                status: {"in":"query","name":"status","dataType":"string"},
+        };
+        app.get('/api/v1/reservations',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ReservationController)),
+            ...(fetchMiddlewares<RequestHandler>(ReservationController.prototype.list)),
+
+            async function ReservationController_list(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsReservationController_list, request, response });
+
+                const controller = new ReservationController();
+
+              await templateService.apiHandler({
+                methodName: 'list',
                 controller,
                 response,
                 next,
