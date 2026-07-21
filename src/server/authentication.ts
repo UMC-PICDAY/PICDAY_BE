@@ -1,6 +1,10 @@
 import type { Request } from "express";
 import { AppError } from "../common/error.js";
-import { verifyToken, type TokenType } from "../domains/auth/auth.token.js";
+import {
+  extractBearerToken,
+  verifyToken,
+  type TokenType,
+} from "../domains/auth/auth.token.js";
 
 // tsoa @Security(securityName) → 요구 토큰 타입 매핑
 // - jwt: Access Token (일반 인증 API)
@@ -30,11 +34,10 @@ export async function expressAuthentication(
     throw new AppError("COMMON_500");
   }
 
-  const header = request.headers.authorization;
-  if (!header?.startsWith("Bearer ")) {
+  const token = extractBearerToken(request.headers.authorization);
+  if (!token) {
     throw new AppError("AUTH_4013");
   }
-  const token = header.slice("Bearer ".length).trim();
 
   const payload = verifyToken(token, tokenType);
 

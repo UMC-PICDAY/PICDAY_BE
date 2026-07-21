@@ -47,6 +47,18 @@ export function signSignupToken(userId: string): string {
   });
 }
 
+/**
+ * `Authorization: Bearer <token>` 헤더에서 토큰만 추출.
+ * 형식이 아니거나 값이 비어 있으면 null.
+ */
+export function extractBearerToken(header?: string): string | null {
+  if (!header?.startsWith("Bearer ")) {
+    return null;
+  }
+  const token = header.slice("Bearer ".length).trim();
+  return token.length > 0 ? token : null;
+}
+
 // 만료 시 토큰 타입별로 명세서의 에러 코드가 다름
 // (access → AUTH_4017, refresh → AUTH_4016, signup → AUTH_4014)
 const EXPIRED_ERROR_CODE: Record<TokenType, ErrorCodeType> = {

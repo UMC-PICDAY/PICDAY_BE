@@ -11,6 +11,7 @@ import {
   REFRESH_TOKEN_EXPIRES_IN,
   signAccessToken,
   signRefreshToken,
+  verifyToken,
 } from "./auth.token.js";
 
 // 영문 소문자 시작, 영문 소문자+숫자, 4~12자 (signup 규칙과 동일)
@@ -36,6 +37,25 @@ async function generateUniqueNickname(): Promise<string> {
   }
 
   return nickname;
+}
+
+/**
+ * Access/Refresh 토큰을 새로 발급하고 refreshToken을 DB에 저장한다.
+ * 로그인·토큰 갱신 모두 이 경로를 거치므로, 갱신 시 이전 refreshToken은 덮어써져 무효화된다(Refresh 회전).
+ */
+async function issueTokenPair(userId: bigint) {
+  const sub = userId.toString();
+  const accessToken = signAccessToken(sub);
+  const refreshToken = signRefreshToken(sub);
+
+  await authRepository.updateRefreshToken(userId, refreshToken);
+
+  return {
+    accessToken,
+    refreshToken,
+    accessTokenExpiresIn: ACCESS_TOKEN_EXPIRES_IN,
+    refreshTokenExpiresIn: REFRESH_TOKEN_EXPIRES_IN,
+  };
 }
 
 export async function register(dto: SignupRequestDto) {
@@ -84,26 +104,47 @@ export async function login(dto: LoginRequestDto) {
     throw new AppError("AUTH_4015");
   }
 
-  const userId = user.id.toString();
-  const accessToken = signAccessToken(userId);
-  const refreshToken = signRefreshToken(userId);
-
-  await authRepository.updateRefreshToken(user.id, refreshToken);
+  const token = await issueTokenPair(user.id);
 
   return {
     user: {
-      id: userId,
+      id: user.id.toString(),
       loginId: user.loginId,
       nickname: user.nickname,
       provider: user.provider,
     },
-    token: {
-      accessToken,
-      refreshToken,
-      accessTokenExpiresIn: ACCESS_TOKEN_EXPIRES_IN,
-      refreshTokenExpiresIn: REFRESH_TOKEN_EXPIRES_IN,
-    },
+    token,
   };
+}
+
+/**
+ * Refresh Token으로 Access/Refresh를 재발급한다 (Refresh 회전).
+ *
+ * userId는 @Security("refresh")를 통과한 Authorization 헤더에서 나온 값이고,
+ * refreshToken은 실제 대조 대상이 되는 원본 토큰 문자열이다.
+ */
+export async function refresh(userId: bigint, refreshToken: string) {
+  // 서명·만료·타입 검증 (만료 → AUTH_4016, 그 외 → AUTH_4013)
+  const payload = verifyToken(refreshToken, "refresh");
+
+  // 토큰 주인과 인증된 유저가 다르면 위조 시도
+  if (payload.sub !== userId.toString()) {
+    throw new AppError("AUTH_4013");
+  }
+
+  const user = await authRepository.findUserById(userId);
+  if (!user || user.status !== "ACTIVE") {
+    throw new AppError("AUTH_4013");
+  }
+
+  // DB 값과 불일치 = 이미 회전되어 폐기된 토큰의 재사용 또는 로그아웃된 세션 → 탈취 의심
+  if (!user.refreshToken || user.refreshToken !== refreshToken) {
+    throw new AppError("AUTH_4013");
+  }
+
+  const token = await issueTokenPair(user.id);
+
+  return { token };
 }
 
 export async function checkLoginIdAvailability(rawLoginId: string) {
