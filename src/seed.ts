@@ -1,4 +1,5 @@
 // src/seed.ts
+// 시드데이터 확인 : pnpm exec tsx src/seed.ts
 import "dotenv/config";
 import { prisma } from "./config/prisma.js";
 
@@ -339,6 +340,79 @@ async function main() {
     ...reservationBase,
     timeSlotId: todaySlot.id,
     status: "RESERVED",
+  });
+
+  // B에 완료 예약 2건 추가 -> 예약완료건수 A=1, B=2, C=0
+  const studioBSlot1 = await upsertTimeSlot(
+    studioB.id,
+    RESERVATION_TEST_DATE,
+    time("11:00:00.000"),
+    time("12:00:00.000"),
+    false,
+  );
+  const studioBSlot2 = await upsertTimeSlot(
+    studioB.id,
+    RESERVATION_TEST_DATE,
+    time("13:00:00.000"),
+    time("14:00:00.000"),
+    false,
+  );
+
+  const studioBReservationBase = {
+    userId: user.id,
+    studioProductId: otherStudioProduct.id,
+    reserveeName: "홍길동",
+    reserveePhone: "01012345678",
+    totalPrice: otherStudioProduct.price,
+  };
+
+  const studioBCompletedReservation1 = await upsertReservation({
+    ...studioBReservationBase,
+    timeSlotId: studioBSlot1.id,
+    status: "COMPLETED",
+  });
+
+  const studioBCompletedReservation2 = await upsertReservation({
+    ...studioBReservationBase,
+    timeSlotId: studioBSlot2.id,
+    status: "COMPLETED",
+  });
+
+  // 완료된 예약에 리뷰를 달았음 -> 평균 평점(A=4점, B=5점, C=리뷰없음→0점)
+  await prisma.review.upsert({
+    where: { reservationId: completedReservation.id },
+    update: { rating: 4 },
+    create: {
+      reservationId: completedReservation.id,
+      userId: user.id,
+      studioId: studioA.id,
+      rating: 4,
+      content: "만족스러운 촬영이었어요. 사진 퀄리티도 좋고 친절했습니다.",
+    },
+  });
+
+  await prisma.review.upsert({
+    where: { reservationId: studioBCompletedReservation1.id },
+    update: { rating: 5 },
+    create: {
+      reservationId: studioBCompletedReservation1.id,
+      userId: user.id,
+      studioId: studioB.id,
+      rating: 5,
+      content: "정말 최고의 촬영 경험이었습니다. 강력 추천해요!",
+    },
+  });
+
+  await prisma.review.upsert({
+    where: { reservationId: studioBCompletedReservation2.id },
+    update: { rating: 5 },
+    create: {
+      reservationId: studioBCompletedReservation2.id,
+      userId: user.id,
+      studioId: studioB.id,
+      rating: 5,
+      content: "두 번째 방문인데도 여전히 만족스러웠어요.",
+    },
   });
 
   console.log("✅ 시드 완료");
