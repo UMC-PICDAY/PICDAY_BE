@@ -1,9 +1,13 @@
 import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
+  parseGetStudioProductDetailRequest,
   parseGetStudioSlotsRequest,
+  studioProductDetailResponseSchema,
   studioSlotsResponseSchema,
+  type GetStudioProductDetailQuery,
   type GetStudioSlotsQuery,
+  type StudioProductDetailResponseDto,
   type StudioSlotsResponseDto,
 } from "./studio.dto.js";
 import * as studioRepository from "./studio.repository.js";
@@ -92,5 +96,63 @@ export async function getStudioSlots(
       throw error;
     }
     throw new AppError("STUDIO_5001");
+  }
+}
+
+// === 컨셉 사진 상세 조회 API ===
+export async function getStudioProductDetail(
+  rawStudioId: string,
+  rawStudioProductId: string,
+): Promise<StudioProductDetailResponseDto> {
+  try {
+    let query: GetStudioProductDetailQuery;
+
+    try {
+      query = parseGetStudioProductDetailRequest({
+        studioId: rawStudioId,
+        studioProductId: rawStudioProductId,
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const hasStudioIdError = error.issues.some(
+          (issue) => issue.path[0] === "studioId",
+        );
+        throw new AppError(hasStudioIdError ? "STUDIO_40011" : "STUDIO_4006");
+      }
+      throw error;
+    }
+
+    const studio = await studioRepository.findStudioForProductDetail(
+      query.studioId,
+    );
+
+    if (!studio) {
+      throw new AppError("STUDIO_4041");
+    }
+
+    const product = await studioRepository.findStudioProductDetailById(
+      query.studioProductId,
+    );
+
+    if (!product) {
+      throw new AppError("STUDIO_4043");
+    }
+
+    if (product.studioId !== query.studioId) {
+      throw new AppError("STUDIO_4044");
+    }
+
+    return studioProductDetailResponseSchema.parse({
+      studioId: studio.id,
+      studioName: studio.name,
+      studioProductId: product.id,
+      productName: product.name,
+      imageUrls: product.productImages.map((image) => image.url),
+    });
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("COMMON_500");
   }
 }

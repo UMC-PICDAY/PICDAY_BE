@@ -68,6 +68,32 @@ export function parseGetStudioSlotsRequest(
   return getStudioSlotsRequestSchema.parse(input);
 }
 
+// 컨셉 사진 상세 조회 API
+const studioProductIdSchema = z
+  .string()
+  .regex(/^\d+$/, "상품 ID는 양의 정수여야 합니다.")
+  .transform((id) => BigInt(id))
+  .refine((id) => id > 0n, "상품 ID는 양의 정수여야 합니다.");
+
+export const getStudioProductDetailRequestSchema = z.object({
+  studioId: studioIdSchema,
+  studioProductId: studioProductIdSchema,
+});
+
+export type GetStudioProductDetailRequestDto = z.input<
+  typeof getStudioProductDetailRequestSchema
+>;
+
+export type GetStudioProductDetailQuery = z.output<
+  typeof getStudioProductDetailRequestSchema
+>;
+
+export function parseGetStudioProductDetailRequest(
+  input: GetStudioProductDetailRequestDto,
+): GetStudioProductDetailQuery {
+  return getStudioProductDetailRequestSchema.parse(input);
+}
+
 function formatTime(date: Date) {
   const hours = date.getUTCHours().toString().padStart(2, "0");
   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
@@ -100,4 +126,25 @@ export const getStudioSlotsSuccessResponseSchema = z.object({
 
 export type GetStudioSlotsSuccessResponseDto = z.output<
   typeof getStudioSlotsSuccessResponseSchema
+>;
+
+export const studioProductDetailResponseSchema = z
+  .object({
+    studioId: z.bigint().transform((id) => id.toString()),
+    studioName: z.string(),
+    studioProductId: z.bigint().transform((id) => id.toString()),
+    productName: z.string(),
+    imageUrls: z.array(z.url()),
+  })
+  .transform((detail) => ({
+    ...detail,
+    imageCount: detail.imageUrls.length,
+  }));
+
+export type StudioProductDetailResponseInputDto = z.input<
+  typeof studioProductDetailResponseSchema
+>;
+
+export type StudioProductDetailResponseDto = z.output<
+  typeof studioProductDetailResponseSchema
 >;
