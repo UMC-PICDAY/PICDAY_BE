@@ -1,6 +1,7 @@
 // src/recalculatePopularityRank.ts
+// 재계산 : pnpm rank:recalculate
 
-// 홈 화면의 '지금 인기 있는 사진관(평균 평점)'/예약 완료 건수 랭킹을 재계산하는 배치 스크립트.
+// 홈 화면의 배너(평균 평점)/'지금 인기 있는 사진관'(예약 완료 건수) 랭킹을 재계산하는 배치 스크립트.
 // 실제 "하루 1회 실행"은 배포 인프라(cron/GitHub Actions 등)에서 이 스크립트를 호출하도록 연결한다.
 import "dotenv/config";
 import { prisma } from "./config/prisma.js";
@@ -51,7 +52,7 @@ async function main() {
 
   // 3-1. DB에 들어갈 사진관 별 평균 평점/예약 완료 건수 매핑
   // 평점 기준
-  const popularityScores: RankedScore[] = studios.map((studio) => ({
+  const ratingScores: RankedScore[] = studios.map((studio) => ({
     id: studio.id,
     score: ratingByStudioId.get(studio.id) ?? 0,
   }));
@@ -62,7 +63,7 @@ async function main() {
   }));
 
   // 3-2. 랭킹 계산 후 매핑
-  const popularityRankByStudioId = assignRanks(popularityScores);
+  const ratingRankByStudioId = assignRanks(ratingScores);
   const reservationRankByStudioId = assignRanks(reservationScores);
 
   // 4. DB 업데이트
@@ -71,8 +72,8 @@ async function main() {
       prisma.studio.update({
         where: { id: studio.id },
         data: {
-          popularityScore: ratingByStudioId.get(studio.id) ?? 0,
-          popularityRank: popularityRankByStudioId.get(studio.id),
+          ratingScore: ratingByStudioId.get(studio.id) ?? 0,
+          ratingRank: ratingRankByStudioId.get(studio.id),
           reservationCount: reservationCountByStudioId.get(studio.id) ?? 0,
           reservationRank: reservationRankByStudioId.get(studio.id),
         },

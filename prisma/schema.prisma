@@ -231,10 +231,10 @@ model Studio {
   introduction String? @map("introduction") @db.Text // 사진관 소개
   notice       String? @map("notice") @db.Text // 공지사항
 
-  popularityScore   Float? @map("popularity_score")   // 평균 평점 (배치가 채움)
-  popularityRank    Int?   @map("popularity_rank")    // 평점 기준 순위, 1~10이 '지금 인기 있는 사진관'에 해당 (배치가 채움)
+  ratingScore       Float? @map("rating_score")       // 평균 평점 (배치가 채움)
+  ratingRank        Int?   @map("rating_rank")         // 평점 기준 순위, 1~10이 배너에 해당 (배치가 채움)
   reservationCount  Int?   @map("reservation_count")  // 예약 완료 건수 (배치가 채움)
-  reservationRank   Int?   @map("reservation_rank")   // 예약건수 기준 순위 (배치가 채움, 비로그인 "최근 본 사진관" 대체용)
+  reservationRank   Int?   @map("reservation_rank")   // 예약건수 기준 순위, '지금 인기 있는 사진관'에 해당 (배치가 채움)
 
   recentStudioViews RecentStudioView[] // 최근 본 사진관 (로그인 유저 기준)
 
@@ -246,7 +246,7 @@ model Studio {
   studioServices  StudioService[]
   studioInfoItems StudioInfoItem[]
 
-  @@index([popularityRank])
+  @@index([ratingRank])
   @@index([reservationRank])
   @@map("studio")
 }
