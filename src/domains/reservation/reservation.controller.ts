@@ -26,10 +26,27 @@ type AuthenticatedRequest = {
   userId: bigint;
 };
 
+
+/**
+ * 예약(Reservation) 도메인 API
+ *
+ * 스튜디오 촬영 예약의 생성/조회/취소를 담당한다.
+ * 모든 엔드포인트는 JWT 인증(Bearer Token)이 필요하며,
+ * 조회·취소 API는 요청자 본인 소유의 예약인지 검증한다.
+ */
 @Route("reservations")
 @Tags("Reservation")
 @Security("jwt")
 export class ReservationController extends Controller {
+  /**
+   * 예약 생성
+   *
+   * 스튜디오/상품/타임슬롯을 지정해 새 예약을 생성한다.
+   * 필수 약관 동의, 타임슬롯 유효성(과거 여부·중복 예약)을 검증한 뒤
+   * 결제 정보와 함께 예약을 확정한다.
+   *
+   * @summary 예약 생성
+   */
   @Post()
   @SuccessResponse(201, "Created")
   public async create(
@@ -49,6 +66,15 @@ export class ReservationController extends Controller {
     };
   }
 
+  /**
+   * 예약 취소
+   *
+   * 본인 소유의 예약을 취소 처리한다.
+   * 이미 취소되었거나 완료된 예약, 촬영 당일 취소 요청은 거부된다.
+   *
+   * @summary 예약 취소
+   * @param reservationId 취소할 예약 ID
+   */
   @Patch("{reservationId}/cancel")
   @SuccessResponse(200, "OK")
   public async cancel(@Path() reservationId: string, @Request() request: any) {
@@ -62,6 +88,16 @@ export class ReservationController extends Controller {
     return success(result);
   }
 
+  /**
+   * 예약 상세 조회
+   *
+   * 예약 1건의 상세 정보(스튜디오/상품/타임슬롯/결제 금액 등)를 조회한다.
+   * 본인 소유가 아니거나 존재하지 않는 예약은 동일한 에러 코드로 응답해
+   * 예약 존재 여부가 노출되지 않도록 한다.
+   *
+   * @summary 예약 상세 조회
+   * @param reservationId 조회할 예약 ID
+   */
   @Get("{reservationId}")
   @SuccessResponse(200, "OK")
   public async detail(@Path() reservationId: string, @Request() request: any) {
@@ -75,12 +111,25 @@ export class ReservationController extends Controller {
     return success(result);
   }
 
+   /**
+   * 내 예약 목록 조회
+   *
+   * 요청자 본인의 예약 목록을 조회한다.
+   * status 쿼리로 예약 상태(RESERVED/COMPLETED/CANCELLED)별 필터링이 가능하다.
+   *
+   * @summary 내 예약 목록 조회
+   * @param status 예약 상태 필터 (미지정 시 전체 조회)
+   */
   @Get()
   @SuccessResponse(200, "OK")
   public async list(@Request() request: any, @Query() status?: string) {
     const { status: parsedStatus } = getMyReservationListQuerySchema.parse({
       status,
     });
+<<<<<<< Updated upstream
+=======
+    const { userId } = request as AuthenticatedRequest;
+>>>>>>> Stashed changes
 
     const { userId } = request as AuthenticatedRequest;
     const result = await reservationService.list(userId, parsedStatus);

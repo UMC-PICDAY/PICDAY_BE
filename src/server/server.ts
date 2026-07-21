@@ -3,11 +3,14 @@ import "dotenv/config";
 import { errorHandler } from "../common/errorHandler.js";
 import { success } from "../common/response.js";
 import { RegisterRoutes } from "../generated/routes.js"; // tsoa가 자동 생성
+import { setupSwagger } from "../config/swagger.js";
 
 const app = express();
 app.use(express.json());
 
 app.get("/health", (_req, res) => res.json(success("ok")));
+
+setupSwagger(app);
 
 const apiRouter = Router();
 RegisterRoutes(apiRouter);
