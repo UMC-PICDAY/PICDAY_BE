@@ -24,27 +24,34 @@ const COMMON_STUDIO_COUNT = 6;
 // 상단 배너 용 사진관 10개 조회 (평균 평점)
 export async function findHighRatedStudios() {
   return prisma.studio.findMany({
-    where: { ratingRank: { not: null } },
     orderBy: { ratingRank: "asc" },
     take: BANNER_STUDIO_COUNT,
+    where: { ratingRank: { not: null } },
     select: {
       id: true,
       name: true,
       ratingScore: true,
-      location: { select: { locationCategory: true } },
-      products: {
-        select: {
-          price: true,
-          productImages: {
-            where: { studioThumbnailOrder: { not: null } },
-            select: { url: true, studioThumbnailOrder: true },
+      studioLocation: {
+        select: { locationCategory: true },
+      },
+      studioProduct: {
+        productImage: {
+          where: {
+            studioThumbnailOrder: { not: null },
+          },
+          orderBy: {
+            studioThumbnailOrder: "asc",
+          },
+          take: 1,
+          select: {
+            url: true,
+            studioThumbnailOrder: true,
           },
         },
       },
     },
   });
 }
-
 export type FindHighRatedStudiosResult = Awaited<
   ReturnType<typeof findHighRatedStudios>
 >;
@@ -76,7 +83,6 @@ export async function findRecentlyViewedStudios(userId: bigint) {
     },
   });
 }
-
 export type FindRecentlyViewedStudiosResult = Awaited<
   ReturnType<typeof findRecentlyViewedStudios>
 >;
