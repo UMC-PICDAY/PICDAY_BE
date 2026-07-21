@@ -12,7 +12,10 @@ function time(value: string) {
 async function upsertStudio(name: string) {
   const existing = await prisma.studio.findFirst({
     where: { name },
-    select: { id: true, name: true },
+    select: {
+      id: true,
+      name: true,
+    },
   });
 
   if (existing) {
@@ -21,7 +24,10 @@ async function upsertStudio(name: string) {
 
   return prisma.studio.create({
     data: { name },
-    select: { id: true, name: true },
+    select: {
+      id: true,
+      name: true,
+    },
   });
 }
 
@@ -36,7 +42,10 @@ async function upsertProduct(
   },
 ) {
   const existing = await prisma.studioProduct.findFirst({
-    where: { studioId, name: data.name },
+    where: {
+      studioId,
+      name: data.name,
+    },
   });
 
   if (existing) {
@@ -47,7 +56,10 @@ async function upsertProduct(
   }
 
   return prisma.studioProduct.create({
-    data: { studioId, ...data },
+    data: {
+      studioId,
+      ...data,
+    },
   });
 }
 
@@ -67,8 +79,16 @@ async function upsertTimeSlot(
         endTime,
       },
     },
-    update: { isAvailable },
-    create: { studioId, date, startTime, endTime, isAvailable },
+    update: {
+      isAvailable,
+    },
+    create: {
+      studioId,
+      date,
+      startTime,
+      endTime,
+      isAvailable,
+    },
   });
 }
 
@@ -98,12 +118,16 @@ async function upsertReservation(data: {
     });
   }
 
-  return prisma.reservation.create({ data });
+  return prisma.reservation.create({
+    data,
+  });
 }
 
 async function main() {
   const user = await prisma.user.upsert({
-    where: { loginId: "testuser01" },
+    where: {
+      loginId: "testuser01",
+    },
     update: {
       password: "hashed-password",
       name: "홍길동",
@@ -121,54 +145,6 @@ async function main() {
     },
   });
 
-  const studio = await prisma.studio.create({
-    data: { name: "PICDAY 홍대점", introduction: "홍대 인근 사진관" },
-  });
-
-  const studio2 = await prisma.studio.create({
-    data: { name: "데이지 스튜디오", introduction: "성수 감성 스튜디오" },
-  });
-
-  const product = await prisma.studioProduct.create({
-    data: {
-      studioId: studio.id,
-      shootingCategory: "PROFILE",
-      name: "프로필 촬영 패키지",
-      price: 50000,
-      basePeople: 1,
-    },
-  });
-
-  const product2 = await prisma.studioProduct.create({
-    data: {
-      studioId: studio2.id,
-      shootingCategory: "PERSONAL_PORTRAIT",
-      name: "개인화보",
-      price: 150000,
-      basePeople: 1,
-    },
-  });
-
-  // 필수 약관 (예약 생성 API 테스트용 — agreedTermIds에 필요)
-  // NOTE: 기존 seed에 Terms가 없어서 POST /reservations 호출 시
-  // TERMS_INVALID → RESERVATION_4005로 항상 실패하던 문제를 수정
-  const requiredTerm = await prisma.terms.create({
-    data: {
-      type: "REFUND_POLICY",
-      version: "1.0",
-      isRequired: true,
-      content: "예약 확정 후 촬영 당일 취소 시 환불이 불가합니다.", // 임시 약관 내용
-    },
-  });
-
-  // 미래 타임슬롯 (정상 취소/목록 테스트용)
-  const futureSlot = await prisma.timeSlot.create({
-    data: {
-      studioId: studio.id,
-      date: new Date("2026-12-25"),
-      startTime: new Date("1970-01-01T10:00:00Z"),
-      endTime: new Date("1970-01-01T11:00:00Z"),
-    },
   const studioA = await upsertStudio("PICDAY HTTP 검증 A");
   const studioB = await upsertStudio("PICDAY HTTP 검증 B");
   const studioC = await upsertStudio("PICDAY HTTP 검증 C");
@@ -180,14 +156,16 @@ async function main() {
     basePeople: 1,
     shortDescription: "기본 프로필 · 보정본 1매",
   });
-  await upsertProduct(studioA.id, {
+
+  const personalPortrait = await upsertProduct(studioA.id, {
     shootingCategory: "PERSONAL_PORTRAIT",
     name: "개인 화보 패키지",
     price: 70000,
     basePeople: 2,
     shortDescription: "자연광 개인 화보 · 보정본 2매",
   });
-  await upsertProduct(studioA.id, {
+
+  const premiumProfile = await upsertProduct(studioA.id, {
     shootingCategory: "PROFILE",
     name: "프리미엄 프로필 패키지",
     price: 90000,
@@ -195,9 +173,27 @@ async function main() {
     shortDescription: null,
   });
 
+  const otherStudioProduct = await upsertProduct(studioB.id, {
+    shootingCategory: "PROFILE",
+    name: "타 사진관 프로필 패키지",
+    price: 60000,
+    basePeople: 1,
+    shortDescription: "다른 사진관 소속 상품",
+  });
+
   for (const image of [
-    { order: 2, url: "https://example.com/profile-second.jpg" },
-    { order: 1, url: "https://example.com/profile-first.jpg" },
+    {
+      order: 2,
+      url: "https://example.com/profile-second.jpg",
+    },
+    {
+      order: 1,
+      url: "https://example.com/profile-first.jpg",
+    },
+    {
+      order: 3,
+      url: "https://example.com/profile-third.jpg",
+    },
   ]) {
     await prisma.productImage.upsert({
       where: {
@@ -206,7 +202,9 @@ async function main() {
           order: image.order,
         },
       },
-      update: { url: image.url },
+      update: {
+        url: image.url,
+      },
       create: {
         studioProductId: profileBasic.id,
         order: image.order,
@@ -215,41 +213,51 @@ async function main() {
     });
   }
 
-  const futureSlot2 = await prisma.timeSlot.create({
-    data: {
-      studioId: studio2.id,
-      date: new Date("2026-07-15"),
-      startTime: new Date("1970-01-01T14:00:00Z"),
-      endTime: new Date("1970-01-01T15:00:00Z"),
+  for (const image of [
+    {
+      order: 1,
+      url: "https://example.com/personal-portrait-first.jpg",
+    },
+    {
+      order: 2,
+      url: "https://example.com/personal-portrait-second.jpg",
+    },
+  ]) {
+    await prisma.productImage.upsert({
+      where: {
+        studioProductId_order: {
+          studioProductId: personalPortrait.id,
+          order: image.order,
+        },
+      },
+      update: {
+        url: image.url,
+      },
+      create: {
+        studioProductId: personalPortrait.id,
+        order: image.order,
+        url: image.url,
+      },
+    });
+  }
+
+  await prisma.productImage.upsert({
+    where: {
+      studioProductId_order: {
+        studioProductId: otherStudioProduct.id,
+        order: 1,
+      },
+    },
+    update: {
+      url: "https://example.com/other-studio-profile.jpg",
+    },
+    create: {
+      studioProductId: otherStudioProduct.id,
+      order: 1,
+      url: "https://example.com/other-studio-profile.jpg",
     },
   });
 
-  // 신규 예약 생성(POST /reservations) 테스트 전용 타임슬롯
-  // futureSlot/futureSlot2는 아래에서 이미 예약이 걸려 isAvailable=false가 되므로
-  // 별도의 빈 슬롯을 하나 더 마련해둠 (SLOT_CONFLICT 방지)
-  const openSlot = await prisma.timeSlot.create({
-    data: {
-      studioId: studio.id,
-      date: new Date("2026-08-01"),
-      startTime: new Date("1970-01-01T13:00:00Z"),
-      endTime: new Date("1970-01-01T14:00:00Z"),
-    },
-  });
-
-  // 과거 타임슬롯 (완료된 예약 테스트용)
-  const pastSlot = await prisma.timeSlot.create({
-    data: {
-      studioId: studio2.id,
-      date: new Date("2026-06-20"),
-      startTime: new Date("1970-01-01T10:00:00Z"),
-      endTime: new Date("1970-01-01T11:00:00Z"),
-    },
-  });
-
-  // 오늘 날짜 타임슬롯 (당일취소 테스트용)
-  const now = new Date();
-  const todayDateOnly = new Date(
-    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0),
   const availableSlot = await upsertTimeSlot(
     studioA.id,
     HTTP_TEST_DATE,
@@ -257,6 +265,7 @@ async function main() {
     time("11:00:00.000"),
     true,
   );
+
   const unavailableSlot = await upsertTimeSlot(
     studioA.id,
     HTTP_TEST_DATE,
@@ -264,6 +273,7 @@ async function main() {
     time("13:00:00.000"),
     false,
   );
+
   const otherStudioSlot = await upsertTimeSlot(
     studioB.id,
     HTTP_TEST_DATE,
@@ -279,7 +289,9 @@ async function main() {
     time("11:00:00.000"),
     false,
   );
+
   const shiftedNow = new Date(Date.now() + 9 * 60 * 60 * 1000);
+
   const todayDate = new Date(
     Date.UTC(
       shiftedNow.getUTCFullYear(),
@@ -287,6 +299,7 @@ async function main() {
       shiftedNow.getUTCDate(),
     ),
   );
+
   const todaySlot = await upsertTimeSlot(
     studioA.id,
     todayDate,
@@ -297,143 +310,68 @@ async function main() {
 
   const reservationBase = {
     userId: user.id,
-    reserveeName: "홍길동",
-    reserveePhone: "01012345678",
-  };
-
-  // 1. 정상 취소 가능 (RESERVED, 미래 날짜)
-  const normal = await prisma.reservation.create({
-    data: {
-      ...base,
-      studioProductId: product.id,
-      timeSlotId: futureSlot.id,
-      totalPrice: 50000,
-      status: "RESERVED",
-    },
-  });
-
-  // 2. 이미 취소됨 (4092 테스트용 + 목록 CANCELLED 필터용)
-  const cancelled = await prisma.reservation.create({
-    data: {
-      ...base,
-      studioProductId: product.id,
-      timeSlotId: futureSlot.id,
-      totalPrice: 50000,
-      status: "CANCELLED",
-      canceledAt: new Date(),
-    },
-  });
-
-  // 3. 이미 완료됨 (4093 테스트용 + 목록 COMPLETED 필터용)
-  const completed = await prisma.reservation.create({
-    data: {
-      ...base,
-      studioProductId: product2.id,
-      timeSlotId: pastSlot.id,
-      totalPrice: 150000,
-      status: "COMPLETED",
-    },
-  });
-
-  // 4. 당일 취소 시도 대상 (4002 테스트용)
-  const sameDay = await prisma.reservation.create({
-    data: {
-      ...base,
-      studioProductId: product.id,
-      timeSlotId: todaySlot.id,
-      totalPrice: 50000,
-      status: "RESERVED",
-    },
-  });
-
-  // 5. 다른 스튜디오의 예약 (목록 조회 시 여러 스튜디오 섞여 나오는지 확인용)
-  const anotherStudio = await prisma.reservation.create({
-    data: {
-      ...base,
-      studioProductId: product2.id,
-      timeSlotId: futureSlot2.id,
-      totalPrice: 150000,
-      status: "RESERVED",
-    },
-  });
-
-  // 6. 다른 유저의 예약 (내 예약 목록에 안 섞여 나오는지 확인용 — ownership 검증)
-  const otherUser = await prisma.user.create({
-    data: {
-      loginId: "testuser02",
-      password: "hashed-password",
-      name: "김철수",
-      nickname: "테스트유저2",
-      email: "test2@example.com",
-      phoneNumber: "01087654321",
-    },
-  });
-  const otherUsersReservation = await prisma.reservation.create({
-    data: {
-      userId: otherUser.id,
-      studioProductId: product.id,
-      timeSlotId: futureSlot.id,
-      reserveeName: "김철수",
-      reserveePhone: "01087654321",
-      totalPrice: 50000,
-      status: "RESERVED",
-    },
-  });
-
-  console.log("✅ 시드 완료");
-  console.log("--- 예약 생성(POST) API 테스트용 ---");
-  console.log("studioId          :", studio.id.toString());
-  console.log("studioProductId   :", product.id.toString());
-  console.log("timeSlotId (빈 슬롯):", openSlot.id.toString());
-  console.log("requiredTermId    :", requiredTerm.id.toString());
-  console.log("--- 취소 API 테스트용 ---");
-  console.log("정상 취소용 id     :", normal.id.toString());
-  console.log("이미 취소됨 id     :", cancelled.id.toString());
-  console.log("이미 완료됨 id     :", completed.id.toString());
-  console.log("당일취소 대상 id   :", sameDay.id.toString());
-  console.log("존재하지 않는 id   : 999999 (실제로 없는 값)");
-  console.log("--- 목록 조회 API 테스트용 ---");
-  console.log("testuser01 (id=" + user.id.toString() + ") 예약 5건: RESERVED x3, CANCELLED x1, COMPLETED x1");
-  console.log("다른 스튜디오 예약 id:", anotherStudio.id.toString());
-  console.log("testuser02 (id=" + otherUser.id.toString() + ") 소유 예약 id:", otherUsersReservation.id.toString(), "(내 목록에 안 나와야 함)");
     studioProductId: profileBasic.id,
     reserveeName: "홍길동",
     reserveePhone: "01012345678",
     totalPrice: profileBasic.price,
   };
-  const normal = await upsertReservation({
+
+  const normalReservation = await upsertReservation({
     ...reservationBase,
     timeSlotId: reservationFutureSlot.id,
     status: "RESERVED",
   });
-  const cancelled = await upsertReservation({
+
+  const cancelledReservation = await upsertReservation({
     ...reservationBase,
     timeSlotId: reservationFutureSlot.id,
     status: "CANCELLED",
     canceledAt: new Date(),
   });
-  const completed = await upsertReservation({
+
+  const completedReservation = await upsertReservation({
     ...reservationBase,
     timeSlotId: reservationFutureSlot.id,
     status: "COMPLETED",
   });
-  const sameDay = await upsertReservation({
+
+  const sameDayReservation = await upsertReservation({
     ...reservationBase,
     timeSlotId: todaySlot.id,
     status: "RESERVED",
   });
 
   console.log("✅ 시드 완료");
-  console.log("HTTP 사진관 A ID       :", studioA.id.toString());
-  console.log("HTTP 사진관 B ID       :", studioB.id.toString());
-  console.log("HTTP 사진관 C ID       :", studioC.id.toString());
-  console.log("미래 가용 슬롯 ID       :", availableSlot.id.toString());
-  console.log("미래 마감 슬롯 ID       :", unavailableSlot.id.toString());
-  console.log("다른 사진관 슬롯 ID   :", otherStudioSlot.id.toString());
-  console.log("정상 취소용 예약 ID     :", normal.id.toString());
-  console.log("이미 취소된 예약 ID     :", cancelled.id.toString());
-  console.log("이미 완료된 예약 ID     :", completed.id.toString());
-  console.log("당일 취소 대상 예약 ID  :", sameDay.id.toString());
+
+  console.log("\n--- 사진관 및 컨셉 API 테스트용 ---");
+  console.log("사진관 A ID                 :", studioA.id.toString());
+  console.log("사진관 B ID                 :", studioB.id.toString());
+  console.log("사진관 C ID                 :", studioC.id.toString());
+  console.log("기본 프로필 상품 ID         :", profileBasic.id.toString());
+  console.log("개인 화보 상품 ID           :", personalPortrait.id.toString());
+  console.log("이미지 없는 상품 ID         :", premiumProfile.id.toString());
+  console.log("다른 사진관 소속 상품 ID   :", otherStudioProduct.id.toString());
+
+  console.log("\n--- 예약 가능 시간 API 테스트용 ---");
+  console.log("테스트 날짜                 : 2030-12-25");
+  console.log("미래 가용 슬롯 ID           :", availableSlot.id.toString());
+  console.log("미래 마감 슬롯 ID           :", unavailableSlot.id.toString());
+  console.log("다른 사진관 슬롯 ID         :", otherStudioSlot.id.toString());
+
+  console.log("\n--- 예약 API 테스트용 ---");
+  console.log("정상 취소용 예약 ID         :", normalReservation.id.toString());
+  console.log(
+    "이미 취소된 예약 ID         :",
+    cancelledReservation.id.toString(),
+  );
+  console.log(
+    "이미 완료된 예약 ID         :",
+    completedReservation.id.toString(),
+  );
+  console.log(
+    "당일 취소 대상 예약 ID      :",
+    sameDayReservation.id.toString(),
+  );
 }
 
 main()
