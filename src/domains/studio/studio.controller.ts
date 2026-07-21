@@ -60,10 +60,7 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Query() timeSlotId?: string,
   ): Promise<GetStudioProductsSuccessResponseDto> {
-    const data = await studioService.getStudioProducts(
-      studioId,
-      timeSlotId,
-    );
+    const data = await studioService.getStudioProducts(studioId, timeSlotId);
 
     return {
       success: true,
@@ -88,9 +85,8 @@ export class StudioController extends Controller {
       studioProductId,
     );
 
-    return success(
-      data,
-      "사진관 컨셉 사진 조회에 성공했습니다.",
-    );
+    return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
   }
+
+  // === 홈 화면 API ===
 }
