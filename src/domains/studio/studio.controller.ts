@@ -14,7 +14,9 @@ import type {
   StudioProductDetailResponseDto,
   StudioProductsResponseDto,
 } from "./studio.dto.js";
+import type { StudioAutocompleteResponseDto } from "./studio.search.dto.js";
 import * as studioService from "./studio.service.js";
+import * as studioSearchService from "./studio.search.service.js";
 
 type AppErrorResponse = {
   success: false;
@@ -28,6 +30,14 @@ type GetStudioProductsSuccessResponseDto = {
   code: "COMMON_200";
   message: "사진관 컨셉 목록 조회에 성공했습니다.";
   data: StudioProductsResponseDto;
+};
+
+type GetStudioAutocompleteSuccessResponseDto = {
+  // 사진관 자동완성 검색 API
+  success: true;
+  code: "STUDIO_200";
+  message: "사진관 자동완성 조회에 성공했습니다.";
+  data: StudioAutocompleteResponseDto;
 };
 
 @Route("studios")
@@ -60,10 +70,7 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Query() timeSlotId?: string,
   ): Promise<GetStudioProductsSuccessResponseDto> {
-    const data = await studioService.getStudioProducts(
-      studioId,
-      timeSlotId,
-    );
+    const data = await studioService.getStudioProducts(studioId, timeSlotId);
 
     return {
       success: true,
@@ -88,9 +95,22 @@ export class StudioController extends Controller {
       studioProductId,
     );
 
-    return success(
+    return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
+  }
+
+  // === 사진관 자동완성 검색 API ===
+  @Get("autocomplete")
+  @SuccessResponse(200, "OK")
+  public async getStudioAutocomplete(
+    @Query() keyword: string,
+  ): Promise<GetStudioAutocompleteSuccessResponseDto> {
+    const data = await studioSearchService.getStudioAutocomplete(keyword);
+
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "사진관 자동완성 조회에 성공했습니다.",
       data,
-      "사진관 컨셉 사진 조회에 성공했습니다.",
-    );
+    };
   }
 }
