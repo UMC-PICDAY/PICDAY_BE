@@ -10,7 +10,7 @@ import {
   Security,
   SuccessResponse,
   Tags,
-  Query
+  Query,
 } from "tsoa";
 import { success } from "../../common/response.js";
 import {
@@ -36,7 +36,7 @@ export class ReservationController extends Controller {
     @Request() request: any,
   ): Promise<CreateReservationSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
-    const data = await reservationService.createReservation(body, userId);
+    const data = await reservationService.create(body, userId);
 
     this.setStatus(201);
     return {
@@ -50,9 +50,9 @@ export class ReservationController extends Controller {
   @Patch("{reservationId}/cancel")
   @SuccessResponse(200, "OK")
   public async cancel(
-    @Path() reservationId: string,
-    @Request() request: any,
-  ) {
+      @Path() reservationId: string,
+      @Request() request: any
+    ) {
     const { reservationId: id } = reservationIdParamsSchema.parse({
       reservationId,
     });
@@ -69,12 +69,30 @@ export class ReservationController extends Controller {
   public async detail(
     @Path() reservationId: string,
     @Request() request: any
-  ){
-    const { reservationId: id } = reservationIdParamsSchema.parse({ reservationId });
+  ) {
+    const { reservationId: id } = reservationIdParamsSchema.parse({
+      reservationId,
+    });
     const { userId } = request as AuthenticatedRequest;
 
     const result = await reservationService.getDetail(BigInt(id), userId);
-    
+
+    return success(result);
+  }
+
+  @Get()
+  @SuccessResponse(200, "OK")
+  public async list(
+    @Request() request: any,
+    @Query() status?: string
+  ) {
+    const { status: parsedStatus } = getMyReservationListQuerySchema.parse({
+      status,
+    });
+    const { userId } = request as AuthenticatedRequest; // TODO: 인증 미들웨어 머지 후 request.userId로 교체
+
+    const result = await reservationService.list(userId, parsedStatus);
+
     return success(result);
   }
 

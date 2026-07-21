@@ -428,6 +428,7 @@ export function RegisterRoutes(app: Router) {
                 status: {"in":"query","name":"status","dataType":"string"},
         };
         app.get('/api/v1/reservations',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReservationController)),
             ...(fetchMiddlewares<RequestHandler>(ReservationController.prototype.list)),
 

@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-export const reservationStatusEnum = z.enum(["RESERVED", "COMPLETED", "CANCELLED"]);
+export const reservationStatusEnum = z.enum([
+  "RESERVED",
+  "COMPLETED",
+  "CANCELLED",
+]);
 export type ReservationStatus = z.infer<typeof reservationStatusEnum>;
 
 // 예약 생성 API
@@ -99,7 +103,6 @@ export const reservationIdParamsSchema = z.object({
 });
 export type ReservationIdParams = z.infer<typeof reservationIdParamsSchema>;
 
-
 // 예약 취소 API
 
 export const cancelReservationResponseSchema = z.object({
@@ -120,7 +123,7 @@ export const getReservationDetailResponseSchema = z.object({
   reserveePhone: z.string(),
   totalPrice: z.number().int().nonnegative(),
   studio: z.object({
-    id: z.bigint().transform((id)=>id.toString()),
+    id: z.bigint().transform((id) => id.toString()),
     name: z.string(),
   }),
   studioProduct: z.object({
@@ -129,35 +132,44 @@ export const getReservationDetailResponseSchema = z.object({
     price: z.number().int().nonnegative(),
   }),
   timeSlot: z.object({
-    date: z.date().transform((date) => date.toISOString().slice(0,10)),
+    date: z.date().transform((date) => date.toISOString().slice(0, 10)),
     startTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
     endTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
   }),
   createdAt: z.date().transform((date) => date.toISOString()),
-  canceledAt: z.date().nullable().transform((date) => date?.toISOString() ?? null),
+  canceledAt: z
+    .date()
+    .nullable()
+    .transform((date) => date?.toISOString() ?? null),
 });
 
-export type GetReservationDetailResponseDto = z.infer<typeof getReservationDetailResponseSchema>;
+export type GetReservationDetailResponseDto = z.infer<
+  typeof getReservationDetailResponseSchema
+>;
 
 // 내 예약 조회 API
 
 // 쿼리 string 검증
 export const getMyReservationListQuerySchema = z.object({
-  status: reservationStatusEnum.optional()
+  status: reservationStatusEnum.optional(),
 });
 
-export type GetMyReservationsQuery = z.infer<typeof getMyReservationListQuerySchema>
+export type GetMyReservationsQuery = z.infer<
+  typeof getMyReservationListQuerySchema
+>;
 
 export const getMyReservationListResponseSchema = z.array(
   z.object({
     reservationId: z.bigint().transform((id) => id.toString()),
     studioName: z.string(),
     conceptName: z.string(),
-    reservationDate: z.date().transform((d) => d.toISOString().slice(0,10)),
+    reservationDate: z.date().transform((d) => d.toISOString().slice(0, 10)),
     reservationTime: z.string(),
     totalPrice: z.number(),
     status: reservationStatusEnum,
   }),
-)
+);
 
-export type GetMyReservationListResponseDto = z.infer<typeof getMyReservationListResponseSchema>;
+export type GetMyReservationListResponseDto = z.infer<
+  typeof getMyReservationListResponseSchema
+>;
