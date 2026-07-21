@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ShootingCategory } from "../../generated/prisma/enums.js";
 
 export const createStudioSchema = z.object({
   name: z.string().min(1),
@@ -68,10 +69,44 @@ export function parseGetStudioSlotsRequest(
   return getStudioSlotsRequestSchema.parse(input);
 }
 
+// 컨셉 목록 조회 API
+const timeSlotIdSchema = z
+  .string()
+  .regex(/^\d+$/, "시간 슬롯 ID는 양의 정수여야 합니다.")
+  .transform((id) => BigInt(id))
+  .refine((id) => id > 0n, "시간 슬롯 ID는 양의 정수여야 합니다.");
+
+export const getStudioProductsRequestSchema = z.object({
+  studioId: studioIdSchema,
+  timeSlotId: timeSlotIdSchema.optional(),
+});
+
+export type GetStudioProductsRequestDto = z.input<
+  typeof getStudioProductsRequestSchema
+>;
+
+export type GetStudioProductsQuery = z.output<
+  typeof getStudioProductsRequestSchema
+>;
+
+export function parseGetStudioProductsRequest(
+  input: GetStudioProductsRequestDto,
+): GetStudioProductsQuery {
+  return getStudioProductsRequestSchema.parse(input);
+}
+
 function formatTime(date: Date) {
   const hours = date.getUTCHours().toString().padStart(2, "0");
   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
+}
+
+function formatDate(date: Date) {
+  return [
+    date.getUTCFullYear().toString().padStart(4, "0"),
+    (date.getUTCMonth() + 1).toString().padStart(2, "0"),
+    date.getUTCDate().toString().padStart(2, "0"),
+  ].join("-");
 }
 
 export const studioSlotResponseSchema = z.object({
@@ -101,3 +136,51 @@ export const getStudioSlotsSuccessResponseSchema = z.object({
 export type GetStudioSlotsSuccessResponseDto = z.output<
   typeof getStudioSlotsSuccessResponseSchema
 >;
+
+export const studioProductsSelectedSlotSchema = z.object({
+  timeSlotId: z.bigint().transform((id) => id.toString()),
+  date: z.date().transform(formatDate),
+  startTime: z.date().transform(formatTime),
+  endTime: z.date().transform(formatTime),
+  isAvailable: z.boolean(),
+});
+
+export const studioProductListItemSchema = z
+  .object({
+    studioProductId: z.bigint().transform((id) => id.toString()),
+    productName: z.string(),
+    imageUrls: z.array(z.url()),
+    price: z.number().int().nonnegative(),
+    basePeople: z.number().int().min(1),
+    shortDescription: z.string().nullable(),
+  })
+  .transform((product) => ({
+    ...product,
+    imageCount: product.imageUrls.length,
+  }));
+
+export const studioProductGroupSchema = z.object({
+  shootingCategory: z.enum(ShootingCategory),
+  products: z.array(studioProductListItemSchema),
+});
+
+export const studioProductsResponseSchema = z.object({
+  studioId: z.bigint().transform((id) => id.toString()),
+  studioName: z.string(),
+  selectedSlot: studioProductsSelectedSlotSchema.nullable(),
+  productGroups: z.array(studioProductGroupSchema),
+});
+
+export type StudioProductsResponseInputDto = z.input<
+  typeof studioProductsResponseSchema
+>;
+
+export type StudioProductsResponseDto = z.output<
+  typeof studioProductsResponseSchema
+>;
+
+export function createStudioProductsResponse(
+  input: StudioProductsResponseInputDto,
+): StudioProductsResponseDto {
+  return studioProductsResponseSchema.parse(input);
+}
