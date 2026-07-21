@@ -95,4 +95,18 @@ export class ReservationController extends Controller {
 
     return success(result);
   }
+
+  @Get()
+  @SuccessResponse(200, "OK")
+  public async list(
+    @Request() request: any,
+    @Query() status?: string,
+  ) {
+    const { status: parsedStatus } = getMyReservationListQuerySchema.parse({ status });
+    const userId = request.userId ?? BigInt(1); // TODO: 인증 미들웨어 머지 후 request.userId로 교체
+
+    const result = await reservationService.list(userId, parsedStatus);
+
+    return success(result);
+  }
 }
