@@ -12,6 +12,7 @@ import { success, type ApiResponse } from "../../common/response.js";
 import type {
   GetStudioSlotsSuccessResponseDto,
   StudioProductDetailResponseDto,
+  StudioProductsResponseDto,
 } from "./studio.dto.js";
 import * as studioService from "./studio.service.js";
 
@@ -22,10 +23,17 @@ type AppErrorResponse = {
   data: null;
 };
 
-// === 예약 가능 시간 조회 API ===
+type GetStudioProductsSuccessResponseDto = {
+  success: true;
+  code: "COMMON_200";
+  message: "사진관 컨셉 목록 조회에 성공했습니다.";
+  data: StudioProductsResponseDto;
+};
+
 @Route("studios")
 @Tags("Studio")
 export class StudioController extends Controller {
+  // === 예약 가능 시간 조회 API ===
   @Get("{studioId}/slots")
   @SuccessResponse(200, "OK")
   public async getStudioSlots(
@@ -38,6 +46,29 @@ export class StudioController extends Controller {
       success: true,
       code: "COMMON_200",
       message: "예약 가능 시간 조회에 성공했습니다.",
+      data,
+    };
+  }
+
+  // === 컨셉 목록 조회 API ===
+  @Get("{studioId}/products")
+  @SuccessResponse(200, "OK")
+  @Response<AppErrorResponse>(400, "잘못된 요청")
+  @Response<AppErrorResponse>(404, "대상을 찾을 수 없음")
+  @Response<AppErrorResponse>(500, "서버 오류")
+  public async getStudioProducts(
+    @Path() studioId: string,
+    @Query() timeSlotId?: string,
+  ): Promise<GetStudioProductsSuccessResponseDto> {
+    const data = await studioService.getStudioProducts(
+      studioId,
+      timeSlotId,
+    );
+
+    return {
+      success: true,
+      code: "COMMON_200",
+      message: "사진관 컨셉 목록 조회에 성공했습니다.",
       data,
     };
   }
@@ -57,6 +88,9 @@ export class StudioController extends Controller {
       studioProductId,
     );
 
-    return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
+    return success(
+      data,
+      "사진관 컨셉 사진 조회에 성공했습니다.",
+    );
   }
 }
