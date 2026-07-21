@@ -107,7 +107,7 @@ export const ErrorCode = {
   STUDIO_4001: {
     status: 400,
     code: "STUDIO_4001",
-    message: "사진관 ID 또는 날짜 입력값이 올바르지 않습니다.",
+    message: "사진관 API 요청 형식 또는 입력값이 올바르지 않습니다.",
   },
   STUDIO_4002: {
     status: 400,
@@ -170,6 +170,11 @@ export const ErrorCode = {
     code: "STUDIO_40014",
     message: "올바르지 않은 정렬 기준입니다.",
   },
+  STUDIO_40015: {
+    status: 400,
+    code: "STUDIO_40015",
+    message: "해당 시간 슬롯은 요청한 사진관에 속하지 않습니다.",
+  },
   STUDIO_4041: {
     status: 404,
     code: "STUDIO_4041",
@@ -184,6 +189,11 @@ export const ErrorCode = {
     status: 404,
     code: "STUDIO_4044",
     message: "해당 사진관의 상품을 찾을 수 없습니다.",
+  },
+  STUDIO_4045: {
+    status: 404,
+    code: "STUDIO_4045",
+    message: "존재하지 않는 시간 슬롯입니다.",
   },
   STUDIO_5001: {
     status: 500,

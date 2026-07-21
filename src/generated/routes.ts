@@ -11,8 +11,11 @@ import { StudioController } from './../domains/studio/studio.controller.js';
 import { ReservationController } from './../domains/reservation/reservation.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../domains/auth/auth.controller.js';
+import { expressAuthentication } from './../server/authentication.js';
+// @ts-ignore - no great way to install types from subpackage
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
+const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, securityName: string, scopes?: string[], res?: ExResponse) => Promise<any>;
 
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -66,6 +69,26 @@ const models: TsoaRoute.Models = {
     "GetStudioSlotsSuccessResponseDto": {
         "dataType": "refAlias",
         "type": {"ref":"output_typeofgetStudioSlotsSuccessResponseSchema_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "output_typeofstudioProductsResponseSchema_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"selectedSlot":{"dataType":"nestedObjectLiteral","nestedProperties":{"endTime":{"dataType":"string"},"startTime":{"dataType":"string"},"date":{"dataType":"string"},"timeSlotId":{"dataType":"string"},"isAvailable":{"dataType":"boolean","required":true}}},"studioId":{"dataType":"string"},"productGroups":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"products":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"shortDescription":{"dataType":"string"},"studioProductId":{"dataType":"string"},"basePeople":{"dataType":"double","required":true},"price":{"dataType":"double","required":true},"imageUrls":{"dataType":"array","array":{"dataType":"string"},"required":true},"productName":{"dataType":"string","required":true},"imageCount":{"dataType":"double","required":true}}},"required":true},"shootingCategory":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["ID_PHOTO"]},{"dataType":"enum","enums":["PROFILE"]},{"dataType":"enum","enums":["PERSONAL_PORTRAIT"]},{"dataType":"enum","enums":["JOB_PHOTO"]},{"dataType":"enum","enums":["FAMILY"]},{"dataType":"enum","enums":["FRIENDSHIP"]}],"required":true}}},"required":true},"studioName":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StudioProductsResponseDto": {
+        "dataType": "refAlias",
+        "type": {"ref":"output_typeofstudioProductsResponseSchema_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetStudioProductsSuccessResponseDto": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"StudioProductsResponseDto","required":true},"message":{"dataType":"enum","enums":["사진관 컨셉 목록 조회에 성공했습니다."],"required":true},"code":{"dataType":"enum","enums":["COMMON_200"],"required":true},"success":{"dataType":"enum","enums":[true],"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AppErrorResponse": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"enum","enums":[null],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"enum","enums":[false],"required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "output_typeofcreateReservationSuccessResponseSchema_": {
@@ -151,6 +174,7 @@ export function RegisterRoutes(app: Router) {
                 size: {"in":"query","name":"size","dataType":"string"},
         };
         app.get('/api/v1/wishlists',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistController.prototype.list)),
 
@@ -182,6 +206,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/api/v1/wishlists',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistController.prototype.add)),
 
@@ -213,6 +238,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/api/v1/wishlists/:studioId',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistController.prototype.remove)),
 
@@ -270,11 +296,43 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStudioController_getStudioProducts: Record<string, TsoaRoute.ParameterSchema> = {
+                studioId: {"in":"path","name":"studioId","required":true,"dataType":"string"},
+                timeSlotId: {"in":"query","name":"timeSlotId","dataType":"string"},
+        };
+        app.get('/api/v1/studios/:studioId/products',
+            ...(fetchMiddlewares<RequestHandler>(StudioController)),
+            ...(fetchMiddlewares<RequestHandler>(StudioController.prototype.getStudioProducts)),
+
+            async function StudioController_getStudioProducts(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStudioController_getStudioProducts, request, response });
+
+                const controller = new StudioController();
+
+              await templateService.apiHandler({
+                methodName: 'getStudioProducts',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsReservationController_create: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"CreateReservationRequestDto"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/api/v1/reservations',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReservationController)),
             ...(fetchMiddlewares<RequestHandler>(ReservationController.prototype.create)),
 
@@ -306,6 +364,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.patch('/api/v1/reservations/:reservationId/cancel',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReservationController)),
             ...(fetchMiddlewares<RequestHandler>(ReservationController.prototype.cancel)),
 
@@ -337,6 +396,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/api/v1/reservations/:reservationId',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReservationController)),
             ...(fetchMiddlewares<RequestHandler>(ReservationController.prototype.detail)),
 
@@ -517,6 +577,76 @@ export function RegisterRoutes(app: Router) {
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
+
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+    function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+        return async function runAuthenticationMiddleware(request: any, response: any, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            // keep track of failed auth attempts so we can hand back the most
+            // recent one.  This behavior was previously existing so preserving it
+            // here
+            const failedAttempts: any[] = [];
+            const pushAndRethrow = (error: any) => {
+                failedAttempts.push(error);
+                throw error;
+            };
+
+            const secMethodOrPromises: Promise<any>[] = [];
+            for (const secMethod of security) {
+                if (Object.keys(secMethod).length > 1) {
+                    const secMethodAndPromises: Promise<any>[] = [];
+
+                    for (const name in secMethod) {
+                        secMethodAndPromises.push(
+                            expressAuthenticationRecasted(request, name, secMethod[name], response)
+                                .catch(pushAndRethrow)
+                        );
+                    }
+
+                    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+                    secMethodOrPromises.push(Promise.all(secMethodAndPromises)
+                        .then(users => { return users[0]; }));
+                } else {
+                    for (const name in secMethod) {
+                        secMethodOrPromises.push(
+                            expressAuthenticationRecasted(request, name, secMethod[name], response)
+                                .catch(pushAndRethrow)
+                        );
+                    }
+                }
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            try {
+                request['user'] = await Promise.any(secMethodOrPromises);
+
+                // Response was sent in middleware, abort
+                if (response.writableEnded) {
+                    return;
+                }
+
+                next();
+            }
+            catch(err) {
+                // Show most recent error as response
+                const error = failedAttempts.pop();
+                error.status = error.status || 401;
+
+                // Response was sent in middleware, abort
+                if (response.writableEnded) {
+                    return;
+                }
+                next(error);
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        }
+    }
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 }

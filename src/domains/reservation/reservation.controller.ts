@@ -7,6 +7,7 @@ import {
   Get,
   Request,
   Route,
+  Security,
   SuccessResponse,
   Tags,
   Query
@@ -21,10 +22,12 @@ import {
 } from "./reservation.dto.js";
 import * as reservationService from "./reservation.service.js";
 
+// 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다
 type AuthenticatedRequest = { userId: bigint };
 
 @Route("reservations")
 @Tags("Reservation")
+@Security("jwt")
 export class ReservationController extends Controller {
   @Post()
   @SuccessResponse(201, "Created")
