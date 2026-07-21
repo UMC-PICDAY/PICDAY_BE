@@ -126,10 +126,6 @@ export class ReservationController extends Controller {
     const { status: parsedStatus } = getMyReservationListQuerySchema.parse({
       status,
     });
-<<<<<<< Updated upstream
-=======
-    const { userId } = request as AuthenticatedRequest;
->>>>>>> Stashed changes
 
     const { userId } = request as AuthenticatedRequest;
     const result = await reservationService.list(userId, parsedStatus);
