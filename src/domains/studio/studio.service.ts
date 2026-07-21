@@ -2,11 +2,15 @@ import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
   createStudioProductsResponse,
+  parseGetStudioProductDetailRequest,
   parseGetStudioProductsRequest,
   parseGetStudioSlotsRequest,
+  studioProductDetailResponseSchema,
   studioSlotsResponseSchema,
+  type GetStudioProductDetailQuery,
   type GetStudioProductsQuery,
   type GetStudioSlotsQuery,
+  type StudioProductDetailResponseDto,
   type StudioProductsResponseDto,
   type StudioProductsResponseInputDto,
   type StudioSlotsResponseDto,
@@ -59,11 +63,17 @@ function getKstSlotStartMilliseconds(date: Date, startTime: Date) {
 }
 
 function groupStudioProducts(
-  products: NonNullable<studioRepository.FindStudioProductsResult>["products"],
+  products: NonNullable<
+    studioRepository.FindStudioProductsResult
+  >["products"],
 ): StudioProductsResponseInputDto["productGroups"] {
-  type ProductGroup = StudioProductsResponseInputDto["productGroups"][number];
+  type ProductGroup =
+    StudioProductsResponseInputDto["productGroups"][number];
 
-  const groups = new Map<ProductGroup["shootingCategory"], ProductGroup>();
+  const groups = new Map<
+    ProductGroup["shootingCategory"],
+    ProductGroup
+  >();
 
   for (const product of products) {
     let group = groups.get(product.shootingCategory);
@@ -73,6 +83,7 @@ function groupStudioProducts(
         shootingCategory: product.shootingCategory,
         products: [],
       };
+
       groups.set(product.shootingCategory, group);
     }
 
@@ -107,6 +118,7 @@ export async function getStudioSlots(
       if (error instanceof ZodError) {
         throw new AppError("STUDIO_4001");
       }
+
       throw error;
     }
 
@@ -116,10 +128,11 @@ export async function getStudioSlots(
       throw new AppError("STUDIO_4002");
     }
 
-    const studio = await studioRepository.findStudioWithTimeSlotsByDate(
-      query.studioId,
-      query.dbDate,
-    );
+    const studio =
+      await studioRepository.findStudioWithTimeSlotsByDate(
+        query.studioId,
+        query.dbDate,
+      );
 
     if (!studio) {
       throw new AppError("STUDIO_4041");
@@ -135,13 +148,15 @@ export async function getStudioSlots(
         isAvailable:
           slot.isAvailable &&
           (!isToday ||
-            getTimeSeconds(slot.startTime) > kstNow.secondsSinceMidnight),
+            getTimeSeconds(slot.startTime) >
+              kstNow.secondsSinceMidnight),
       })),
     );
   } catch (error) {
     if (error instanceof AppError) {
       throw error;
     }
+
     throw new AppError("STUDIO_5001");
   }
 }
@@ -164,19 +179,25 @@ export async function getStudioProducts(
       if (error instanceof ZodError) {
         throw new AppError("STUDIO_4001");
       }
+
       throw error;
     }
 
-    const studio = await studioRepository.findStudioProducts(query.studioId);
+    const studio = await studioRepository.findStudioProducts(
+      query.studioId,
+    );
 
     if (!studio) {
       throw new AppError("STUDIO_4041");
     }
 
-    let selectedSlot: StudioProductsResponseInputDto["selectedSlot"] = null;
+    let selectedSlot:
+      | StudioProductsResponseInputDto["selectedSlot"] = null;
 
     if (query.timeSlotId !== undefined) {
-      const slot = await studioRepository.findTimeSlotById(query.timeSlotId);
+      const slot = await studioRepository.findTimeSlotById(
+        query.timeSlotId,
+      );
 
       if (!slot) {
         throw new AppError("STUDIO_4045");
@@ -193,8 +214,10 @@ export async function getStudioProducts(
         endTime: slot.endTime,
         isAvailable:
           slot.isAvailable &&
-          getKstSlotStartMilliseconds(slot.date, slot.startTime) >
-            nowProvider(),
+          getKstSlotStartMilliseconds(
+            slot.date,
+            slot.startTime,
+          ) > nowProvider(),
       };
     }
 
@@ -208,6 +231,74 @@ export async function getStudioProducts(
     if (error instanceof AppError) {
       throw error;
     }
+
+    throw new AppError("COMMON_500");
+  }
+}
+
+// === 컨셉 사진 상세 조회 API ===
+export async function getStudioProductDetail(
+  rawStudioId: string,
+  rawStudioProductId: string,
+): Promise<StudioProductDetailResponseDto> {
+  try {
+    let query: GetStudioProductDetailQuery;
+
+    try {
+      query = parseGetStudioProductDetailRequest({
+        studioId: rawStudioId,
+        studioProductId: rawStudioProductId,
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const hasStudioIdError = error.issues.some(
+          (issue) => issue.path[0] === "studioId",
+        );
+
+        throw new AppError(
+          hasStudioIdError ? "STUDIO_40011" : "STUDIO_4006",
+        );
+      }
+
+      throw error;
+    }
+
+    const studio =
+      await studioRepository.findStudioForProductDetail(
+        query.studioId,
+      );
+
+    if (!studio) {
+      throw new AppError("STUDIO_4041");
+    }
+
+    const product =
+      await studioRepository.findStudioProductDetailById(
+        query.studioProductId,
+      );
+
+    if (!product) {
+      throw new AppError("STUDIO_4043");
+    }
+
+    if (product.studioId !== query.studioId) {
+      throw new AppError("STUDIO_4044");
+    }
+
+    return studioProductDetailResponseSchema.parse({
+      studioId: studio.id,
+      studioName: studio.name,
+      studioProductId: product.id,
+      productName: product.name,
+      imageUrls: product.productImages.map(
+        (image) => image.url,
+      ),
+    });
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+
     throw new AppError("COMMON_500");
   }
 }

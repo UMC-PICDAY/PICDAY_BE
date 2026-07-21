@@ -99,3 +99,41 @@ export async function findTimeSlotById(timeSlotId: bigint) {
 export type FindTimeSlotByIdResult = Awaited<
   ReturnType<typeof findTimeSlotById>
 >;
+
+// === 컨셉 사진 상세 조회 API ===
+export async function findStudioForProductDetail(studioId: bigint) {
+  return prisma.studio.findUnique({
+    where: { id: studioId },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+}
+
+export type FindStudioForProductDetailResult = Awaited<
+  ReturnType<typeof findStudioForProductDetail>
+>;
+
+export async function findStudioProductDetailById(
+  studioProductId: bigint,
+) {
+  return prisma.studioProduct.findUnique({
+    where: { id: studioProductId },
+    select: {
+      id: true,
+      studioId: true,
+      name: true,
+      productImages: {
+        orderBy: { order: "asc" },
+        select: {
+          url: true,
+        },
+      },
+    },
+  });
+}
+
+export type FindStudioProductDetailByIdResult = Awaited<
+  ReturnType<typeof findStudioProductDetailById>
+>;
