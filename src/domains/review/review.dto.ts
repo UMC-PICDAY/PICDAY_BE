@@ -62,6 +62,79 @@ export type UpdateReviewSuccessResponseDto = {
   data: { reviewId: number };
 };
 
+// 리뷰 목록 조회 API
+export const reviewSortSchema = z
+  .enum(["recent", "recommend", "ratingHigh", "ratingLow"])
+  .default("recent");
+
+export type ReviewSort = z.infer<typeof reviewSortSchema>;
+
+export const getReviewsQuerySchema = z.object({
+  sort: reviewSortSchema,
+  photoOnly: z
+    .union([z.boolean(), z.enum(["true", "false"])])
+    .transform((v) => v === true || v === "true")
+    .default(false),
+  page: z.coerce.number().int().min(1).default(1),
+  size: z.coerce.number().int().min(1).max(50).default(10),
+});
+
+export type GetReviewsQuery = z.infer<typeof getReviewsQuerySchema>;
+
+export const studioIdParamsSchema = z.object({
+  studioId: z.string().regex(/^\d+$/, "유효하지 않은 사진관 ID입니다."),
+});
+
+export type ReviewListItemDto = {
+  reviewId: number;
+  writerNickname: string | null;
+  rating: number;
+  content: string;
+  images: string[];
+  likeCount: number;
+  isLiked: boolean;
+  isBest: boolean;
+  createdAt: string;
+};
+
+export type GetReviewsResponseDto = {
+  summary: {
+    avgRating: number;
+    totalCount: number;
+    photoReviewCount: number;
+  };
+  page: number;
+  size: number;
+  items: ReviewListItemDto[];
+};
+
+export type GetReviewsSuccessResponseDto = {
+  success: true;
+  code: "COMMON_200";
+  message: string;
+  data: GetReviewsResponseDto;
+};
+
+// 리뷰 추천 / 추천 취소 API
+export type ReviewLikeResponseDto = {
+  reviewId: number;
+  likeCount: number;
+};
+
+export type AddReviewLikeSuccessResponseDto = {
+  success: true;
+  code: "COMMON_201";
+  message: string;
+  data: ReviewLikeResponseDto;
+};
+
+export type RemoveReviewLikeSuccessResponseDto = {
+  success: true;
+  code: "COMMON_200";
+  message: string;
+  data: ReviewLikeResponseDto;
+};
+
 // 리뷰 삭제 API
 export const reviewIdParamsSchema = z.object({
   reviewId: z.string().regex(/^\d+$/, "유효하지 않은 리뷰 ID입니다."),

@@ -12,9 +12,11 @@ import {
   Tags,
 } from "tsoa";
 import type {
+  AddReviewLikeSuccessResponseDto,
   CreateReviewRequestDto,
   CreateReviewSuccessResponseDto,
   DeleteReviewSuccessResponseDto,
+  RemoveReviewLikeSuccessResponseDto,
   UpdateReviewRequestDto,
   UpdateReviewSuccessResponseDto,
 } from "./review.dto.js";
@@ -79,6 +81,43 @@ export class ReviewController extends Controller {
       success: true,
       code: "COMMON_200",
       message: "리뷰가 삭제되었습니다.",
+      data,
+    };
+  }
+
+  /** 리뷰 추천 (도움돼요) */
+  @Post("{reviewId}/like")
+  @SuccessResponse(201, "Created")
+  public async addLike(
+    @Path() reviewId: string,
+    @Request() request: any,
+  ): Promise<AddReviewLikeSuccessResponseDto> {
+    const { userId } = request as AuthenticatedRequest;
+    const data = await reviewService.addLike(userId, reviewId);
+
+    this.setStatus(201);
+    return {
+      success: true,
+      code: "COMMON_201",
+      message: "리뷰를 추천했습니다.",
+      data,
+    };
+  }
+
+  /** 리뷰 추천 취소 */
+  @Delete("{reviewId}/like")
+  @SuccessResponse(200, "OK")
+  public async removeLike(
+    @Path() reviewId: string,
+    @Request() request: any,
+  ): Promise<RemoveReviewLikeSuccessResponseDto> {
+    const { userId } = request as AuthenticatedRequest;
+    const data = await reviewService.removeLike(userId, reviewId);
+
+    return {
+      success: true,
+      code: "COMMON_200",
+      message: "리뷰 추천을 취소했습니다.",
       data,
     };
   }
