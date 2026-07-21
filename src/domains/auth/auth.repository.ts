@@ -28,6 +28,13 @@ export async function findUserByNickname(nickname: string) {
   });
 }
 
+/** 토큰 갱신용: 저장된 refreshToken·status 확인을 위해 id로 조회 */
+export async function findUserById(id: bigint) {
+  return prisma.user.findUnique({
+    where: { id },
+  });
+}
+
 /** 로컬 로그인용: ACTIVE 상태의 LOCAL 유저를 loginId로 조회 */
 export async function findActiveLocalUserByLoginId(loginId: string) {
   return prisma.user.findFirst({

@@ -35,6 +35,17 @@ export const loginRequestSchema = z.object({
 
 export type LoginRequestDto = z.infer<typeof loginRequestSchema>;
 
+/**
+ * 토큰 갱신 요청 body.
+ * refreshToken은 선택 — @Security("refresh")로 Authorization 헤더가 이미 필수이며,
+ * body에 담아 보내는 클라이언트(명세서 (B)안)를 함께 수용하기 위한 필드다.
+ */
+export const refreshRequestSchema = z.object({
+  refreshToken: z.string().min(1, "refreshToken이 비어 있습니다.").optional(),
+});
+
+export type RefreshRequestDto = z.infer<typeof refreshRequestSchema>;
+
 function parseOrThrow<T>(
   schema: z.ZodType<T>,
   body: unknown,
@@ -65,7 +76,15 @@ const LOGIN_FIELD_ERROR: Record<string, ErrorCodeType> = {
   password: "AUTH_4015",
 };
 
+// 토큰 관련 형식 오류는 명세서상 모두 AUTH_4013으로 수렴
+const REFRESH_FIELD_ERROR: Record<string, ErrorCodeType> = {
+  refreshToken: "AUTH_4013",
+};
+
 export const parseSignup = (body: unknown) =>
   parseOrThrow(signupRequestSchema, body, SIGNUP_FIELD_ERROR);
 export const parseLogin = (body: unknown) =>
   parseOrThrow(loginRequestSchema, body, LOGIN_FIELD_ERROR);
+// body를 아예 보내지 않는 (A)안 클라이언트를 위해 undefined/null은 빈 객체로 취급
+export const parseRefresh = (body: unknown) =>
+  parseOrThrow(refreshRequestSchema, body ?? {}, REFRESH_FIELD_ERROR);
