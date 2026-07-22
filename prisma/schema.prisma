@@ -26,7 +26,7 @@ model Reservation {
   studioProductId BigInt @map("studio_product_id")
 
   reserveeName  String @map("reservee_name") @db.VarChar(50)
-  reserveePhone String @map("reservee_Phone") @db.VarChar(20)
+  reserveePhone String @map("reservee_phone") @db.VarChar(20)
   totalPrice    Int    @map("total_price") @db.UnsignedInt
 
   status     ReservationStatus @default(RESERVED)
