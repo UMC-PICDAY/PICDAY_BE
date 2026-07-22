@@ -20,6 +20,7 @@ const COMMON_STUDIO_COUNT = 6;
 // 1. 각 studio 에 해당하는 product 목록은 따로 조회하는 API를 만들어서, studio 조회 시 product 목록은 제외하고, product 조회 API에서 studioId로 조회하도록 변경 필요
 // 왜냐하면 스튜디오 단위의 데이터 값은 다 같은데, product의 가격과 이미지 때문에 엄청 많이 중복됨.
 // 2. LacationCategory 타입 선언 안하고 위에서 주석처리 된것 처럼 import로 받아오기
+// 3. locationCategory 별 사진관 조회 : 사진관 선정 기준 재검토
 
 // 상단 배너 용 사진관 10개 조회 (평균 평점)
 export async function findHighRatedStudios() {
@@ -36,12 +37,8 @@ export async function findHighRatedStudios() {
       },
       studioProduct: {
         productImage: {
-          where: {
-            studioThumbnailOrder: { not: null },
-          },
-          orderBy: {
-            studioThumbnailOrder: "asc",
-          },
+          where: { studioThumbnailOrder: { not: null } },
+          orderBy: { studioThumbnailOrder: "asc" },
           take: 1,
           select: {
             url: true,
@@ -74,7 +71,12 @@ export async function findRecentlyViewedStudios(userId: bigint) {
               price: true,
               productImages: {
                 where: { studioThumbnailOrder: { not: null } },
-                select: { url: true, studioThumbnailOrder: true },
+                orderBy: { studioThumbnailOrder: "asc" },
+                take: 1,
+                select: {
+                  url: true,
+                  studioThumbnailOrder: true,
+                },
               },
             },
           },
@@ -103,14 +105,18 @@ export async function findPopularStudios() {
           price: true,
           productImages: {
             where: { studioThumbnailOrder: { not: null } },
-            select: { url: true, studioThumbnailOrder: true },
+            orderBy: { studioThumbnailOrder: "asc" },
+            take: 1,
+            select: {
+              url: true,
+              studioThumbnailOrder: true,
+            },
           },
         },
       },
     },
   });
 }
-
 export type FindPopularStudiosResult = Awaited<
   ReturnType<typeof findPopularStudios>
 >;
