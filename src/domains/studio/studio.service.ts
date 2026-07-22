@@ -1,15 +1,20 @@
 import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
+  createStudioDetailResponse,
   createStudioProductsResponse,
+  parseGetStudioDetailRequest,
   parseGetStudioProductDetailRequest,
   parseGetStudioProductsRequest,
   parseGetStudioSlotsRequest,
   studioProductDetailResponseSchema,
   studioSlotsResponseSchema,
+  type GetStudioDetailQuery,
   type GetStudioProductDetailQuery,
   type GetStudioProductsQuery,
   type GetStudioSlotsQuery,
+  type StudioDetailResponseDto,
+  type StudioDetailResponseInputDto,
   type StudioProductDetailResponseDto,
   type StudioProductsResponseDto,
   type StudioProductsResponseInputDto,
@@ -293,6 +298,170 @@ export async function getStudioProductDetail(
       imageUrls: product.productImages.map(
         (image) => image.url,
       ),
+    });
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+
+    throw new AppError("COMMON_500");
+  }
+}
+
+const STATION_LINE_CODES = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13]);
+
+function splitLines(value: string) {
+  return value
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+}
+
+function getStationLineCodes(stationDetail: unknown) {
+  if (!Array.isArray(stationDetail)) {
+    return [];
+  }
+
+  return stationDetail.filter(
+    (code): code is number =>
+      typeof code === "number" &&
+      Number.isInteger(code) &&
+      STATION_LINE_CODES.has(code),
+  );
+}
+
+function createStudioInfo(
+  items: NonNullable<studioRepository.FindStudioDetailByIdResult>["studioInfoItems"],
+): StudioDetailResponseInputDto["studioInfo"] {
+  const studioInfo: StudioDetailResponseInputDto["studioInfo"] = {
+    operation: [],
+    parking: [],
+    shootingGuide: [],
+  };
+
+  for (const item of items) {
+    const lines = splitLines(item.content);
+
+    switch (item.infoSection.title) {
+      case "운영 정보":
+        studioInfo.operation.push(...lines);
+        break;
+      case "주차 정보":
+        studioInfo.parking.push(...lines);
+        break;
+      case "촬영 안내":
+        studioInfo.shootingGuide.push(...lines);
+        break;
+    }
+  }
+
+  return studioInfo;
+}
+
+// === 사진관 상세 정보 조회 API ===
+export async function getStudioDetail(
+  rawStudioId: string,
+  userId?: bigint,
+): Promise<StudioDetailResponseDto> {
+  try {
+    let query: GetStudioDetailQuery;
+
+    try {
+      query = parseGetStudioDetailRequest({
+        studioId: rawStudioId,
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new AppError("STUDIO_4001");
+      }
+
+      throw error;
+    }
+
+    const studio = await studioRepository.findStudioDetailById(query.studioId);
+
+    if (!studio) {
+      throw new AppError("STUDIO_4041");
+    }
+
+    const [representativeImages, isWishlisted, reviewSummary, previewReview] =
+      await Promise.all([
+        studioRepository.findStudioRepresentativeImages(query.studioId),
+        userId === undefined
+          ? Promise.resolve(false)
+          : studioRepository.existsWishlist(query.studioId, userId),
+        studioRepository.findStudioReviewSummary(query.studioId),
+        studioRepository.findStudioPreviewReview(query.studioId),
+      ]);
+
+    const location = studio.location;
+    const address = location
+      ? [location.mainAddress, location.subAddress]
+          .map((part) => part.trim())
+          .filter((part) => part.length > 0)
+          .join(" ") || null
+      : null;
+    const notice =
+      studio.notice === null || studio.notice.trim().length === 0
+        ? null
+        : {
+            title: "예약 및 촬영 안내",
+            items: splitLines(studio.notice),
+          };
+    const hairMakeupService = studio.studioServices.find(
+      (service) => service.serviceCode === "HAIR_MAKEUP",
+    );
+    const averageRating = reviewSummary._avg.rating;
+
+    return createStudioDetailResponse({
+      studioId: studio.id,
+      studioName: studio.name,
+      imageUrls: representativeImages.map((image) => image.url),
+      isWishlisted,
+      location: {
+        locationCategory: location?.locationCategory ?? null,
+        district: location?.mainAddress ?? null,
+        address,
+        latitude:
+          location?.latitude === null || location?.latitude === undefined
+            ? null
+            : Number(location.latitude),
+        longitude:
+          location?.longitude === null || location?.longitude === undefined
+            ? null
+            : Number(location.longitude),
+        nearestStation: location?.nearestStation ?? null,
+        walkingMinutes: location?.walkingMinutes ?? null,
+        stationLineCodes: getStationLineCodes(location?.stationDetail),
+      },
+      representativeProducts: studio.products.map((product) => ({
+        studioProductId: product.id,
+        productName: product.name,
+        thumbnailUrl: product.productImages[0]?.url ?? null,
+        price: product.price,
+      })),
+      serviceCodes: studio.studioServices.map((service) => service.serviceCode),
+      introduction: studio.introduction,
+      notice,
+      studioInfo: createStudioInfo(studio.studioInfoItems),
+      hairMakeupPartnerCount: hairMakeupService?._count.hairMakeupDetails ?? 0,
+      reviewSummary: {
+        averageRating:
+          averageRating === null ? null : Math.round(averageRating * 10) / 10,
+        reviewCount: reviewSummary._count._all,
+        previewReview:
+          previewReview === null
+            ? null
+            : {
+                reviewId: previewReview.id,
+                writerNickname: previewReview.user.nickname ?? "익명",
+                isBest: previewReview._count.likes > 0,
+                rating: previewReview.rating,
+                createdAt: previewReview.createdAt,
+                content: previewReview.content,
+                imageUrls: previewReview.images.map((image) => image.url),
+              },
+      },
     });
   } catch (error) {
     if (error instanceof AppError) {
