@@ -88,3 +88,47 @@ export const parseLogin = (body: unknown) =>
 // body를 아예 보내지 않는 (A)안 클라이언트를 위해 undefined/null은 빈 객체로 취급
 export const parseRefresh = (body: unknown) =>
   parseOrThrow(refreshRequestSchema, body ?? {}, REFRESH_FIELD_ERROR);
+
+// 해당 Schema로 get / update response 모두 사용
+export const getMeResponseSchema = z.object({
+  user: z.object({
+    id: z.bigint().transform((id) => id.toString()),
+    name: z.string(),
+    nickname: z.string(),
+    email: z.email(),
+    //profileImageUrl: z.url().nullable(),
+    provider: z.enum(["KAKAO", "GOOGLE", "APPLE", "LOCAL"]),
+    // notification: z.object({
+    //   reservation: z.boolean(),
+    //   marketing: z.boolean(),
+    // }),
+  }),
+});
+
+export type GetMeResponseDto = z.output<typeof getMeResponseSchema>;
+
+export const updateNicknameRequestSchema = z.object({
+  nickname: z
+    .string()
+    .min(2, "닉네임 형식이 올바르지 않아요.")
+    .max(10, "닉네임 형식이 올바르지 않아요.")
+    .regex(/^[가-힣a-zA-Z0-9]+$/, "닉네임 형식이 올바르지 않아요."),
+});
+
+export type UpdateNicknameRequestDto = z.infer<typeof updateNicknameRequestSchema>;
+
+export const updateNicknameResponseSchema = z.object({
+  user: z.object({
+    id: z.bigint().transform((id) => id.toString()),
+    nickname: z.string(),
+  }),
+});
+
+export type UpdateNicknameResponseDto = z.infer<typeof updateNicknameResponseSchema>;
+
+const UPDATE_NICKNAME_FIELD_ERROR: Record<string, ErrorCodeType> = {
+  nickname: "AUTH_4003",
+};
+
+export const parseUpdateNickname = (body: unknown) =>
+  parseOrThrow(updateNicknameRequestSchema, body, UPDATE_NICKNAME_FIELD_ERROR);

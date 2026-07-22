@@ -1,7 +1,15 @@
 import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
 import * as authRepository from "./auth.repository.js";
-import type { LoginRequestDto, SignupRequestDto } from "./auth.dto.js";
+import { 
+  type LoginRequestDto,
+  type SignupRequestDto,
+  type GetMeResponseDto,
+  type UpdateNicknameRequestDto,
+  type UpdateNicknameResponseDto,
+  getMeResponseSchema,
+  updateNicknameResponseSchema
+} from "./auth.dto.js";
 import {
   NICKNAME_ADJECTIVES,
   NICKNAME_NOUNS,
@@ -164,4 +172,48 @@ export async function checkNicknameAvailability(nickname: string) {
 
   const existing = await authRepository.findUserByNickname(nickname);
   return { available: !existing };
+}
+
+export async function getMe(
+  userId: bigint
+): Promise<GetMeResponseDto> {
+  const user = await authRepository.getUserById(userId);
+
+  if (!user){
+    throw new AppError("COMMON_404");
+  }
+
+  return getMeResponseSchema.parse({
+    user: {
+      id: user.id,
+      name: user.name,
+      nickname: user.nickname,
+      email: user.email,
+      // profileImageUrl: user.profileImageUrl,
+      provider: user.provider,
+      // notification: {
+      //   reservation: user.notificationReservation,
+      //   marketing: user.notificationMarketing,
+      // },
+    },
+  });
+}
+
+export async function updateNickname(
+  userId: bigint,
+  dto: UpdateNicknameRequestDto
+): Promise<UpdateNicknameResponseDto> {
+  const duplicated = await authRepository.getUserByNickname(dto.nickname);
+  if (duplicated) {
+    throw new AppError("AUTH_4091");
+  }
+
+  const user = await authRepository.updateNickname(userId, dto.nickname);
+
+  return updateNicknameResponseSchema.parse({
+    user: {
+      id: user.id,
+      nickname: user.nickname
+    }
+  });
 }
