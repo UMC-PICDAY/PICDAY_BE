@@ -259,6 +259,11 @@ export const ErrorCode = {
     code: "REVIEW_4005",
     message: "page/size/sort 형식이 올바르지 않습니다.",
   },
+  REVIEW_4006: {
+    status: 400,
+    code: "REVIEW_4006",
+    message: "올바르지 않은 리뷰 태그입니다.",
+  },
   REVIEW_4031: {
     status: 403,
     code: "REVIEW_4031",

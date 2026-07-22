@@ -17,6 +17,26 @@ const imageUrlsSchema = z
   .max(5, "이미지는 최대 5개까지 가능합니다.")
   .nullable();
 
+// 리뷰 태그 ("어떤 점이 좋았나요?") — 선택 항목, 개수 제한 없음
+export const reviewKeywordSchema = z.enum([
+  "KIND_SERVICE",
+  "DETAILED_RETOUCH",
+  "ON_TIME",
+  "COMFORTABLE_MOOD",
+  "REASONABLE_PRICE",
+  "SATISFYING_RESULT",
+]);
+
+export type ReviewKeywordValue = z.infer<typeof reviewKeywordSchema>;
+
+const keywordsSchema = z
+  .array(reviewKeywordSchema)
+  .refine(
+    (keywords) => new Set(keywords).size === keywords.length,
+    "동일한 태그를 중복해서 선택할 수 없습니다.",
+  )
+  .nullable();
+
 // 리뷰 작성 API
 export const createReviewRequestSchema = z
   .object({
@@ -27,6 +47,7 @@ export const createReviewRequestSchema = z
       .max(Number.MAX_SAFE_INTEGER, "reservationId가 허용 범위를 초과했습니다."),
     rating: ratingSchema,
     content: contentSchema,
+    keywords: keywordsSchema.optional(),
     imageUrls: imageUrlsSchema.optional(),
   })
   .strict();
@@ -45,6 +66,7 @@ export const updateReviewRequestSchema = z
   .object({
     rating: ratingSchema.optional(),
     content: contentSchema.optional(),
+    keywords: keywordsSchema.optional(),
     imageUrls: imageUrlsSchema.optional(),
   })
   .strict()
@@ -90,6 +112,7 @@ export type ReviewListItemDto = {
   writerNickname: string | null;
   rating: number;
   content: string;
+  keywords: ReviewKeywordValue[];
   images: string[];
   likeCount: number;
   isLiked: boolean;

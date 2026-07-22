@@ -110,9 +110,19 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"union","subSchemas":[{"ref":"StudioProductDetailResponseDto"},{"dataType":"enum","enums":[null]}],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"boolean","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "infer_typeofreviewKeywordSchema_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["KIND_SERVICE"]},{"dataType":"enum","enums":["DETAILED_RETOUCH"]},{"dataType":"enum","enums":["ON_TIME"]},{"dataType":"enum","enums":["COMFORTABLE_MOOD"]},{"dataType":"enum","enums":["REASONABLE_PRICE"]},{"dataType":"enum","enums":["SATISFYING_RESULT"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReviewKeywordValue": {
+        "dataType": "refAlias",
+        "type": {"ref":"infer_typeofreviewKeywordSchema_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ReviewListItemDto": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"createdAt":{"dataType":"string","required":true},"isBest":{"dataType":"boolean","required":true},"isLiked":{"dataType":"boolean","required":true},"likeCount":{"dataType":"double","required":true},"images":{"dataType":"array","array":{"dataType":"string"},"required":true},"content":{"dataType":"string","required":true},"rating":{"dataType":"double","required":true},"writerNickname":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"reviewId":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"createdAt":{"dataType":"string","required":true},"isBest":{"dataType":"boolean","required":true},"isLiked":{"dataType":"boolean","required":true},"likeCount":{"dataType":"double","required":true},"images":{"dataType":"array","array":{"dataType":"string"},"required":true},"keywords":{"dataType":"array","array":{"dataType":"refAlias","ref":"ReviewKeywordValue"},"required":true},"content":{"dataType":"string","required":true},"rating":{"dataType":"double","required":true},"writerNickname":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"reviewId":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetReviewsResponseDto": {
@@ -132,7 +142,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "infer_typeofcreateReviewRequestSchema_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"imageUrls":{"dataType":"array","array":{"dataType":"string"}},"content":{"dataType":"string","required":true},"rating":{"dataType":"double","required":true},"reservationId":{"dataType":"double","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"imageUrls":{"dataType":"array","array":{"dataType":"string"}},"keywords":{"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["KIND_SERVICE"]},{"dataType":"enum","enums":["DETAILED_RETOUCH"]},{"dataType":"enum","enums":["ON_TIME"]},{"dataType":"enum","enums":["COMFORTABLE_MOOD"]},{"dataType":"enum","enums":["REASONABLE_PRICE"]},{"dataType":"enum","enums":["SATISFYING_RESULT"]}]}},"content":{"dataType":"string","required":true},"rating":{"dataType":"double","required":true},"reservationId":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateReviewRequestDto": {
@@ -147,7 +157,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "infer_typeofupdateReviewRequestSchema_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"imageUrls":{"dataType":"array","array":{"dataType":"string"}},"content":{"dataType":"string"},"rating":{"dataType":"double"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"imageUrls":{"dataType":"array","array":{"dataType":"string"}},"keywords":{"dataType":"array","array":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["KIND_SERVICE"]},{"dataType":"enum","enums":["DETAILED_RETOUCH"]},{"dataType":"enum","enums":["ON_TIME"]},{"dataType":"enum","enums":["COMFORTABLE_MOOD"]},{"dataType":"enum","enums":["REASONABLE_PRICE"]},{"dataType":"enum","enums":["SATISFYING_RESULT"]}]}},"content":{"dataType":"string"},"rating":{"dataType":"double"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateReviewRequestDto": {

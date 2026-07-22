@@ -346,10 +346,34 @@ model Review {
   user        User        @relation(fields: [userId], references: [id])
   studio      Studio      @relation(fields: [studioId], references: [id]) // Studio 모델 추가 후 주석 해제
 
-  images ReviewImage[]
-  likes  ReviewLike[]
+  images   ReviewImage[]
+  likes    ReviewLike[]
+  keywords ReviewKeywordTag[]
 
   @@map("review")
+}
+
+// 리뷰 태그 ("어떤 점이 좋았나요?" 복수선택, 선택 항목)
+enum ReviewKeyword {
+  KIND_SERVICE // 친절한 응대
+  DETAILED_RETOUCH // 꼼꼼한 보정
+  ON_TIME // 시간 엄수
+  COMFORTABLE_MOOD // 편안한 분위기
+  REASONABLE_PRICE // 합리적인 가격
+  SATISFYING_RESULT // 만족스러운 결과물
+}
+
+model ReviewKeywordTag {
+  id       BigInt        @id @default(autoincrement())
+  reviewId BigInt        @map("review_id")
+  keyword  ReviewKeyword
+
+  // 관계 설정
+  review Review @relation(fields: [reviewId], references: [id])
+
+  // 리뷰당 같은 태그 중복 방지
+  @@unique([reviewId, keyword])
+  @@map("review_keyword")
 }
 
 // ==========================================

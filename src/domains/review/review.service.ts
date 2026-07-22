@@ -24,6 +24,9 @@ function toValidationError(error: ZodError): AppError {
   if (fields.has("imageUrls")) {
     return new AppError("REVIEW_4003");
   }
+  if (fields.has("keywords")) {
+    return new AppError("REVIEW_4006");
+  }
   return new AppError("COMMON_400");
 }
 
@@ -103,6 +106,7 @@ export async function getReviews(
         writerNickname: row.user.nickname,
         rating: row.rating,
         content: row.content,
+        keywords: row.keywords.map((tag) => tag.keyword),
         images: row.images.map((image) => image.url),
         likeCount: row._count.likes,
         isLiked: likedIds.has(row.id),
@@ -211,6 +215,7 @@ export async function createReview(
       reservationId: reservation.id,
       rating: request.rating,
       content: request.content,
+      keywords: request.keywords ?? [],
       imageUrls: request.imageUrls ?? [],
     });
 
@@ -259,6 +264,7 @@ export async function updateReview(
       reviewId,
       ...(request.rating !== undefined && { rating: request.rating }),
       ...(request.content !== undefined && { content: request.content }),
+      ...(request.keywords !== undefined && { keywords: request.keywords }),
       ...(request.imageUrls !== undefined && { imageUrls: request.imageUrls }),
     });
 
