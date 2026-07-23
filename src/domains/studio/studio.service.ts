@@ -337,6 +337,7 @@ function createStudioInfo(
     operation: [],
     parking: [],
     shootingGuide: [],
+    refundGuide: [],
   };
 
   for (const item of items) {
@@ -351,6 +352,9 @@ function createStudioInfo(
         break;
       case "촬영 안내":
         studioInfo.shootingGuide.push(...lines);
+        break;
+      case "환불 안내":
+        studioInfo.refundGuide.push(...lines);
         break;
     }
   }

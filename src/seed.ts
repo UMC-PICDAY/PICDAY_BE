@@ -507,6 +507,7 @@ async function main() {
   const operationSection = await upsertInfoSection("운영 정보");
   const parkingSection = await upsertInfoSection("주차 정보");
   const shootingGuideSection = await upsertInfoSection("촬영 안내");
+  const refundGuideSection = await upsertInfoSection("환불 안내");
 
   await prisma.studioInfoItem.upsert({
     where: {
@@ -562,6 +563,23 @@ async function main() {
       infoSectionId: shootingGuideSection.id,
       content:
         "의상 무료 대여\n헤어메이크업 제휴 가능\n보정본은 촬영 후 7일 이내 전달",
+    },
+  });
+
+  await prisma.studioInfoItem.upsert({
+    where: {
+      studioId_infoSectionId: {
+        studioId: studioA.id,
+        infoSectionId: refundGuideSection.id,
+      },
+    },
+    update: {
+      content: "환불 정책은 사진관 정책에 따름\n당일 취소 불가",
+    },
+    create: {
+      studioId: studioA.id,
+      infoSectionId: refundGuideSection.id,
+      content: "환불 정책은 사진관 정책에 따름\n당일 취소 불가",
     },
   });
 

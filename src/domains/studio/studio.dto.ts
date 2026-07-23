@@ -295,6 +295,7 @@ export const studioDetailInfoSchema = z.object({
   operation: z.array(z.string()),
   parking: z.array(z.string()),
   shootingGuide: z.array(z.string()),
+  refundGuide: z.array(z.string()),
 });
 
 export const studioDetailPreviewReviewSchema = z.object({
