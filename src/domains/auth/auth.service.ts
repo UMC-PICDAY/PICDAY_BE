@@ -75,6 +75,29 @@ export function getSocialAuthUrl(provider: SocialProvider) {
   return { authUrl: buildSocialAuthUrl(provider) };
 }
 
+/**
+ * 약관 동의 검증. (자체 회원가입·소셜 회원가입 완료가 공유)
+ * - 필수 약관(isRequired=true)이 모두 동의 목록에 포함되어야 한다.
+ * - 존재하지 않는 약관 ID가 섞여 있으면 안 된다.
+ * 위반 시 AUTH_4008.
+ */
+export async function assertTermsAgreed(agreedTermIds: bigint[]): Promise<void> {
+  const [requiredTermIds, existingTermIds] = await Promise.all([
+    authRepository.findRequiredTermIds(),
+    authRepository.findExistingTermIds(agreedTermIds),
+  ]);
+
+  const agreedSet = new Set(agreedTermIds);
+  const existingSet = new Set(existingTermIds);
+
+  const missingRequired = requiredTermIds.filter((id) => !agreedSet.has(id));
+  const unknownAgreed = agreedTermIds.filter((id) => !existingSet.has(id));
+
+  if (missingRequired.length > 0 || unknownAgreed.length > 0) {
+    throw new AppError("AUTH_4008");
+  }
+}
+
 export async function register(dto: SignupRequestDto) {
   const existingLoginId = await authRepository.findUserByLoginId(dto.loginId);
   if (existingLoginId) {
@@ -86,18 +109,24 @@ export async function register(dto: SignupRequestDto) {
     throw new AppError("AUTH_4092");
   }
 
+  // 필수 약관 동의 여부를 유저 생성 전에 먼저 검증 (실패 시 빠르게 중단)
+  const agreedTermIds = dto.agreedTermsIds.map((id) => BigInt(id));
+  await assertTermsAgreed(agreedTermIds);
+
   const hashedPassword = await bcrypt.hash(dto.password, 10);
   const nickname = await generateUniqueNickname();
 
-  // TODO: agreedTermsIds(dto.agreedTermsIds)를 UserTerms로 저장하는 로직 추가
-  const user = await authRepository.createUser({
-    loginId: dto.loginId,
-    password: hashedPassword,
-    name: dto.name,
-    nickname,
-    email: dto.email,
-    phoneNumber: dto.phoneNumber,
-  });
+  const user = await authRepository.createUserWithTerms(
+    {
+      loginId: dto.loginId,
+      password: hashedPassword,
+      name: dto.name,
+      nickname,
+      email: dto.email,
+      phoneNumber: dto.phoneNumber,
+    },
+    agreedTermIds,
+  );
 
   const { password: _password, ...userWithoutPassword } = user;
 

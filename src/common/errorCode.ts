@@ -360,6 +360,11 @@ export const ErrorCode = {
     code: "AUTH_4007",
     message: "올바른 휴대폰 번호를 입력해 주세요. (숫자만 입력)",
   },
+  AUTH_4008: {
+    status: 400,
+    code: "AUTH_4008",
+    message: "필수 약관에 동의해 주세요.",
+  },
   AUTH_4011: {
     status: 401,
     code: "AUTH_4011",

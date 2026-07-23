@@ -53,18 +53,62 @@ export async function updateRefreshToken(
   });
 }
 
-export async function createUser(data: CreateUserData) {
-  return prisma.user.create({
-    data: {
-      loginId: data.loginId,
-      password: data.password,
-      name: data.name,
-      nickname: data.nickname,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
-      provider: "LOCAL",
-      status: "ACTIVE",
-    },
+/** 약관 검증용: 필수 약관(isRequired=true)의 ID 목록 */
+export async function findRequiredTermIds(): Promise<bigint[]> {
+  const terms = await prisma.terms.findMany({
+    where: { isRequired: true },
+    select: { id: true },
+  });
+  return terms.map((term) => term.id);
+}
+
+/** 약관 검증용: 주어진 ID 중 실제 존재하는 약관 ID 목록 (미존재 ID 판별용) */
+export async function findExistingTermIds(ids: bigint[]): Promise<bigint[]> {
+  if (ids.length === 0) {
+    return [];
+  }
+  const terms = await prisma.terms.findMany({
+    where: { id: { in: ids } },
+    select: { id: true },
+  });
+  return terms.map((term) => term.id);
+}
+
+/**
+ * 자체 회원가입: 유저 생성과 약관 동의 저장을 한 트랜잭션으로 원자적으로 처리한다.
+ * 유저만 생성되고 약관 동의가 유실되는 부분 실패를 방지한다.
+ */
+export async function createUserWithTerms(
+  data: CreateUserData,
+  agreedTermIds: bigint[],
+) {
+  return prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        loginId: data.loginId,
+        password: data.password,
+        name: data.name,
+        nickname: data.nickname,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        provider: "LOCAL",
+        status: "ACTIVE",
+      },
+    });
+
+    if (agreedTermIds.length > 0) {
+      const agreedAt = new Date();
+      await tx.userTerms.createMany({
+        data: agreedTermIds.map((termsId) => ({
+          userId: user.id,
+          termsId,
+          isAgreed: true,
+          agreedAt,
+        })),
+      });
+    }
+
+    return user;
   });
 }
 
