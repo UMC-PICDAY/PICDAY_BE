@@ -305,6 +305,23 @@ export const ErrorCode = {
     message: "리뷰 처리 중 오류가 발생했어요.",
   },
 
+  // Image (리뷰 이미지 업로드)
+  IMAGE_4001: {
+    status: 400,
+    code: "IMAGE_4001",
+    message: "지원하지 않는 파일 형식입니다.",
+  },
+  IMAGE_4002: {
+    status: 400,
+    code: "IMAGE_4002",
+    message: "파일 용량이 초과되었습니다.",
+  },
+  IMAGE_5001: {
+    status: 500,
+    code: "IMAGE_5001",
+    message: "이미지 업로드에 실패했습니다.",
+  },
+
   // Auth
   AUTH_4001: {
     status: 400,
