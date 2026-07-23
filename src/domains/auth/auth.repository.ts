@@ -1,4 +1,5 @@
 import { prisma } from "../../config/prisma.js";
+import type { Provider } from "../../generated/prisma/client.js";
 
 
 export type CreateUserData = {
@@ -39,6 +40,17 @@ export async function findUserById(id: bigint) {
 export async function findActiveLocalUserByLoginId(loginId: string) {
   return prisma.user.findFirst({
     where: { loginId, provider: "LOCAL", status: "ACTIVE" },
+  });
+}
+
+/** 소셜 로그인용: (provider, providerId)로 소셜 계정과 연결된 유저를 함께 조회 */
+export async function findSocialAccountWithUser(
+  provider: Provider,
+  providerId: string,
+) {
+  return prisma.socialAccount.findUnique({
+    where: { provider_providerId: { provider, providerId } },
+    include: { user: true },
   });
 }
 

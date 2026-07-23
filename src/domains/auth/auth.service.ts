@@ -1,7 +1,12 @@
 import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
 import * as authRepository from "./auth.repository.js";
-import { buildSocialAuthUrl, type SocialProvider } from "./auth.social.js";
+import {
+  buildSocialAuthUrl,
+  getSocialProfile,
+  type SocialProvider,
+} from "./auth.social.js";
+import type { SocialLoginRequestDto, SocialLoginResponseData } from "./auth.dto.js";
 import { 
   type LoginRequestDto,
   type SignupRequestDto,
@@ -20,6 +25,7 @@ import {
   REFRESH_TOKEN_EXPIRES_IN,
   signAccessToken,
   signRefreshToken,
+  signSocialSignupToken,
   verifyToken,
 } from "./auth.token.js";
 
@@ -73,6 +79,70 @@ async function issueTokenPair(userId: bigint) {
  */
 export function getSocialAuthUrl(provider: SocialProvider) {
   return { authUrl: buildSocialAuthUrl(provider) };
+}
+
+/**
+ * 소셜 로그인. 인가 코드로 소셜 프로필을 조회한 뒤 기존/신규를 판별한다.
+ * - 기존(소셜 계정 존재): 토큰 발급 후 즉시 로그인
+ * - 신규: 소셜 정보를 담은 signupToken 발급 → 회원가입 완료(3번)로 유도
+ */
+export async function socialLogin(
+  provider: SocialProvider,
+  dto: SocialLoginRequestDto,
+): Promise<{ message: string; data: SocialLoginResponseData }> {
+  const social = await getSocialProfile(
+    provider,
+    dto.authorizationCode,
+    dto.redirectUri,
+  );
+
+  const account = await authRepository.findSocialAccountWithUser(
+    social.provider,
+    social.providerId,
+  );
+
+  // 기존 유저 → 즉시 로그인
+  if (account) {
+    const token = await issueTokenPair(account.user.id);
+    return {
+      message: "로그인에 성공했습니다.",
+      data: {
+        isNewUser: false,
+        user: {
+          id: account.user.id.toString(),
+          nickname: account.user.nickname,
+          email: account.user.email,
+          // 스키마에 profileImageUrl 컬럼이 없어 현재는 null (getMe와 동일)
+          profileImageUrl: null,
+          provider: account.user.provider ?? social.provider,
+        },
+        token,
+      },
+    };
+  }
+
+  // 신규 유저 → 소셜 정보를 담은 signupToken 발급
+  const signupToken = signSocialSignupToken({
+    provider: social.provider,
+    providerId: social.providerId,
+    email: social.email,
+    name: social.name,
+    phoneNumber: social.phoneNumber,
+  });
+
+  return {
+    message: "추가 정보 입력이 필요합니다.",
+    data: {
+      isNewUser: true,
+      signupToken,
+      socialInfo: {
+        id: social.providerId,
+        email: social.email,
+        name: social.name,
+        phoneNumber: social.phoneNumber,
+      },
+    },
+  };
 }
 
 /**

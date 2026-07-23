@@ -15,7 +15,13 @@ import {
 } from "tsoa";
 import { AppError } from "../../common/error.js";
 import { success } from "../../common/response.js";
-import { parseLogin, parseRefresh, parseSignup, parseUpdateNickname } from "./auth.dto.js";
+import {
+  parseLogin,
+  parseRefresh,
+  parseSignup,
+  parseSocialLogin,
+  parseUpdateNickname,
+} from "./auth.dto.js";
 import * as authService from "./auth.service.js";
 import { assertSocialProvider } from "./auth.social.js";
 import { extractBearerToken } from "./auth.token.js";
@@ -45,6 +51,24 @@ export class AuthController extends Controller {
     const socialProvider = assertSocialProvider(provider);
     const result = authService.getSocialAuthUrl(socialProvider);
     return success(result);
+  }
+
+  /**
+   * 소셜 로그인 (카카오·구글 구조 동일)
+   *
+   * 인가 코드로 소셜 프로필 조회 후 기존/신규를 판별한다.
+   * 기존 유저는 토큰 발급(즉시 로그인), 신규 유저는 signupToken + socialInfo 반환.
+   */
+  @Post("{provider}/login")
+  @SuccessResponse(200, "OK")
+  @Response<AuthErrorResponse>(400, "AUTH_4001: Redirect URI 불일치")
+  @Response<AuthErrorResponse>(401, "AUTH_4011: 유효하지 않은 인증 코드")
+  @Response<AuthErrorResponse>(500, "AUTH_5021: 소셜 로그인 서버 오류")
+  public async socialLogin(@Path() provider: string, @Body() body: unknown) {
+    const socialProvider = assertSocialProvider(provider);
+    const dto = parseSocialLogin(body);
+    const { data, message } = await authService.socialLogin(socialProvider, dto);
+    return success(data, message);
   }
 
   /** 자체 회원가입 */
