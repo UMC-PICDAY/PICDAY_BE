@@ -16,6 +16,7 @@ import {
 import { AppError } from "../../common/error.js";
 import { success } from "../../common/response.js";
 import {
+  parseCompleteSocialSignup,
   parseLogin,
   parseRefresh,
   parseSignup,
@@ -24,7 +25,7 @@ import {
 } from "./auth.dto.js";
 import * as authService from "./auth.service.js";
 import { assertSocialProvider } from "./auth.social.js";
-import { extractBearerToken } from "./auth.token.js";
+import { extractBearerToken, type SignupTokenPayload } from "./auth.token.js";
 
 type AuthErrorResponse = {
   success: false;
@@ -35,6 +36,8 @@ type AuthErrorResponse = {
 
 // 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다
 type AuthenticatedRequest = { userId: bigint };
+// signup 보안(Signup Token)은 userId 대신 소셜 정보를 채워준다
+type AuthenticatedSignupRequest = { signupInfo: SignupTokenPayload };
 
 @Route("auth")
 @Tags("Auth")
@@ -69,6 +72,29 @@ export class AuthController extends Controller {
     const dto = parseSocialLogin(body);
     const { data, message } = await authService.socialLogin(socialProvider, dto);
     return success(data, message);
+  }
+
+  /**
+   * 소셜 회원가입 완료 (닉네임 설정)
+   *
+   * Authorization: Bearer <SIGNUP_TOKEN> 필수.
+   * 약관 동의를 받아 정식 회원으로 전환하고, 완료 즉시 로그인 토큰을 발급한다.
+   */
+  @Post("signup/complete")
+  @Security("signup")
+  @SuccessResponse(201, "Created")
+  @Response<AuthErrorResponse>(401, "AUTH_4013: 유효하지 않은 토큰")
+  @Response<AuthErrorResponse>(401, "AUTH_4014: Signup Token 만료")
+  public async completeSocialSignup(
+    @Request() request: any,
+    @Body() body: unknown,
+  ) {
+    const { signupInfo } = request as AuthenticatedSignupRequest;
+
+    const dto = parseCompleteSocialSignup(body);
+    const result = await authService.completeSocialSignup(signupInfo, dto);
+    this.setStatus(201);
+    return success(result, "회원가입이 완료되었습니다.");
   }
 
   /** 자체 회원가입 */

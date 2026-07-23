@@ -274,14 +274,19 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"union","subSchemas":[{"ref":"SocialLoginResponseData"},{"dataType":"enum","enums":[null]}],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"boolean","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse__user_58__id_63_-string--nickname_63_-string--provider_63_-LOCAL-or-KAKAO-or-GOOGLE-or-APPLE_--token_58__accessToken-string--refreshToken-string--accessTokenExpiresIn-number--refreshTokenExpiresIn-number___": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"token":{"dataType":"nestedObjectLiteral","nestedProperties":{"refreshTokenExpiresIn":{"dataType":"double","required":true},"accessTokenExpiresIn":{"dataType":"double","required":true},"refreshToken":{"dataType":"string","required":true},"accessToken":{"dataType":"string","required":true}},"required":true},"user":{"dataType":"nestedObjectLiteral","nestedProperties":{"provider":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["LOCAL"]},{"dataType":"enum","enums":["KAKAO"]},{"dataType":"enum","enums":["GOOGLE"]},{"dataType":"enum","enums":["APPLE"]}]},"nickname":{"dataType":"string"},"id":{"dataType":"string"}},"required":true}}},{"dataType":"enum","enums":[null]}],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"boolean","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserStatus": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["ACTIVE"]},{"dataType":"enum","enums":["WITHDRAWN"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ApiResponse__id-string--createdAt-Date--status-UserStatus--name-string--loginId-string--nickname-string--email-string--phoneNumber-string--provider-Provider--refreshToken-string--updatedAt-Date--deletedAt-Date__": {
+    "ApiResponse__id-string--createdAt-Date--status-UserStatus--name-string--nickname-string--provider-Provider--refreshToken-string--loginId-string--email-string--phoneNumber-string--updatedAt-Date--deletedAt-Date__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"deletedAt":{"dataType":"datetime","required":true},"updatedAt":{"dataType":"datetime","required":true},"refreshToken":{"dataType":"string","required":true},"provider":{"ref":"Provider","required":true},"phoneNumber":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"nickname":{"dataType":"string","required":true},"loginId":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"status":{"ref":"UserStatus","required":true},"createdAt":{"dataType":"datetime","required":true},"id":{"dataType":"string","required":true}}},{"dataType":"enum","enums":[null]}],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"boolean","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"deletedAt":{"dataType":"datetime","required":true},"updatedAt":{"dataType":"datetime","required":true},"phoneNumber":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"loginId":{"dataType":"string","required":true},"refreshToken":{"dataType":"string","required":true},"provider":{"ref":"Provider","required":true},"nickname":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"status":{"ref":"UserStatus","required":true},"createdAt":{"dataType":"datetime","required":true},"id":{"dataType":"string","required":true}}},{"dataType":"enum","enums":[null]}],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"string","required":true},"success":{"dataType":"boolean","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ApiResponse__user_58__id-string--loginId-string--nickname-string--provider-Provider_--token_58__accessToken-string--refreshToken-string--accessTokenExpiresIn-number--refreshTokenExpiresIn-number___": {
@@ -964,6 +969,38 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 next,
                 validatedArgs,
                 successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAuthController_completeSocialSignup: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"dataType":"any"},
+        };
+        app.post('/api/v1/auth/signup/complete',
+            authenticateMiddleware([{"signup":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AuthController)),
+            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.completeSocialSignup)),
+
+            async function AuthController_completeSocialSignup(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_completeSocialSignup, request, response });
+
+                const controller = new AuthController();
+
+              await templateService.apiHandler({
+                methodName: 'completeSocialSignup',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
               });
             } catch (err) {
                 return next(err);

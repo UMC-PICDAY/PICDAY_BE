@@ -1,5 +1,5 @@
 import { prisma } from "../../config/prisma.js";
-import type { Provider } from "../../generated/prisma/client.js";
+import { Prisma, type Provider } from "../../generated/prisma/client.js";
 
 
 export type CreateUserData = {
@@ -125,6 +125,77 @@ export async function createUserWithTerms(
 
     return user;
   });
+}
+
+export type CreateSocialUserData = {
+  provider: Provider;
+  providerId: string;
+  email: string;
+  name: string | null;
+  phoneNumber: string | null;
+  nickname: string;
+};
+
+export type CreateSocialUserOutcome =
+  | { kind: "CREATED"; user: Awaited<ReturnType<typeof prisma.user.create>> }
+  // signupToken 재사용(이미 가입 완료된 소셜 계정으로 재요청) — SocialAccount unique 제약 위반
+  | { kind: "ALREADY_REGISTERED" };
+
+/**
+ * 소셜 회원가입 완료: 유저 생성·SocialAccount 연결·약관 동의 저장을 한 트랜잭션으로 처리한다.
+ * signupToken이 이미 소비된 경우(SocialAccount 중복) ALREADY_REGISTERED를 반환한다.
+ */
+export async function createSocialUserWithTerms(
+  data: CreateSocialUserData,
+  agreedTermIds: bigint[],
+): Promise<CreateSocialUserOutcome> {
+  try {
+    const user = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          name: data.name,
+          nickname: data.nickname,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          provider: data.provider,
+          status: "ACTIVE",
+        },
+      });
+
+      await tx.socialAccount.create({
+        data: {
+          userId: user.id,
+          provider: data.provider,
+          providerId: data.providerId,
+        },
+      });
+
+      if (agreedTermIds.length > 0) {
+        const agreedAt = new Date();
+        await tx.userTerms.createMany({
+          data: agreedTermIds.map((termsId) => ({
+            userId: user.id,
+            termsId,
+            isAgreed: true,
+            agreedAt,
+          })),
+        });
+      }
+
+      return user;
+    });
+
+    return { kind: "CREATED", user };
+  } catch (error) {
+    // UNIQUE(provider, provider_id) 제약 위반 = signupToken 재사용(이미 가입 완료됨)
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return { kind: "ALREADY_REGISTERED" };
+    }
+    throw error;
+  }
 }
 
 export async function getUserById(userId: bigint){

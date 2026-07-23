@@ -6,8 +6,14 @@ import {
   getSocialProfile,
   type SocialProvider,
 } from "./auth.social.js";
-import type { SocialLoginRequestDto, SocialLoginResponseData } from "./auth.dto.js";
-import { 
+import type {
+  CompleteSocialSignupRequestDto,
+  CompleteSocialSignupResponseDto,
+  SocialLoginRequestDto,
+  SocialLoginResponseData,
+} from "./auth.dto.js";
+import {
+  completeSocialSignupResponseSchema,
   type LoginRequestDto,
   type SignupRequestDto,
   type GetMeResponseDto,
@@ -27,6 +33,7 @@ import {
   signRefreshToken,
   signSocialSignupToken,
   verifyToken,
+  type SignupTokenPayload,
 } from "./auth.token.js";
 
 // 영문 소문자 시작, 영문 소문자+숫자, 4~12자 (signup 규칙과 동일)
@@ -143,6 +150,49 @@ export async function socialLogin(
       },
     },
   };
+}
+
+/**
+ * 소셜 회원가입 완료. signupToken(소셜 정보)과 약관 동의를 받아 정식 회원으로 전환한다.
+ * 닉네임은 서버 자동 배정, 이름·전화번호는 소셜 동의 항목에서 이미 수집된 값을 그대로 사용.
+ * 완료 즉시 로그인(정식 토큰 발급).
+ */
+export async function completeSocialSignup(
+  signupInfo: SignupTokenPayload,
+  dto: CompleteSocialSignupRequestDto,
+): Promise<CompleteSocialSignupResponseDto> {
+  const agreedTermIds = dto.agreedTermsIds.map((id) => BigInt(id));
+  await assertTermsAgreed(agreedTermIds);
+
+  const nickname = await generateUniqueNickname();
+
+  const outcome = await authRepository.createSocialUserWithTerms(
+    {
+      provider: signupInfo.provider,
+      providerId: signupInfo.providerId,
+      email: signupInfo.email,
+      name: signupInfo.name,
+      phoneNumber: signupInfo.phoneNumber,
+      nickname,
+    },
+    agreedTermIds,
+  );
+
+  // signupToken 재사용(이미 가입 완료된 소셜 계정으로 재요청) → 토큰 무효 취급
+  if (outcome.kind === "ALREADY_REGISTERED") {
+    throw new AppError("AUTH_4013");
+  }
+
+  const token = await issueTokenPair(outcome.user.id);
+
+  return completeSocialSignupResponseSchema.parse({
+    user: {
+      id: outcome.user.id,
+      nickname: outcome.user.nickname,
+      provider: outcome.user.provider,
+    },
+    token,
+  });
 }
 
 /**
