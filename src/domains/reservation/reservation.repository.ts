@@ -74,7 +74,7 @@ export const findReservationCreationReferences = async ({
       },
     }),
     prisma.terms.findMany({
-      where: { isRequired: true },
+      where: { scope: "RESERVATION", isRequired: true },
       select: {
         id: true,
         type: true,
@@ -138,11 +138,11 @@ export const createReservation = async (
 
     const [requiredTerms, agreedTerms] = await Promise.all([
       tx.terms.findMany({
-        where: { isRequired: true },
+        where: { scope: "RESERVATION", isRequired: true },
         select: { id: true },
       }),
       tx.terms.findMany({
-        where: { id: { in: input.agreedTermIds } },
+        where: { scope: "RESERVATION", id: { in: input.agreedTermIds } },
         select: { id: true },
       }),
     ]);

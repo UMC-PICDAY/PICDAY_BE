@@ -53,22 +53,25 @@ export async function updateRefreshToken(
   });
 }
 
-/** 약관 검증용: 필수 약관(isRequired=true)의 ID 목록 */
+/** 약관 검증용: 회원가입 필수 약관(SIGNUP scope, isRequired=true)의 ID 목록 */
 export async function findRequiredTermIds(): Promise<bigint[]> {
   const terms = await prisma.terms.findMany({
-    where: { isRequired: true },
+    where: { scope: "SIGNUP", isRequired: true },
     select: { id: true },
   });
   return terms.map((term) => term.id);
 }
 
-/** 약관 검증용: 주어진 ID 중 실제 존재하는 약관 ID 목록 (미존재 ID 판별용) */
+/**
+ * 약관 검증용: 주어진 ID 중 실제 존재하는 회원가입(SIGNUP) 약관 ID 목록.
+ * scope로 한정해, 예약용 약관 ID를 회원가입에 섞어 보내면 미존재로 판별한다.
+ */
 export async function findExistingTermIds(ids: bigint[]): Promise<bigint[]> {
   if (ids.length === 0) {
     return [];
   }
   const terms = await prisma.terms.findMany({
-    where: { id: { in: ids } },
+    where: { scope: "SIGNUP", id: { in: ids } },
     select: { id: true },
   });
   return terms.map((term) => term.id);

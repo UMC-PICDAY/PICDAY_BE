@@ -1,6 +1,62 @@
 // src/seed.ts
 import "dotenv/config";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { prisma } from "./config/prisma.js";
+import type { TermsScope, TermsType } from "./generated/prisma/client.js";
+
+// 약관 원본(.md)은 repo 루트 terms/auth 에 있고, seed가 읽어 DB content로 넣는다.
+const TERMS_AUTH_DIR = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "terms",
+  "auth",
+);
+
+// 메타데이터는 여기서 타입 안전하게 관리, 본문은 .md 파일에서 로드
+const AUTH_TERMS: ReadonlyArray<{
+  type: TermsType;
+  scope: TermsScope;
+  version: string;
+  isRequired: boolean;
+  file: string;
+}> = [
+  { type: "SERVICE", scope: "SIGNUP", version: "v1", isRequired: true, file: "service.md" },
+  { type: "PRIVACY_COLLECTION", scope: "SIGNUP", version: "v1", isRequired: true, file: "privacy.md" },
+  { type: "AGE_OVER_14", scope: "SIGNUP", version: "v1", isRequired: true, file: "over14.md" },
+  { type: "MARKETING", scope: "SIGNUP", version: "v1", isRequired: false, file: "marketing.md" },
+];
+
+async function seedAuthTerms() {
+  const seeded: { type: TermsType; id: bigint }[] = [];
+
+  for (const term of AUTH_TERMS) {
+    const content = readFileSync(join(TERMS_AUTH_DIR, term.file), "utf-8").trim();
+
+    // (type, version) 유니크 기준 upsert — 재실행해도 중복 생성되지 않음
+    const row = await prisma.terms.upsert({
+      where: { type_version: { type: term.type, version: term.version } },
+      update: {
+        content,
+        scope: term.scope,
+        isRequired: term.isRequired,
+      },
+      create: {
+        type: term.type,
+        scope: term.scope,
+        version: term.version,
+        isRequired: term.isRequired,
+        content,
+      },
+      select: { id: true, type: true },
+    });
+
+    seeded.push(row);
+  }
+
+  return seeded;
+}
 
 const HTTP_TEST_DATE = new Date("2030-12-25T00:00:00.000Z");
 const RESERVATION_TEST_DATE = new Date("2030-12-26T00:00:00.000Z");
@@ -786,7 +842,14 @@ async function main() {
     });
   }
 
+  const seededTerms = await seedAuthTerms();
+
   console.log("✅ 시드 완료");
+
+  console.log("\n--- 회원가입 약관(SIGNUP) 테스트용 ---");
+  for (const term of seededTerms) {
+    console.log(`${term.type.padEnd(20)} ID:`, term.id.toString());
+  }
 
   console.log("\n--- 사진관 및 컨셉 API 테스트용 ---");
   console.log("사진관 A ID                 :", studioA.id.toString());
