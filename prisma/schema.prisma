@@ -324,6 +324,9 @@ model StudioProduct {
   basePeople       Int     @map("base_people") @db.UnsignedInt
   description      String? @db.Text
   shortDescription String? @map("short_description") @db.Text
+  comparisonSummary String?  @map("comparison_summary") @db.VarChar(100) // 상품 비교 - "보정 2장 · 의상 포함"
+  hasAdditionalPrice Boolean @default(false) @map("has_additional_price") // 상품 비교 - 추가금 여부
+
 
   studio        Studio         @relation(fields: [studioId], references: [id])
   productImages ProductImage[]
