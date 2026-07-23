@@ -1,5 +1,5 @@
 import { prisma } from "../../config/prisma.js";
-import { Prisma } from "../../generated/prisma/client.js";
+import { Prisma, type ReviewKeyword } from "../../generated/prisma/client.js";
 
 export type CreateReviewInput = {
   userId: bigint;
@@ -7,6 +7,7 @@ export type CreateReviewInput = {
   reservationId: bigint;
   rating: number;
   content: string;
+  keywords: ReviewKeyword[];
   imageUrls: string[];
 };
 
@@ -18,6 +19,8 @@ export type UpdateReviewInput = {
   reviewId: bigint;
   rating?: number;
   content?: string;
+  // undefined = 태그 변경 없음 / null·[] = 전체 삭제 / 배열 = 전체 교체
+  keywords?: ReviewKeyword[] | null;
   // undefined = 이미지 변경 없음 / null·[] = 전체 삭제 / string[] = 전체 교체
   imageUrls?: string[] | null;
 };
@@ -48,6 +51,9 @@ export async function createReview(
         images: {
           create: input.imageUrls.map((url) => ({ url })),
         },
+        keywords: {
+          create: input.keywords.map((keyword) => ({ keyword })),
+        },
       },
       select: { id: true },
     });
@@ -73,7 +79,7 @@ export async function findReviewOwner(reviewId: bigint) {
 }
 
 export async function updateReview(input: UpdateReviewInput) {
-  const { reviewId, rating, content, imageUrls } = input;
+  const { reviewId, rating, content, keywords, imageUrls } = input;
 
   return prisma.$transaction(async (tx) => {
     const review = await tx.review.update({
@@ -96,15 +102,27 @@ export async function updateReview(input: UpdateReviewInput) {
       }
     }
 
+    // keywords가 전달된 경우에만 전체 교체
+    if (keywords !== undefined) {
+      await tx.reviewKeywordTag.deleteMany({ where: { reviewId } });
+
+      if (keywords !== null && keywords.length > 0) {
+        await tx.reviewKeywordTag.createMany({
+          data: keywords.map((keyword) => ({ reviewId, keyword })),
+        });
+      }
+    }
+
     return review;
   });
 }
 
 export async function deleteReview(reviewId: bigint) {
-  // 자식 레코드(이미지·추천) 먼저 삭제 후 리뷰 삭제
+  // 자식 레코드(이미지·추천·태그) 먼저 삭제 후 리뷰 삭제
   await prisma.$transaction([
     prisma.reviewImage.deleteMany({ where: { reviewId } }),
     prisma.reviewLike.deleteMany({ where: { reviewId } }),
+    prisma.reviewKeywordTag.deleteMany({ where: { reviewId } }),
     prisma.review.delete({ where: { id: reviewId } }),
   ]);
 }
@@ -162,6 +180,7 @@ export type ReviewListRow = {
   createdAt: Date;
   user: { nickname: string | null };
   images: { url: string }[];
+  keywords: { keyword: ReviewKeyword }[];
   _count: { likes: number };
 };
 
@@ -189,6 +208,7 @@ export async function findReviewPage(params: {
       createdAt: true,
       user: { select: { nickname: true } },
       images: { select: { url: true } },
+      keywords: { select: { keyword: true } },
       _count: { select: { likes: true } },
     },
   });
