@@ -22,7 +22,9 @@ PICKDAY_BE/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/          # Feature / Bug / Refactor 이슈 템플릿
 │   └── PULL_REQUEST_TEMPLATE.md # PR 템플릿
+├── docs/                        # API·기능 명세서 등 문서(gitignore)
 ├── prisma/
+│   ├── migrations/              # Prisma 마이그레이션
 │   └── schema.prisma            # DB 스키마 (MySQL)
 ├── src/
 │   ├── common/                  # 공통 유틸 (응답/에러/상수)
@@ -33,28 +35,33 @@ PICKDAY_BE/
 │   │   └── response.ts
 │   ├── config/                  # 앱/인프라 설정
 │   │   ├── prisma.ts
+│   │   ├── s3.ts
 │   │   └── swagger.ts
 │   ├── domains/                 # 도메인별 비즈니스 로직
-│   │   ├── auth/
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── auth.dto.ts
-│   │   │   ├── auth.repository.ts
-│   │   │   ├── auth.router.ts
-│   │   │   └── auth.service.ts
-│   │   ├── reservation/
-│   │   ├── studio/
-│   │   ├── user/                # (예정)
-│   │   ├── review/              # (예정)
+│   │   ├── auth/                # 인증·소셜 로그인·약관
+│   │   ├── image/               # 이미지 업로드 (S3)
+│   │   ├── reservation/         # 예약
+│   │   ├── review/              # 리뷰
 │   │   ├── search/              # (예정)
-│   │   └── wishlist/            # (예정)
-│   ├── generated/               # Prisma Client 생성물 (gitignore)
+│   │   ├── studio/              # 스튜디오
+│   │   ├── user/                # (예정)
+│   │   └── wishlist/            # 위시리스트
+│   ├── generated/               # 생성물 (gitignore)
+│   │   ├── prisma/              # Prisma Client
+│   │   └── routes.ts            # tsoa 라우트
+│   ├── seed.ts                  # 시드 데이터
 │   └── server/
+│       ├── authentication.ts    # tsoa 인증 미들웨어
 │       └── server.ts            # 앱 진입점 / 라우터 등록
+├── terms/                       # 약관 마크다운 (auth)
+│   └── auth/
 ├── .env.example
+├── eslint.config.js
 ├── package.json
 ├── pnpm-lock.yaml
 ├── prisma.config.ts
-└── tsconfig.json
+├── tsconfig.json
+└── tsoa.json
 ```
 
 ### Domain Layer Convention
