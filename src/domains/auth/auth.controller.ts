@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Get,
+  Path,
   Post,
   Patch,
   Query,
   Request,
+  Response,
   Route,
   Security,
   SuccessResponse,
@@ -15,7 +17,15 @@ import { AppError } from "../../common/error.js";
 import { success } from "../../common/response.js";
 import { parseLogin, parseRefresh, parseSignup, parseUpdateNickname } from "./auth.dto.js";
 import * as authService from "./auth.service.js";
+import { assertSocialProvider } from "./auth.social.js";
 import { extractBearerToken } from "./auth.token.js";
+
+type AuthErrorResponse = {
+  success: false;
+  code: string;
+  message: string;
+  data: null;
+};
 
 // 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다
 type AuthenticatedRequest = { userId: bigint };
@@ -23,6 +33,20 @@ type AuthenticatedRequest = { userId: bigint };
 @Route("auth")
 @Tags("Auth")
 export class AuthController extends Controller {
+  /**
+   * 소셜 인증 URL 생성
+   *
+   * provider(kakao|google)의 소셜 인증 페이지로 보낼 authorize URL을 생성한다.
+   */
+  @Get("{provider}/url")
+  @SuccessResponse(200, "OK")
+  @Response<AuthErrorResponse>(500, "AUTH_5021: 소셜 로그인 서버 오류")
+  public async getSocialAuthUrl(@Path() provider: string) {
+    const socialProvider = assertSocialProvider(provider);
+    const result = authService.getSocialAuthUrl(socialProvider);
+    return success(result);
+  }
+
   /** 자체 회원가입 */
   @Post("signup")
   @SuccessResponse(201, "Created")

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
 import * as authRepository from "./auth.repository.js";
+import { buildSocialAuthUrl, type SocialProvider } from "./auth.social.js";
 import { 
   type LoginRequestDto,
   type SignupRequestDto,
@@ -64,6 +65,14 @@ async function issueTokenPair(userId: bigint) {
     accessTokenExpiresIn: ACCESS_TOKEN_EXPIRES_IN,
     refreshTokenExpiresIn: REFRESH_TOKEN_EXPIRES_IN,
   };
+}
+
+/**
+ * 소셜 인증 URL 생성.
+ * provider(kakao|google)별 authorize URL을 만들어 반환한다.
+ */
+export function getSocialAuthUrl(provider: SocialProvider) {
+  return { authUrl: buildSocialAuthUrl(provider) };
 }
 
 export async function register(dto: SignupRequestDto) {
