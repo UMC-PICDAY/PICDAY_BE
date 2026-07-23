@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { ShootingCategory } from "../../generated/prisma/enums.js";
+import {
+  LocationCategory,
+  ServiceCode,
+  ShootingCategory,
+} from "../../generated/prisma/enums.js";
 
 export const createStudioSchema = z.object({
   name: z.string().min(1),
@@ -243,4 +247,98 @@ export function createStudioProductsResponse(
   input: StudioProductsResponseInputDto,
 ): StudioProductsResponseDto {
   return studioProductsResponseSchema.parse(input);
+}
+
+// 사진관 상세 정보 조회 API
+export const getStudioDetailRequestSchema = z.object({
+  studioId: studioIdSchema,
+});
+
+export type GetStudioDetailRequestDto = z.input<
+  typeof getStudioDetailRequestSchema
+>;
+
+export type GetStudioDetailQuery = z.output<
+  typeof getStudioDetailRequestSchema
+>;
+
+export function parseGetStudioDetailRequest(
+  input: GetStudioDetailRequestDto,
+): GetStudioDetailQuery {
+  return getStudioDetailRequestSchema.parse(input);
+}
+
+export const studioDetailLocationSchema = z.object({
+  locationCategory: z.enum(LocationCategory).nullable(),
+  district: z.string().nullable(),
+  address: z.string().nullable(),
+  latitude: z.number().nullable(),
+  longitude: z.number().nullable(),
+  nearestStation: z.string().nullable(),
+  walkingMinutes: z.number().int().nonnegative().nullable(),
+  stationLineCodes: z.array(z.number().int().positive()),
+});
+
+export const studioDetailRepresentativeProductSchema = z.object({
+  studioProductId: z.bigint().transform((id) => id.toString()),
+  productName: z.string(),
+  thumbnailUrl: z.url().nullable(),
+  price: z.number().int().nonnegative(),
+});
+
+export const studioDetailNoticeSchema = z.object({
+  title: z.string(),
+  items: z.array(z.string()),
+});
+
+export const studioDetailInfoSchema = z.object({
+  operation: z.array(z.string()),
+  parking: z.array(z.string()),
+  shootingGuide: z.array(z.string()),
+  refundGuide: z.array(z.string()),
+});
+
+export const studioDetailPreviewReviewSchema = z.object({
+  reviewId: z.bigint().transform((id) => id.toString()),
+  writerNickname: z.string(),
+  isBest: z.boolean(),
+  rating: z.number().int().min(1).max(5),
+  createdAt: z.date().transform((date) => date.toISOString()),
+  content: z.string(),
+  imageUrls: z.array(z.url()),
+});
+
+export const studioDetailReviewSummarySchema = z.object({
+  averageRating: z.number().min(0).max(5).nullable(),
+  reviewCount: z.number().int().nonnegative(),
+  previewReview: studioDetailPreviewReviewSchema.nullable(),
+});
+
+export const studioDetailResponseSchema = z.object({
+  studioId: z.bigint().transform((id) => id.toString()),
+  studioName: z.string(),
+  imageUrls: z.array(z.url()),
+  isWishlisted: z.boolean(),
+  location: studioDetailLocationSchema,
+  representativeProducts: z.array(studioDetailRepresentativeProductSchema),
+  serviceCodes: z.array(z.enum(ServiceCode)),
+  introduction: z.string().nullable(),
+  notice: studioDetailNoticeSchema.nullable(),
+  studioInfo: studioDetailInfoSchema,
+  hairMakeupPartnerCount: z.number().int().nonnegative(),
+  reviewSummary: studioDetailReviewSummarySchema,
+});
+
+export type StudioDetailResponseInputDto = z.input<
+  typeof studioDetailResponseSchema
+>;
+
+export type StudioDetailResponseDto = z.output<
+  typeof studioDetailResponseSchema
+>;
+
+export function createStudioDetailResponse(
+  input: StudioDetailResponseInputDto,
+): StudioDetailResponseDto {
+  return studioDetailResponseSchema.parse(input);
 }
