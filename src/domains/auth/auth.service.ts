@@ -313,6 +313,17 @@ export async function refresh(userId: bigint, refreshToken: string) {
   return { token };
 }
 
+/**
+ * 로그아웃. 서버에 저장된 Refresh Token을 무효화(null)하여 세션을 종료한다.
+ *
+ * userId는 @Security("jwt")를 통과한 Access Token에서 나온 값이다.
+ * refreshToken을 지우면 이후 토큰 갱신(refresh) 시 DB 대조에서 불일치로 걸러진다.
+ * (Cookie 미사용 — Authorization Header 기반이므로 서버는 refreshToken만 무효화한다)
+ */
+export async function logout(userId: bigint): Promise<void> {
+  await authRepository.updateRefreshToken(userId, null);
+}
+
 export async function checkLoginIdAvailability(rawLoginId: string) {
   const loginId = rawLoginId.toLowerCase();
   if (!LOGIN_ID_REGEX.test(loginId)) {

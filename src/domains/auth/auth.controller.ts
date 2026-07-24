@@ -144,6 +144,23 @@ export class AuthController extends Controller {
     return success(result, "토큰이 갱신되었습니다.");
   }
 
+  /**
+   * 로그아웃
+   *
+   * Authorization: Bearer <ACCESS_TOKEN> 필수.
+   * 서버에 저장된 Refresh Token을 무효화(null)하여 세션을 종료한다.
+   */
+  @Security("jwt")
+  @Post("logout")
+  @SuccessResponse(200, "OK")
+  @Response<AuthErrorResponse>(401, "AUTH_4013: 유효하지 않은 토큰")
+  public async logout(@Request() request: any) {
+    const { userId } = request as AuthenticatedRequest;
+
+    await authService.logout(userId);
+    return success(null, "로그아웃되었습니다.");
+  }
+
   /** 아이디 중복 확인 */
   @Get("loginid/check")
   @SuccessResponse(200, "OK")
