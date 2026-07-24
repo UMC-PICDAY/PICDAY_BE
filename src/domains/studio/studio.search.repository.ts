@@ -34,10 +34,10 @@ export async function findHighRatedStudios() {
         select: {
           productImages: {
             // studioThumbnailImage
-            orderBy: {
-              studioThumbnailOrder: { sort: "asc", nulls: "last" },
-              id: "asc",
-            },
+            orderBy: [
+              { ratingRank: { sort: "asc", nulls: "last" } },
+              { id: "asc" },
+            ],
             take: 1,
             select: {
               url: true,
@@ -72,10 +72,10 @@ export async function findRecentlyViewedStudios(userId: bigint) {
               price: true,
               productImages: {
                 // studioThumbnailImage
-                orderBy: {
-                  studioThumbnailOrder: { sort: "asc", nulls: "last" },
-                  id: "asc",
-                },
+                orderBy: [
+                  { ratingRank: { sort: "asc", nulls: "last" } },
+                  { id: "asc" },
+                ],
                 take: 1,
                 select: {
                   url: true,
@@ -107,10 +107,10 @@ export async function findPopularStudios() {
         select: {
           price: true,
           productImages: {
-            orderBy: {
-              studioThumbnailOrder: { sort: "asc", nulls: "last" },
-              id: "asc",
-            },
+            orderBy: [
+              { ratingRank: { sort: "asc", nulls: "last" } },
+              { id: "asc" },
+            ],
             take: 1,
             select: {
               url: true,
@@ -146,10 +146,10 @@ export async function findStudiosByLocationCategory(
             select: {
               price: true,
               productImages: {
-                orderBy: {
-                  studioThumbnailOrder: { sort: "asc", nulls: "last" },
-                  id: "asc",
-                },
+                orderBy: [
+                  { ratingRank: { sort: "asc", nulls: "last" } },
+                  { id: "asc" },
+                ],
                 select: {
                   url: true,
                   studioThumbnailOrder: true,
