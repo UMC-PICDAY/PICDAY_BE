@@ -82,6 +82,33 @@ export type FindStudioProductsResult = Awaited<
   ReturnType<typeof findStudioProducts>
 >;
 
+// === 헤어메이크업 연계 상세 조회 API ===
+export async function findStudioHairMakeupDetails(studioId: bigint) {
+  return prisma.studio.findUnique({
+    where: { id: studioId },
+    select: {
+      id: true,
+      studioServices: {
+        where: { serviceCode: "HAIR_MAKEUP" },
+        select: {
+          hairMakeupDetails: {
+            orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
+            select: {
+              id: true,
+              partnerName: true,
+              additionalPrice: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type FindStudioHairMakeupDetailsResult = Awaited<
+  ReturnType<typeof findStudioHairMakeupDetails>
+>;
+
 export async function findTimeSlotById(timeSlotId: bigint) {
   return prisma.timeSlot.findUnique({
     where: { id: timeSlotId },
@@ -115,9 +142,7 @@ export type FindStudioForProductDetailResult = Awaited<
   ReturnType<typeof findStudioForProductDetail>
 >;
 
-export async function findStudioProductDetailById(
-  studioProductId: bigint,
-) {
+export async function findStudioProductDetailById(studioProductId: bigint) {
   return prisma.studioProduct.findUnique({
     where: { id: studioProductId },
     select: {

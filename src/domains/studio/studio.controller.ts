@@ -12,6 +12,7 @@ import { success, type ApiResponse } from "../../common/response.js";
 import type {
   GetStudioSlotsSuccessResponseDto,
   StudioDetailResponseDto,
+  StudioHairMakeupResponseDto,
   StudioProductDetailResponseDto,
   StudioProductsResponseDto,
 } from "./studio.dto.js";
@@ -45,10 +46,24 @@ export class StudioController extends Controller {
   ): Promise<ApiResponse<StudioDetailResponseDto>> {
     const data = await studioService.getStudioDetail(studioId);
 
-    return success(
-      data,
-      "사진관 상세 정보 조회에 성공했습니다.",
-    );
+    return success(data, "사진관 상세 정보 조회에 성공했습니다.");
+  }
+
+  // === 헤어메이크업 연계 상세 조회 API ===
+  @Get("{studioId}/hair-makeup")
+  @SuccessResponse("200", "사진관 헤어메이크업 연계 정보 조회 성공")
+  @Response<AppErrorResponse>(
+    "400",
+    "STUDIO_4001: 사진관 API 요청 형식 또는 입력값이 올바르지 않습니다.",
+  )
+  @Response<AppErrorResponse>("404", "STUDIO_4041: 존재하지 않는 사진관입니다.")
+  @Response<AppErrorResponse>("500", "COMMON_500: 서버 오류가 발생했습니다.")
+  public async getStudioHairMakeup(
+    @Path() studioId: string,
+  ): Promise<ApiResponse<StudioHairMakeupResponseDto>> {
+    const data = await studioService.getStudioHairMakeup(studioId);
+
+    return success(data, "사진관 헤어메이크업 연계 정보 조회에 성공했습니다.");
   }
 
   // === 예약 가능 시간 조회 API ===
@@ -78,10 +93,7 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Query() timeSlotId?: string,
   ): Promise<GetStudioProductsSuccessResponseDto> {
-    const data = await studioService.getStudioProducts(
-      studioId,
-      timeSlotId,
-    );
+    const data = await studioService.getStudioProducts(studioId, timeSlotId);
 
     return {
       success: true,
@@ -106,9 +118,6 @@ export class StudioController extends Controller {
       studioProductId,
     );
 
-    return success(
-      data,
-      "사진관 컨셉 사진 조회에 성공했습니다.",
-    );
+    return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
   }
 }
