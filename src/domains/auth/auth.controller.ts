@@ -5,6 +5,7 @@ import {
   Path,
   Post,
   Patch,
+  Delete,
   Query,
   Request,
   Response,
@@ -187,7 +188,7 @@ export class AuthController extends Controller {
   }
 
   @Security("jwt")
-  @Patch("me/withdraw")
+  @Delete("me")
   @SuccessResponse(200, "OK")
   public async withdraw(@Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
