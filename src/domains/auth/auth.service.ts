@@ -399,3 +399,23 @@ export async function withdraw(userId: bigint): Promise<void> {
 
   await authRepository.withdrawUser(userId);
 }
+
+const ANONYMIZATION_RETENTION_DAYS = 7;
+
+/** 탈퇴 후 7일 지난 회원 일괄 익명화. 매일 새벽 배치가 호출. */
+export async function anonymizeWithdrawnUsers(): Promise<number> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - ANONYMIZATION_RETENTION_DAYS);
+
+  const targets = await authRepository.findUsersEligibleForAnonymization(cutoff);
+
+  if (targets.length === 0) {
+    return 0;
+  }
+
+  await Promise.all(
+    targets.map((user) => authRepository.anonymizeUser(user.id)),
+  );
+
+  return targets.length;
+}

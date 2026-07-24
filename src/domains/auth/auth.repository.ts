@@ -217,12 +217,41 @@ export async function updateNickname(userId: bigint, nickname: string){
   })
 }
 
+// 회원 탈퇴 - soft delete
 export async function withdrawUser(userId: bigint) {
   return await prisma.user.update({
     where: { id: userId },
     data: {
       status: "WITHDRAWN",
       deletedAt: new Date(),
+      refreshToken: null,
+    },
+  });
+}
+
+// 탈퇴 후 익명화 대상 조회
+export async function findUsersEligibleForAnonymization(cutoff: Date) {
+  return prisma.user.findMany({
+    where: {
+      status: "WITHDRAWN",
+      deletedAt: { lte: cutoff },
+      loginId: { not: null },
+    },
+    select: { id: true },
+  });
+}
+
+// 개인정보 익명화 처리
+export async function anonymizeUser(userId: bigint) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      loginId: null,
+      password: null,
+      name: null,
+      nickname: `탈퇴한회원_${userId}`,
+      email: null,
+      phoneNumber: null,
       refreshToken: null,
     },
   });
