@@ -242,12 +242,21 @@ export const getReservationById = async (reservationId: bigint) => {
 
 // 예약 취소
 export const cancelReservation = async (reservationId: bigint) => {
-  return await prisma.reservation.update({
-    where: { id: reservationId },
-    data: {
-      status: "CANCELLED",
-      canceledAt: new Date(),
-    },
+  return await prisma.$transaction(async (tx) => {
+    const reservation = await tx.reservation.update({
+      where: { id: reservationId },
+      data: {
+        status: "CANCELLED",
+        canceledAt: new Date(),
+      },
+    });
+
+    await tx.timeSlot.update({
+      where: { id: reservation.timeSlotId },
+      data: { isAvailable: true },
+    });
+
+    return reservation;
   });
 };
 
@@ -268,5 +277,15 @@ export const getReservationsByUserId = async (
       timeSlot: true,
     },
     orderBy: { createdAt: "desc" },
+  });
+};
+
+// 진행 중인 예약이 존재하는지 확인
+export const getActiveReservationByUserId = async (userId: bigint) => {
+  return await prisma.reservation.findFirst({
+    where: {
+      userId,
+      status: "RESERVED",
+    },
   });
 };
