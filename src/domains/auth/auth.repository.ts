@@ -1,4 +1,5 @@
 import { prisma } from "../../config/prisma.js";
+import { Prisma, type Provider } from "../../generated/prisma/client.js";
 
 
 export type CreateUserData = {
@@ -42,6 +43,17 @@ export async function findActiveLocalUserByLoginId(loginId: string) {
   });
 }
 
+/** 소셜 로그인용: (provider, providerId)로 소셜 계정과 연결된 유저를 함께 조회 */
+export async function findSocialAccountWithUser(
+  provider: Provider,
+  providerId: string,
+) {
+  return prisma.socialAccount.findUnique({
+    where: { provider_providerId: { provider, providerId } },
+    include: { user: true },
+  });
+}
+
 /** 로그인/로그아웃 시 refreshToken 저장 또는 삭제(null) */
 export async function updateRefreshToken(
   userId: bigint,
@@ -53,17 +65,154 @@ export async function updateRefreshToken(
   });
 }
 
-export async function createUser(data: CreateUserData) {
-  return prisma.user.create({
-    data: {
-      loginId: data.loginId,
-      password: data.password,
-      name: data.name,
-      nickname: data.nickname,
-      email: data.email,
-      phoneNumber: data.phoneNumber,
-      provider: "LOCAL",
-      status: "ACTIVE",
-    },
+/** 약관 검증용: 회원가입 필수 약관(SIGNUP scope, isRequired=true)의 ID 목록 */
+export async function findRequiredTermIds(): Promise<bigint[]> {
+  const terms = await prisma.terms.findMany({
+    where: { scope: "SIGNUP", isRequired: true },
+    select: { id: true },
   });
+  return terms.map((term) => term.id);
+}
+
+/**
+ * 약관 검증용: 주어진 ID 중 실제 존재하는 회원가입(SIGNUP) 약관 ID 목록.
+ * scope로 한정해, 예약용 약관 ID를 회원가입에 섞어 보내면 미존재로 판별한다.
+ */
+export async function findExistingTermIds(ids: bigint[]): Promise<bigint[]> {
+  if (ids.length === 0) {
+    return [];
+  }
+  const terms = await prisma.terms.findMany({
+    where: { scope: "SIGNUP", id: { in: ids } },
+    select: { id: true },
+  });
+  return terms.map((term) => term.id);
+}
+
+/**
+ * 자체 회원가입: 유저 생성과 약관 동의 저장을 한 트랜잭션으로 원자적으로 처리한다.
+ * 유저만 생성되고 약관 동의가 유실되는 부분 실패를 방지한다.
+ */
+export async function createUserWithTerms(
+  data: CreateUserData,
+  agreedTermIds: bigint[],
+) {
+  return prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        loginId: data.loginId,
+        password: data.password,
+        name: data.name,
+        nickname: data.nickname,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        provider: "LOCAL",
+        status: "ACTIVE",
+      },
+    });
+
+    if (agreedTermIds.length > 0) {
+      const agreedAt = new Date();
+      await tx.userTerms.createMany({
+        data: agreedTermIds.map((termsId) => ({
+          userId: user.id,
+          termsId,
+          isAgreed: true,
+          agreedAt,
+        })),
+      });
+    }
+
+    return user;
+  });
+}
+
+export type CreateSocialUserData = {
+  provider: Provider;
+  providerId: string;
+  email: string | null;
+  name: string | null;
+  phoneNumber: string | null;
+  nickname: string;
+};
+
+export type CreateSocialUserOutcome =
+  | { kind: "CREATED"; user: Awaited<ReturnType<typeof prisma.user.create>> }
+  // signupToken 재사용(이미 가입 완료된 소셜 계정으로 재요청) — SocialAccount unique 제약 위반
+  | { kind: "ALREADY_REGISTERED" };
+
+/**
+ * 소셜 회원가입 완료: 유저 생성·SocialAccount 연결·약관 동의 저장을 한 트랜잭션으로 처리한다.
+ * signupToken이 이미 소비된 경우(SocialAccount 중복) ALREADY_REGISTERED를 반환한다.
+ */
+export async function createSocialUserWithTerms(
+  data: CreateSocialUserData,
+  agreedTermIds: bigint[],
+): Promise<CreateSocialUserOutcome> {
+  try {
+    const user = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          name: data.name,
+          nickname: data.nickname,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          provider: data.provider,
+          status: "ACTIVE",
+        },
+      });
+
+      await tx.socialAccount.create({
+        data: {
+          userId: user.id,
+          provider: data.provider,
+          providerId: data.providerId,
+        },
+      });
+
+      if (agreedTermIds.length > 0) {
+        const agreedAt = new Date();
+        await tx.userTerms.createMany({
+          data: agreedTermIds.map((termsId) => ({
+            userId: user.id,
+            termsId,
+            isAgreed: true,
+            agreedAt,
+          })),
+        });
+      }
+
+      return user;
+    });
+
+    return { kind: "CREATED", user };
+  } catch (error) {
+    // UNIQUE(provider, provider_id) 제약 위반 = signupToken 재사용(이미 가입 완료됨)
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return { kind: "ALREADY_REGISTERED" };
+    }
+    throw error;
+  }
+}
+
+export async function getUserById(userId: bigint){
+  return prisma.user.findUnique({
+    where: { id: userId }
+  });
+}
+
+export async function getUserByNickname(nickname: string){
+  return prisma.user.findUnique({
+    where: { nickname: nickname }
+  })
+}
+
+export async function updateNickname(userId: bigint, nickname: string){
+  return prisma.user.update({
+    where: { id: userId },
+    data: { nickname }
+  })
 }

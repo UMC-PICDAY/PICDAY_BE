@@ -26,7 +26,7 @@ model Reservation {
   studioProductId BigInt @map("studio_product_id")
 
   reserveeName  String @map("reservee_name") @db.VarChar(50)
-  reserveePhone String @map("reservee_Phone") @db.VarChar(20)
+  reserveePhone String @map("reservee_phone") @db.VarChar(20)
   totalPrice    Int    @map("total_price") @db.UnsignedInt
 
   status     ReservationStatus @default(RESERVED)
@@ -103,19 +103,31 @@ model TimeSlot {
 // 약관 (Terms) 모델
 // ==========================================
 enum TermsType {
+  // 예약·결제용
   REFUND_POLICY
   PRIVACY_COLLECTION
   THIRD_PARTY
   PAYMENT_AGENCY
+  // 회원가입용
+  SERVICE
+  AGE_OVER_14
+  MARKETING
+}
+
+// 약관이 쓰이는 맥락. 필수 약관(isRequired) 조회를 맥락별로 분리하기 위함.
+enum TermsScope {
+  SIGNUP
+  RESERVATION
 }
 
 model Terms {
-  id         BigInt    @id @default(autoincrement())
+  id         BigInt     @id @default(autoincrement())
   type       TermsType
-  version    String    @db.VarChar(10)
-  content    String    @db.Text
-  isRequired Boolean   @map("is_required")
-  createdAt  DateTime  @default(now()) @map("created_at")
+  scope      TermsScope
+  version    String     @db.VarChar(10)
+  content    String     @db.Text
+  isRequired Boolean    @map("is_required")
+  createdAt  DateTime   @default(now()) @map("created_at")
 
   // 관계 설정 
   reservationTerms ReservationTerms[]
@@ -231,10 +243,10 @@ model Studio {
   introduction String? @map("introduction") @db.Text // 사진관 소개
   notice       String? @map("notice") @db.Text // 공지사항
 
-  ratingScore       Float? @map("rating_score")       // 평균 평점 (배치가 채움)
-  ratingRank        Int?   @map("rating_rank")         // 평점 기준 순위, 1~10이 배너에 해당 (배치가 채움)
-  reservationCount  Int?   @map("reservation_count")  // 예약 완료 건수 (배치가 채움)
-  reservationRank   Int?   @map("reservation_rank")   // 예약건수 기준 순위, '지금 인기 있는 사진관'에 해당 (배치가 채움)
+  ratingScore      Float? @map("rating_score") // 평균 평점 (배치가 채움)
+  ratingRank       Int?   @map("rating_rank") // 평점 기준 순위, 1~10이 배너에 해당 (배치가 채움)
+  reservationCount Int?   @map("reservation_count") // 예약 완료 건수 (배치가 채움)
+  reservationRank  Int?   @map("reservation_rank") // 예약건수 기준 순위, '지금 인기 있는 사진관'에 해당 (배치가 채움)
 
   recentStudioViews RecentStudioView[] // 최근 본 사진관 (로그인 유저 기준)
 
@@ -252,10 +264,10 @@ model Studio {
 }
 
 model RecentStudioView {
-  id        BigInt   @id @default(autoincrement())
-  userId    BigInt   @map("user_id")
-  studioId  BigInt   @map("studio_id")
-  viewedAt  DateTime @default(now()) @map("viewed_at")
+  id       BigInt   @id @default(autoincrement())
+  userId   BigInt   @map("user_id")
+  studioId BigInt   @map("studio_id")
+  viewedAt DateTime @default(now()) @map("viewed_at")
 
   user   User   @relation(fields: [userId], references: [id])
   studio Studio @relation(fields: [studioId], references: [id])
@@ -291,9 +303,9 @@ model StudioLocation {
   latitude  Decimal? @db.Decimal(10, 7)
   longitude Decimal? @db.Decimal(10, 7)
 
-  nearestStation String  @map("nearest_station") @db.VarChar(50)
-  walkingMinutes Int     @map("walking_minutes")
-  stationDetail  Json? @map("station_detail")
+  nearestStation String @map("nearest_station") @db.VarChar(50)
+  walkingMinutes Int    @map("walking_minutes")
+  stationDetail  Json?  @map("station_detail")
 
   studio Studio @relation(fields: [studioId], references: [id])
 
@@ -306,12 +318,12 @@ model StudioLocation {
 // Studio (Product 단위) 모델
 // ==========================================
 enum ShootingCategory {
-  ID_PHOTO            // 증명
-  PROFILE             // 프로필
-  PERSONAL_PORTRAIT   // 개인화보
-  JOB_PHOTO           // 취업
-  FAMILY              // 가족
-  FRIENDSHIP          // 우정
+  ID_PHOTO // 증명
+  PROFILE // 프로필
+  PERSONAL_PORTRAIT // 개인화보
+  JOB_PHOTO // 취업
+  FAMILY // 가족
+  FRIENDSHIP // 우정
 }
 
 model StudioProduct {
@@ -319,14 +331,13 @@ model StudioProduct {
   studioId         BigInt           @map("studio_id")
   shootingCategory ShootingCategory @map("shooting_category")
 
-  name             String  @db.VarChar(50)
-  price            Int
-  basePeople       Int     @map("base_people") @db.UnsignedInt
-  description      String? @db.Text
-  shortDescription String? @map("short_description") @db.Text
-  comparisonSummary String?  @map("comparison_summary") @db.VarChar(100) // 상품 비교 - "보정 2장 · 의상 포함"
+  name               String  @db.VarChar(50)
+  price              Int
+  basePeople         Int     @map("base_people") @db.UnsignedInt
+  description        String? @db.Text
+  shortDescription   String? @map("short_description") @db.Text
+  comparisonSummary  String? @map("comparison_summary") @db.VarChar(100) // 상품 비교 - "보정 2장 · 의상 포함"
   hasAdditionalPrice Boolean @default(false) @map("has_additional_price") // 상품 비교 - 추가금 여부
-
 
   studio        Studio         @relation(fields: [studioId], references: [id])
   productImages ProductImage[]
@@ -374,10 +385,34 @@ model Review {
   user        User        @relation(fields: [userId], references: [id])
   studio      Studio      @relation(fields: [studioId], references: [id]) // Studio 모델 추가 후 주석 해제
 
-  images ReviewImage[]
-  likes  ReviewLike[]
+  images   ReviewImage[]
+  likes    ReviewLike[]
+  keywords ReviewKeywordTag[]
 
   @@map("review")
+}
+
+// 리뷰 태그 ("어떤 점이 좋았나요?" 복수선택, 선택 항목)
+enum ReviewKeyword {
+  KIND_SERVICE // 친절한 응대
+  DETAILED_RETOUCH // 꼼꼼한 보정
+  ON_TIME // 시간 엄수
+  COMFORTABLE_MOOD // 편안한 분위기
+  REASONABLE_PRICE // 합리적인 가격
+  SATISFYING_RESULT // 만족스러운 결과물
+}
+
+model ReviewKeywordTag {
+  id       BigInt        @id @default(autoincrement())
+  reviewId BigInt        @map("review_id")
+  keyword  ReviewKeyword
+
+  // 관계 설정
+  review Review @relation(fields: [reviewId], references: [id])
+
+  // 리뷰당 같은 태그 중복 방지
+  @@unique([reviewId, keyword])
+  @@map("review_keyword")
 }
 
 // ==========================================
@@ -441,8 +476,8 @@ enum ServiceCode {
 }
 
 model StudioService {
-  id          BigInt            @id @default(autoincrement())
-  studioId    BigInt            @map("studio_id")
+  id          BigInt      @id @default(autoincrement())
+  studioId    BigInt      @map("studio_id")
   serviceCode ServiceCode @map("service_code")
 
   studio Studio @relation(fields: [studioId], references: [id], onDelete: Cascade)

@@ -12,12 +12,17 @@ import {
 import { success, type ApiResponse } from "../../common/response.js";
 import type {
   GetStudioSlotsSuccessResponseDto,
+  StudioDetailResponseDto,
+  StudioHairMakeupResponseDto,
   StudioProductDetailResponseDto,
   StudioProductsResponseDto,
-} from "./studio.dto.js";
-import type { GetHomeResponseDto } from "./studio.search.dto.js";
+} from "./studio.detail.dto.js";
+import type {
+  GetHomeResponseDto,
+  StudioAutocompleteResponseDto,
+} from "./studio.search.dto.js";
+import * as studioDetailService from "./studio.detail.service.js";
 import * as studioSearchService from "./studio.search.service.js";
-import * as studioService from "./studio.service.js";
 
 type AppErrorResponse = {
   success: false;
@@ -31,6 +36,14 @@ type GetStudioProductsSuccessResponseDto = {
   code: "COMMON_200";
   message: "사진관 컨셉 목록 조회에 성공했습니다.";
   data: StudioProductsResponseDto;
+};
+
+// 사진관 자동완성 검색 API 응답
+type GetStudioAutocompleteSuccessResponseDto = {
+  success: true;
+  code: "STUDIO_200";
+  message: "사진관 자동완성 조회에 성공했습니다.";
+  data: StudioAutocompleteResponseDto;
 };
 
 // === api/v1/home ===
@@ -56,6 +69,37 @@ export class HomeController extends Controller {
 @Route("studios")
 @Tags("Studio")
 export class StudioController extends Controller {
+  // === 사진관 상세 정보 조회 API ===
+  @Get("{studioId}")
+  @SuccessResponse(200, "OK")
+  @Response<AppErrorResponse>(400, "STUDIO_4001: 잘못된 요청")
+  @Response<AppErrorResponse>(404, "STUDIO_4041: 사진관을 찾을 수 없음")
+  @Response<AppErrorResponse>(500, "COMMON_500: 서버 오류")
+  public async getStudioDetail(
+    @Path() studioId: string,
+  ): Promise<ApiResponse<StudioDetailResponseDto>> {
+    const data = await studioDetailService.getStudioDetail(studioId);
+
+    return success(data, "사진관 상세 정보 조회에 성공했습니다.");
+  }
+
+  // === 헤어메이크업 연계 상세 조회 API ===
+  @Get("{studioId}/hair-makeup")
+  @SuccessResponse("200", "사진관 헤어메이크업 연계 정보 조회 성공")
+  @Response<AppErrorResponse>(
+    "400",
+    "STUDIO_4001: 사진관 API 요청 형식 또는 입력값이 올바르지 않습니다.",
+  )
+  @Response<AppErrorResponse>("404", "STUDIO_4041: 존재하지 않는 사진관입니다.")
+  @Response<AppErrorResponse>("500", "COMMON_500: 서버 오류가 발생했습니다.")
+  public async getStudioHairMakeup(
+    @Path() studioId: string,
+  ): Promise<ApiResponse<StudioHairMakeupResponseDto>> {
+    const data = await studioDetailService.getStudioHairMakeup(studioId);
+
+    return success(data, "사진관 헤어메이크업 연계 정보 조회에 성공했습니다.");
+  }
+
   // === 예약 가능 시간 조회 API ===
   @Get("{studioId}/slots")
   @SuccessResponse(200, "OK")
@@ -63,7 +107,7 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Query() date?: string,
   ): Promise<GetStudioSlotsSuccessResponseDto> {
-    const data = await studioService.getStudioSlots(studioId, date);
+    const data = await studioDetailService.getStudioSlots(studioId, date);
 
     return {
       success: true,
@@ -83,7 +127,10 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Query() timeSlotId?: string,
   ): Promise<GetStudioProductsSuccessResponseDto> {
-    const data = await studioService.getStudioProducts(studioId, timeSlotId);
+    const data = await studioDetailService.getStudioProducts(
+      studioId,
+      timeSlotId,
+    );
 
     return {
       success: true,
@@ -103,11 +150,27 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Path() studioProductId: string,
   ): Promise<ApiResponse<StudioProductDetailResponseDto>> {
-    const data = await studioService.getStudioProductDetail(
+    const data = await studioDetailService.getStudioProductDetail(
       studioId,
       studioProductId,
     );
 
     return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
+  }
+
+  // === 사진관 자동완성 검색 API ===
+  @Get("autocomplete")
+  @SuccessResponse(200, "OK")
+  public async getStudioAutocomplete(
+    @Query() keyword: string,
+  ): Promise<GetStudioAutocompleteSuccessResponseDto> {
+    const data = await studioSearchService.getStudioAutocomplete(keyword);
+
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "사진관 자동완성 조회에 성공했습니다.",
+      data,
+    };
   }
 }

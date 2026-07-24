@@ -4,7 +4,6 @@
   - You are about to drop the column `description` on the `studio` table. All the data in the column will be lost.
   - You are about to drop the column `facility_description` on the `studio` table. All the data in the column will be lost.
   - You are about to alter the column `station_detail` on the `studio_location` table. The data in that column could be lost. The data in that column will be cast from `VarChar(150)` to `Json`.
-
 */
 -- AlterTable
 ALTER TABLE `studio` DROP COLUMN `description`,

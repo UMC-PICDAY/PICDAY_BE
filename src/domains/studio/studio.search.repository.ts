@@ -1,5 +1,9 @@
 import { prisma } from "../../config/prisma.js";
 
+// ========================================================
+// ======================== 홈 화면  ========================
+// ========================================================
+
 import type { LocationCategory } from "../../generated/prisma/enums.js";
 //   | "HONGDAE"
 //   | "GANGNAM"
@@ -177,3 +181,27 @@ export async function findStudiosByLocationCategory(
     },
   });
 }
+
+// ========================================================
+// =================== 사진관 검색 자동 완성 ===================
+// ========================================================
+
+// === 사진관 자동완성 검색 API ===
+export async function findStudiosByNameKeyword(keyword: string) {
+  return prisma.studio.findMany({
+    where: {
+      name: { contains: keyword },
+    },
+    select: {
+      id: true,
+      name: true,
+      location: {
+        select: { locationCategory: true },
+      },
+    },
+  });
+}
+
+export type FindStudiosByNameKeywordResult = Awaited<
+  ReturnType<typeof findStudiosByNameKeyword>
+>;

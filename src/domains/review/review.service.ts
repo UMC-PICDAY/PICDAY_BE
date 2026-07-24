@@ -2,8 +2,12 @@ import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
   createReviewRequestSchema,
+  getReviewsQuerySchema,
   reviewIdParamsSchema,
+  studioIdParamsSchema,
   updateReviewRequestSchema,
+  type GetReviewsResponseDto,
+  type ReviewLikeResponseDto,
 } from "./review.dto.js";
 import * as reviewRepository from "./review.repository.js";
 
@@ -20,6 +24,9 @@ function toValidationError(error: ZodError): AppError {
   if (fields.has("imageUrls")) {
     return new AppError("REVIEW_4003");
   }
+  if (fields.has("keywords")) {
+    return new AppError("REVIEW_4006");
+  }
   return new AppError("COMMON_400");
 }
 
@@ -32,6 +39,142 @@ function parseReviewId(reviewIdParam: string): bigint {
       throw new AppError("COMMON_400");
     }
     throw error;
+  }
+}
+
+function parseStudioId(studioIdParam: string): bigint {
+  try {
+    const params = studioIdParamsSchema.parse({ studioId: studioIdParam });
+    return BigInt(params.studioId);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      throw new AppError("REVIEW_4044");
+    }
+    throw error;
+  }
+}
+
+// ====== 리뷰 목록 조회 ======
+export async function getReviews(
+  userId: bigint,
+  studioIdParam: string,
+  query: unknown,
+): Promise<GetReviewsResponseDto> {
+  try {
+    const studioId = parseStudioId(studioIdParam);
+
+    let parsed;
+    try {
+      parsed = getReviewsQuerySchema.parse(query);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new AppError("REVIEW_4005");
+      }
+      throw error;
+    }
+
+    const studio = await reviewRepository.findStudioExists(studioId);
+    if (!studio) {
+      throw new AppError("REVIEW_4044");
+    }
+
+    const summary = await reviewRepository.findReviewSummary(studioId);
+    const rows = await reviewRepository.findReviewPage({
+      studioId,
+      sort: parsed.sort,
+      photoOnly: parsed.photoOnly,
+      page: parsed.page,
+      size: parsed.size,
+    });
+
+    const reviewIds = rows.map((row) => row.id);
+    const [likedIds, bestReviewId] = await Promise.all([
+      reviewRepository.findLikedReviewIds(userId, reviewIds),
+      reviewRepository.findBestReviewId(studioId),
+    ]);
+
+    return {
+      summary: {
+        avgRating: Math.round(summary.avgRating * 10) / 10,
+        totalCount: summary.totalCount,
+        photoReviewCount: summary.photoReviewCount,
+      },
+      page: parsed.page,
+      size: parsed.size,
+      items: rows.map((row) => ({
+        reviewId: Number(row.id),
+        writerNickname: row.user.nickname,
+        rating: row.rating,
+        content: row.content,
+        keywords: row.keywords.map((tag) => tag.keyword),
+        images: row.images.map((image) => image.url),
+        likeCount: row._count.likes,
+        isLiked: likedIds.has(row.id),
+        isBest: bestReviewId !== null && row.id === bestReviewId,
+        createdAt: row.createdAt.toISOString(),
+      })),
+    };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("REVIEW_5001");
+  }
+}
+
+// ====== 리뷰 추천 ======
+export async function addLike(
+  userId: bigint,
+  reviewIdParam: string,
+): Promise<ReviewLikeResponseDto> {
+  try {
+    const reviewId = parseReviewId(reviewIdParam);
+
+    const review = await reviewRepository.findReviewExists(reviewId);
+    if (!review) {
+      throw new AppError("REVIEW_4042");
+    }
+
+    const outcome = await reviewRepository.addReviewLike(reviewId, userId);
+    if (outcome === "DUPLICATE") {
+      throw new AppError("REVIEW_4092");
+    }
+
+    const likeCount = await reviewRepository.countReviewLikes(reviewId);
+    return { reviewId: Number(reviewId), likeCount };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("REVIEW_5001");
+  }
+}
+
+// ====== 리뷰 추천 취소 ======
+export async function removeLike(
+  userId: bigint,
+  reviewIdParam: string,
+): Promise<ReviewLikeResponseDto> {
+  try {
+    const reviewId = parseReviewId(reviewIdParam);
+
+    const review = await reviewRepository.findReviewExists(reviewId);
+    if (!review) {
+      throw new AppError("REVIEW_4042");
+    }
+
+    const deleted = await reviewRepository.removeReviewLike(reviewId, userId);
+    if (deleted === 0) {
+      throw new AppError("REVIEW_4043");
+    }
+
+    const likeCount = await reviewRepository.countReviewLikes(reviewId);
+    return { reviewId: Number(reviewId), likeCount };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("REVIEW_5001");
   }
 }
 
@@ -72,6 +215,7 @@ export async function createReview(
       reservationId: reservation.id,
       rating: request.rating,
       content: request.content,
+      keywords: request.keywords ?? [],
       imageUrls: request.imageUrls ?? [],
     });
 
@@ -120,6 +264,7 @@ export async function updateReview(
       reviewId,
       ...(request.rating !== undefined && { rating: request.rating }),
       ...(request.content !== undefined && { content: request.content }),
+      ...(request.keywords !== undefined && { keywords: request.keywords }),
       ...(request.imageUrls !== undefined && { imageUrls: request.imageUrls }),
     });
 

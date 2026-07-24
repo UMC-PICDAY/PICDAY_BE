@@ -17,6 +17,26 @@ const imageUrlsSchema = z
   .max(5, "이미지는 최대 5개까지 가능합니다.")
   .nullable();
 
+// 리뷰 태그 ("어떤 점이 좋았나요?") — 선택 항목, 개수 제한 없음
+export const reviewKeywordSchema = z.enum([
+  "KIND_SERVICE",
+  "DETAILED_RETOUCH",
+  "ON_TIME",
+  "COMFORTABLE_MOOD",
+  "REASONABLE_PRICE",
+  "SATISFYING_RESULT",
+]);
+
+export type ReviewKeywordValue = z.infer<typeof reviewKeywordSchema>;
+
+const keywordsSchema = z
+  .array(reviewKeywordSchema)
+  .refine(
+    (keywords) => new Set(keywords).size === keywords.length,
+    "동일한 태그를 중복해서 선택할 수 없습니다.",
+  )
+  .nullable();
+
 // 리뷰 작성 API
 export const createReviewRequestSchema = z
   .object({
@@ -27,6 +47,7 @@ export const createReviewRequestSchema = z
       .max(Number.MAX_SAFE_INTEGER, "reservationId가 허용 범위를 초과했습니다."),
     rating: ratingSchema,
     content: contentSchema,
+    keywords: keywordsSchema.optional(),
     imageUrls: imageUrlsSchema.optional(),
   })
   .strict();
@@ -45,6 +66,7 @@ export const updateReviewRequestSchema = z
   .object({
     rating: ratingSchema.optional(),
     content: contentSchema.optional(),
+    keywords: keywordsSchema.optional(),
     imageUrls: imageUrlsSchema.optional(),
   })
   .strict()
@@ -60,6 +82,80 @@ export type UpdateReviewSuccessResponseDto = {
   code: "COMMON_200";
   message: string;
   data: { reviewId: number };
+};
+
+// 리뷰 목록 조회 API
+export const reviewSortSchema = z
+  .enum(["recent", "recommend", "ratingHigh", "ratingLow"])
+  .default("recent");
+
+export type ReviewSort = z.infer<typeof reviewSortSchema>;
+
+export const getReviewsQuerySchema = z.object({
+  sort: reviewSortSchema,
+  photoOnly: z
+    .union([z.boolean(), z.enum(["true", "false"])])
+    .transform((v) => v === true || v === "true")
+    .default(false),
+  page: z.coerce.number().int().min(1).default(1),
+  size: z.coerce.number().int().min(1).max(50).default(10),
+});
+
+export type GetReviewsQuery = z.infer<typeof getReviewsQuerySchema>;
+
+export const studioIdParamsSchema = z.object({
+  studioId: z.string().regex(/^\d+$/, "유효하지 않은 사진관 ID입니다."),
+});
+
+export type ReviewListItemDto = {
+  reviewId: number;
+  writerNickname: string | null;
+  rating: number;
+  content: string;
+  keywords: ReviewKeywordValue[];
+  images: string[];
+  likeCount: number;
+  isLiked: boolean;
+  isBest: boolean;
+  createdAt: string;
+};
+
+export type GetReviewsResponseDto = {
+  summary: {
+    avgRating: number;
+    totalCount: number;
+    photoReviewCount: number;
+  };
+  page: number;
+  size: number;
+  items: ReviewListItemDto[];
+};
+
+export type GetReviewsSuccessResponseDto = {
+  success: true;
+  code: "COMMON_200";
+  message: string;
+  data: GetReviewsResponseDto;
+};
+
+// 리뷰 추천 / 추천 취소 API
+export type ReviewLikeResponseDto = {
+  reviewId: number;
+  likeCount: number;
+};
+
+export type AddReviewLikeSuccessResponseDto = {
+  success: true;
+  code: "COMMON_201";
+  message: string;
+  data: ReviewLikeResponseDto;
+};
+
+export type RemoveReviewLikeSuccessResponseDto = {
+  success: true;
+  code: "COMMON_200";
+  message: string;
+  data: ReviewLikeResponseDto;
 };
 
 // 리뷰 삭제 API
