@@ -3,6 +3,7 @@ import {
   Get,
   Path,
   Query,
+  Request,
   Response,
   Route,
   SuccessResponse,
@@ -14,6 +15,8 @@ import type {
   StudioProductDetailResponseDto,
   StudioProductsResponseDto,
 } from "./studio.dto.js";
+import type { GetHomeResponseDto } from "./studio.search.dto.js";
+import * as studioSearchService from "./studio.search.service.js";
 import * as studioService from "./studio.service.js";
 
 type AppErrorResponse = {
@@ -30,6 +33,26 @@ type GetStudioProductsSuccessResponseDto = {
   data: StudioProductsResponseDto;
 };
 
+// === api/v1/home ===
+@Route("home")
+@Tags("Home")
+export class HomeController extends Controller {
+  @Get()
+  @SuccessResponse(200, "OK")
+  public async getHome(
+    @Request() request: any,
+    @Query() latitude?: number,
+    @Query() longitude?: number,
+  ): Promise<GetHomeResponseDto> {
+    return studioSearchService.getHome(
+      request.headers.authorization,
+      latitude,
+      longitude,
+    );
+  }
+}
+
+// === api/v1/studio ===
 @Route("studios")
 @Tags("Studio")
 export class StudioController extends Controller {
@@ -87,6 +110,4 @@ export class StudioController extends Controller {
 
     return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
   }
-
-  // === 홈 화면 API ===
 }

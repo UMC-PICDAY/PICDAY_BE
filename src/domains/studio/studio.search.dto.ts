@@ -26,11 +26,7 @@ export type GetHomeResponseDtoForLogged = {
 export type GetHomeResponseDtoForNotLogged = {
   bannerStudios: BannerStudioItem[];
   popularStudios: StudioWithPriceAndRatingItem[];
-  regionalStudios1: {
-    locationCategory: string;
-    studios: StudioWithPriceAndRatingItem[];
-  };
-  regionalStudios2: {
+  regionalStudios: {
     locationCategory: string;
     studios: StudioWithPriceAndRatingItem[];
   };

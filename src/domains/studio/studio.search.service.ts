@@ -8,9 +8,6 @@ import type {
 } from "./studio.search.dto.js";
 
 import { LocationCategory } from "../../generated/prisma/enums.js";
-import type { ProductImage } from "../../generated/prisma/client.js";
-
-// ♻️ 리팩토링
 
 // ===== 상수 ======
 
@@ -114,9 +111,8 @@ function pickMinPrice(products: Array<{ price: number }>): number | null {
   return minPrice;
 }
 
-// 2. repository의 prisma 추출 결과 -> DTO 맞춰서 변환
+// 2. BannerStudioItem 부분 : repository의 prisma 추출 결과 -> DTO 맞춰서 변환
 
-// 2.1 BannerStudioItem 부분
 type BannerListRow = {
   // prisma에서 조회한 결과의 타입 정의
   id: bigint;
@@ -135,7 +131,7 @@ function toBannerListItem(studio: BannerListRow): BannerStudioItem {
   };
 }
 
-// 2.2 StudioWithPriceAndRatingItem 부분
+// 3.  StudioWithPriceAndRatingItem 부분 : repository의 prisma 추출 결과 -> DTO 맞춰서 변환
 type StudioListRow = {
   id: bigint;
   name: string;
@@ -155,66 +151,171 @@ function toStudioListItem(studio: StudioListRow): StudioWithPriceAndRatingItem {
   };
 }
 
-// 3. 로그인, 비로그인 구분해서 위의 data 조합
+// 3.1 사용자 위치 기반 locationCategory의 사진관 목록
 
-// @Security() 대신 여기서 수동으로 optional auth 처리
-// 토큰 없음 = 비로그인(에러 아님), 토큰 있는데 잘못됨/만료 = AppError(AUTH_401x) 그대로 전파
-async function resolveOptionalUserId(
-  authHeader: string | undefined,
-): Promise<bigint | undefined> {
-  const token = extractBearerToken(authHeader);
+// 거리 계산 함수
+function calculateDistanceKm(
+  userLat: number,
+  userLon: number,
+  coordinateLat: number,
+  coordinateLon: number,
+): number {
+  const R = 6371; // 지구 반지름(km)
+  const dLat = ((coordinateLat - userLat) * Math.PI) / 180;
+  const dLon = ((coordinateLon - userLon) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((userLat * Math.PI) / 180) *
+      Math.cos((coordinateLat * Math.PI) / 180) *
+      Math.sin(dLon / 2) ** 2;
+
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// 사용자 위치 기반으로 가장 가까운 LocationCategory 찾는 함수
+function findNearestLocationCategory(
+  userLatitude: number,
+  userLongitude: number,
+): LocationCategory {
+  let nearestCategory: LocationCategory = LocationCategory.HONGDAE;
+  let nearestDistance = Infinity;
+
+  for (const [category, coordinate] of Object.entries(
+    LOCATION_CATEGORY_COORDINATES,
+  ) as [LocationCategory, locationCategoryLatLon][]) {
+    const distance = calculateDistanceKm(
+      userLatitude,
+      userLongitude,
+      coordinate.latitude,
+      coordinate.longitude,
+    );
+
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearestCategory = category;
+    }
+  }
+
+  return nearestCategory;
+}
+
+// 로그인 여부에 따라서 사용할 LocationCategory 결정하는 함수
+function resolveHomeLocationCategory(
+  latitude?: number,
+  longitude?: number,
+): LocationCategory {
+  if (latitude == null || longitude == null) {
+    return LocationCategory.HONGDAE;
+  }
+
+  return findNearestLocationCategory(latitude, longitude);
+}
+
+// 3.2 Optional Auth 처리
+
+// 1) 로그인 상태일 경우, 요청 예시
+// GET /api/v1/home HTTP/1.1
+// Host: localhost:3000
+// Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjMiLCJpYXQiOjE3MjAwMDAwMDB9.fake-signature
+// Content-Type: application/json
+
+// 2) extractBearerToken(header?: string)함수
+// 파라미터 - header
+//  = Authorization의 value = "Bearer <token>"
+// 리턴 값 -
+//   "Bearer "로 시작하는 header가 있다면 -> "Bearer " 이 제거된 token을 리턴
+//   header가 없다면 -> null 리턴
+
+// 3) verifyToken(token: string, expectedType: TokenType) 함수
+// JWT 토큰이 진짜 유효한 토큰인지 검사하고, 토큰 안에 들어 있는 사용자 정보를 꺼내주는 함수
+// - 만료됐으면
+//    → access면 AUTH_4017
+//    → refresh면 AUTH_4016
+//    → signup이면 AUTH_4014
+
+// - 토큰 형식이 이상하거나 서명이 틀렸으면
+//    → AUTH_4013
+
+type OptionalUser = {
+  userId: bigint | null;
+};
+
+function resolveOptionalUser(authorization?: string): OptionalUser {
+  // Authorization 헤더가 아예 없으면 비로그인 사용자
+  if (!authorization) {
+    // authorization : Authorization: Bearer <token>
+    return { userId: null };
+  }
+
+  // Authorization: Bearer <token> 에서 token만 추출
+  const token = extractBearerToken(authorization); // token 값 : 로그인 -> <token> 리턴, 비로그인 -> null 리턴
+
   if (!token) {
-    return undefined;
+    return { userId: null };
   }
 
+  // access token 검증
+  // verifyToken 내부에서 만료/서명 오류/타입 오류를 AppError로 던짐
   const payload = verifyToken(token, "access");
-  return BigInt(payload.sub);
+
+  return { userId: BigInt(payload.sub) };
 }
 
-async function getRecentOrNearbyStudios(
-  userId: bigint | undefined,
-): Promise<StudioWithPriceAndRatingItem[]> {
-  if (userId !== undefined) {
-    const views =
-      await studioSearchRepository.findRecentlyViewedStudios(userId);
-    return views.map((view) => toStudioListItem(view.studio));
-  }
-
-  const nearby = await Promise.all(
-    NEARBY_CATEGORIES.map((category) =>
-      studioSearchRepository.findStudiosByLocationCategory(category),
-    ),
-  );
-
-  return nearby
-    .flat()
-    .map((row) => toStudioListItem(row.studio))
-    .slice(0, RESULT_LIMIT);
-}
-
+// 4. 홈 화면 조회 API
 export async function getHome(
   authHeader: string | undefined,
+  latitude?: number,
+  longitude?: number,
 ): Promise<GetHomeResponseDto> {
   try {
-    const userId = await resolveOptionalUserId(authHeader);
+    const { userId } = resolveOptionalUser(authHeader);
+    const locationCategory = resolveHomeLocationCategory(latitude, longitude);
 
-    const [bannerStudios, popularStudios, regionalStudioRows, recentStudios] =
-      await Promise.all([
-        studioSearchRepository.findHighRatedStudios(),
-        studioSearchRepository.findPopularStudios(),
-        studioSearchRepository.findStudiosByLocationCategory(REGIONAL_CATEGORY),
-        getRecentOrNearbyStudios(userId),
-      ]);
+    const [bannerRows, popularRows, regionalRows] = await Promise.all([
+      studioSearchRepository.findHighRatedStudios(),
+      studioSearchRepository.findPopularStudios(),
+      studioSearchRepository.findStudiosByLocationCategory(locationCategory),
+    ]);
+
+    // 공통
+    const bannerStudios = bannerRows.map(toBannerListItem);
+    const popularStudios = popularRows.map(toStudioListItem);
+    const regionalStudios = {
+      locationCategory,
+      studios: regionalRows.map((row) => toStudioListItem(row.studio)),
+    };
+
+    // 비로그인 사용자 : 배너 + 인기 사진관 + 위치 기반 사진관
+    if (userId === null) {
+      return {
+        success: true,
+        code: "COMMON_200",
+        message: "홈 화면 조회에 성공했습니다.",
+        data: {
+          bannerStudios,
+          popularStudios,
+          regionalStudios,
+        },
+      };
+    }
+
+    // 로그인 사용자 : 배너 + 최근 본 사진관 + 인기 사진관 + 위치 기반 사진관
+    const recentRows =
+      await studioSearchRepository.findRecentlyViewedStudios(userId);
+    const recentStudios = recentRows.map((view) =>
+      toStudioListItem(view.studio),
+    );
 
     return {
-      bannerStudios: bannerStudios.map(toBannerItem),
-      recentStudios,
-      popularStudios: popularStudios.map(toStudioListItem),
-      regionalStudios: {
-        locationCategory: toLocationLabel(REGIONAL_CATEGORY),
-        studios: regionalStudioRows
-          .map((row) => toStudioListItem(row.studio))
-          .slice(0, RESULT_LIMIT),
+      success: true,
+      code: "COMMON_200",
+      message: "홈 화면 조회에 성공했습니다.",
+      data: {
+        bannerStudios,
+        recentStudios,
+        popularStudios,
+        regionalStudios,
       },
     };
   } catch (error) {

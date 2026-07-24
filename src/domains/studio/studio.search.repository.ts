@@ -30,16 +30,20 @@ export async function findHighRatedStudios() {
       name: true,
       ratingScore: true,
       location: { select: { locationCategory: true } },
-      productImages: {
-        // studioThumbnailImage
-        orderBy: {
-          studioThumbnailOrder: { sort: "asc", nulls: "last" },
-          id: "asc",
-        },
-        take: 1,
+      products: {
         select: {
-          url: true,
-          studioThumbnailOrder: true,
+          productImages: {
+            // studioThumbnailImage
+            orderBy: {
+              studioThumbnailOrder: { sort: "asc", nulls: "last" },
+              id: "asc",
+            },
+            take: 1,
+            select: {
+              url: true,
+              studioThumbnailOrder: true,
+            },
+          },
         },
       },
     },
