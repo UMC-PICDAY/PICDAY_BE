@@ -150,6 +150,45 @@ async function main() {
   const studioB = await upsertStudio("PICDAY HTTP 검증 B");
   const studioC = await upsertStudio("PICDAY HTTP 검증 C");
 
+  await prisma.studioLocation.upsert({
+    where: { studioId: studioA.id },
+    update: {},
+    create: {
+      studioId: studioA.id,
+      mainAddress: "서울 마포구 동교동",
+      subAddress: "홍대입구역 인근",
+      locationCategory: "HONGDAE",
+      nearestStation: "홍대입구역",
+      walkingMinutes: 5,
+    },
+  });
+
+  await prisma.studioLocation.upsert({
+    where: { studioId: studioB.id },
+    update: {},
+    create: {
+      studioId: studioB.id,
+      mainAddress: "서울 마포구 서교동",
+      subAddress: "홍대입구역 인근",
+      locationCategory: "HONGDAE",
+      nearestStation: "홍대입구역",
+      walkingMinutes: 8,
+    },
+  });
+
+  await prisma.studioLocation.upsert({
+    where: { studioId: studioC.id },
+    update: {},
+    create: {
+      studioId: studioC.id,
+      mainAddress: "서울 강남구 역삼동",
+      subAddress: "강남역 인근",
+      locationCategory: "GANGNAM",
+      nearestStation: "강남역",
+      walkingMinutes: 3,
+    },
+  });
+
   const profileBasic = await upsertProduct(studioA.id, {
     shootingCategory: "PROFILE",
     name: "프로필 촬영 패키지",
