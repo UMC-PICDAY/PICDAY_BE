@@ -194,6 +194,6 @@ export class AuthController extends Controller {
     const { userId } = request as AuthenticatedRequest;
 
     await authService.withdraw(userId);
-    // TODO: 응답 래퍼(success()) 이슈 작업 시 다른 API들과 함께 일괄 정리
+    return success(null);
   }
 }
