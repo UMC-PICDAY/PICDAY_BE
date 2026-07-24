@@ -22,7 +22,7 @@ const COMMON_STUDIO_COUNT = 6;
 // 상단 배너 용 사진관 10개 조회 (평균 평점)
 export async function findHighRatedStudios() {
   return prisma.studio.findMany({
-    orderBy: { ratingRank: { sort: "asc", nulls: "last" }, id: "asc" },
+    orderBy: [{ ratingRank: { sort: "asc", nulls: "last" } }, { id: "asc" }],
     take: BANNER_STUDIO_COUNT,
 
     select: {
@@ -35,7 +35,7 @@ export async function findHighRatedStudios() {
           productImages: {
             // studioThumbnailImage
             orderBy: [
-              { ratingRank: { sort: "asc", nulls: "last" } },
+              { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
               { id: "asc" },
             ],
             take: 1,
@@ -73,7 +73,7 @@ export async function findRecentlyViewedStudios(userId: bigint) {
               productImages: {
                 // studioThumbnailImage
                 orderBy: [
-                  { ratingRank: { sort: "asc", nulls: "last" } },
+                  { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
                   { id: "asc" },
                 ],
                 take: 1,
@@ -96,7 +96,10 @@ export type FindRecentlyViewedStudiosResult = Awaited<
 // === 인기 사진관 조회 (예약완료건수 랭킹 순) ===
 export async function findPopularStudios() {
   return prisma.studio.findMany({
-    orderBy: { reservationRank: { sort: "asc", nulls: "last" }, id: "asc" },
+    orderBy: [
+      { reservationRank: { sort: "asc", nulls: "last" } },
+      { id: "asc" },
+    ],
     take: BANNER_STUDIO_COUNT,
     select: {
       id: true,
@@ -108,7 +111,7 @@ export async function findPopularStudios() {
           price: true,
           productImages: {
             orderBy: [
-              { ratingRank: { sort: "asc", nulls: "last" } },
+              { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
               { id: "asc" },
             ],
             take: 1,
@@ -132,9 +135,21 @@ export async function findStudiosByLocationCategory(
 ) {
   return prisma.studioLocation.findMany({
     where: { locationCategory: location },
-    orderBy: {
-      studio: { ratingRank: { sort: "asc", nulls: "last" }, id: "asc" },
-    },
+    orderBy: [
+      {
+        studio: {
+          ratingRank: {
+            sort: "asc",
+            nulls: "last",
+          },
+        },
+      },
+      {
+        studio: {
+          id: "asc",
+        },
+      },
+    ],
     select: {
       studio: {
         select: {
@@ -147,7 +162,7 @@ export async function findStudiosByLocationCategory(
               price: true,
               productImages: {
                 orderBy: [
-                  { ratingRank: { sort: "asc", nulls: "last" } },
+                  { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
                   { id: "asc" },
                 ],
                 select: {

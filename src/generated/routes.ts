@@ -6,6 +6,8 @@ import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { WishlistController } from './../domains/wishlist/wishlist.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { HomeController } from './../domains/studio/studio.controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { StudioController } from './../domains/studio/studio.controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ReviewController } from './../domains/review/review.controller.js';
@@ -61,6 +63,41 @@ const models: TsoaRoute.Models = {
     "DeleteWishlistSuccessResponseDto": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"dataType":"enum","enums":[null],"required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"enum","enums":["COMMON_200"],"required":true},"success":{"dataType":"enum","enums":[true],"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BannerStudioItem": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"locationCategory":{"dataType":"string","required":true},"thumbnailUrl":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"studioName":{"dataType":"string","required":true},"studioId":{"dataType":"string","required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StudioWithPriceAndRatingItem": {
+        "dataType": "refAlias",
+        "type": {"dataType":"intersection","subSchemas":[{"ref":"BannerStudioItem"},{"dataType":"nestedObjectLiteral","nestedProperties":{"rating":{"dataType":"double","required":true},"minPrice":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true}}}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetHomeResponseDtoForLogged": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"regionalStudios":{"dataType":"nestedObjectLiteral","nestedProperties":{"studios":{"dataType":"array","array":{"dataType":"refAlias","ref":"StudioWithPriceAndRatingItem"},"required":true},"locationCategory":{"dataType":"string","required":true}},"required":true},"popularStudios":{"dataType":"array","array":{"dataType":"refAlias","ref":"StudioWithPriceAndRatingItem"},"required":true},"recentStudios":{"dataType":"array","array":{"dataType":"refAlias","ref":"StudioWithPriceAndRatingItem"},"required":true},"bannerStudios":{"dataType":"array","array":{"dataType":"refAlias","ref":"BannerStudioItem"},"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetHomeSuccessResponseDtoForLogged": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"GetHomeResponseDtoForLogged","required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"enum","enums":["COMMON_200"],"required":true},"success":{"dataType":"enum","enums":[true],"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetHomeResponseDtoForNotLogged": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"regionalStudios":{"dataType":"nestedObjectLiteral","nestedProperties":{"studios":{"dataType":"array","array":{"dataType":"refAlias","ref":"StudioWithPriceAndRatingItem"},"required":true},"locationCategory":{"dataType":"string","required":true}},"required":true},"popularStudios":{"dataType":"array","array":{"dataType":"refAlias","ref":"StudioWithPriceAndRatingItem"},"required":true},"bannerStudios":{"dataType":"array","array":{"dataType":"refAlias","ref":"BannerStudioItem"},"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetHomeSuccessResponseDtoForNotLogged": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"data":{"ref":"GetHomeResponseDtoForNotLogged","required":true},"message":{"dataType":"string","required":true},"code":{"dataType":"enum","enums":["COMMON_200"],"required":true},"success":{"dataType":"enum","enums":[true],"required":true}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetHomeResponseDto": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"ref":"GetHomeSuccessResponseDtoForLogged"},{"ref":"GetHomeSuccessResponseDtoForNotLogged"}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "output_typeofgetStudioSlotsSuccessResponseSchema_": {
@@ -311,6 +348,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'remove',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsHomeController_getHome: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                latitude: {"in":"query","name":"latitude","dataType":"double"},
+                longitude: {"in":"query","name":"longitude","dataType":"double"},
+        };
+        app.get('/api/v1/home',
+            ...(fetchMiddlewares<RequestHandler>(HomeController)),
+            ...(fetchMiddlewares<RequestHandler>(HomeController.prototype.getHome)),
+
+            async function HomeController_getHome(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsHomeController_getHome, request, response });
+
+                const controller = new HomeController();
+
+              await templateService.apiHandler({
+                methodName: 'getHome',
                 controller,
                 response,
                 next,
