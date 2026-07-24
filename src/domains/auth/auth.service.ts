@@ -1,7 +1,19 @@
 import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
 import * as authRepository from "./auth.repository.js";
-import { 
+import {
+  buildSocialAuthUrl,
+  getSocialProfile,
+  type SocialProvider,
+} from "./auth.social.js";
+import type {
+  CompleteSocialSignupRequestDto,
+  CompleteSocialSignupResponseDto,
+  SocialLoginRequestDto,
+  SocialLoginResponseData,
+} from "./auth.dto.js";
+import {
+  completeSocialSignupResponseSchema,
   type LoginRequestDto,
   type SignupRequestDto,
   type GetMeResponseDto,
@@ -19,7 +31,9 @@ import {
   REFRESH_TOKEN_EXPIRES_IN,
   signAccessToken,
   signRefreshToken,
+  signSocialSignupToken,
   verifyToken,
+  type SignupTokenPayload,
 } from "./auth.token.js";
 
 // 영문 소문자 시작, 영문 소문자+숫자, 4~12자 (signup 규칙과 동일)
@@ -66,6 +80,144 @@ async function issueTokenPair(userId: bigint) {
   };
 }
 
+/**
+ * 소셜 인증 URL 생성.
+ * provider(kakao|google)별 authorize URL을 만들어 반환한다.
+ */
+export function getSocialAuthUrl(provider: SocialProvider) {
+  return { authUrl: buildSocialAuthUrl(provider) };
+}
+
+/**
+ * 소셜 로그인. 인가 코드로 소셜 프로필을 조회한 뒤 기존/신규를 판별한다.
+ * - 기존(소셜 계정 존재): 토큰 발급 후 즉시 로그인
+ * - 신규: 소셜 정보를 담은 signupToken 발급 → 회원가입 완료(3번)로 유도
+ */
+export async function socialLogin(
+  provider: SocialProvider,
+  dto: SocialLoginRequestDto,
+): Promise<{ message: string; data: SocialLoginResponseData }> {
+  const social = await getSocialProfile(
+    provider,
+    dto.authorizationCode,
+    dto.redirectUri,
+  );
+
+  const account = await authRepository.findSocialAccountWithUser(
+    social.provider,
+    social.providerId,
+  );
+
+  // 기존 유저 → 즉시 로그인
+  if (account) {
+    const token = await issueTokenPair(account.user.id);
+    return {
+      message: "로그인에 성공했습니다.",
+      data: {
+        isNewUser: false,
+        user: {
+          id: account.user.id.toString(),
+          nickname: account.user.nickname,
+          email: account.user.email,
+          // 스키마에 profileImageUrl 컬럼이 없어 현재는 null (getMe와 동일)
+          profileImageUrl: null,
+          provider: account.user.provider ?? social.provider,
+        },
+        token,
+      },
+    };
+  }
+
+  // 신규 유저 → 소셜 정보를 담은 signupToken 발급
+  const signupToken = signSocialSignupToken({
+    provider: social.provider,
+    providerId: social.providerId,
+    email: social.email,
+    name: social.name,
+    phoneNumber: social.phoneNumber,
+  });
+
+  return {
+    message: "추가 정보 입력이 필요합니다.",
+    data: {
+      isNewUser: true,
+      signupToken,
+      socialInfo: {
+        id: social.providerId,
+        email: social.email,
+        name: social.name,
+        phoneNumber: social.phoneNumber,
+      },
+    },
+  };
+}
+
+/**
+ * 소셜 회원가입 완료. signupToken(소셜 정보)과 약관 동의를 받아 정식 회원으로 전환한다.
+ * 닉네임은 서버 자동 배정, 이름·전화번호는 소셜 동의 항목에서 이미 수집된 값을 그대로 사용.
+ * 완료 즉시 로그인(정식 토큰 발급).
+ */
+export async function completeSocialSignup(
+  signupInfo: SignupTokenPayload,
+  dto: CompleteSocialSignupRequestDto,
+): Promise<CompleteSocialSignupResponseDto> {
+  const agreedTermIds = dto.agreedTermsIds.map((id) => BigInt(id));
+  await assertTermsAgreed(agreedTermIds);
+
+  const nickname = await generateUniqueNickname();
+
+  const outcome = await authRepository.createSocialUserWithTerms(
+    {
+      provider: signupInfo.provider,
+      providerId: signupInfo.providerId,
+      email: signupInfo.email,
+      name: signupInfo.name,
+      phoneNumber: signupInfo.phoneNumber,
+      nickname,
+    },
+    agreedTermIds,
+  );
+
+  // signupToken 재사용(이미 가입 완료된 소셜 계정으로 재요청) → 토큰 무효 취급
+  if (outcome.kind === "ALREADY_REGISTERED") {
+    throw new AppError("AUTH_4013");
+  }
+
+  const token = await issueTokenPair(outcome.user.id);
+
+  return completeSocialSignupResponseSchema.parse({
+    user: {
+      id: outcome.user.id,
+      nickname: outcome.user.nickname,
+      provider: outcome.user.provider,
+    },
+    token,
+  });
+}
+
+/**
+ * 약관 동의 검증. (자체 회원가입·소셜 회원가입 완료가 공유)
+ * - 필수 약관(isRequired=true)이 모두 동의 목록에 포함되어야 한다.
+ * - 존재하지 않는 약관 ID가 섞여 있으면 안 된다.
+ * 위반 시 AUTH_4008.
+ */
+export async function assertTermsAgreed(agreedTermIds: bigint[]): Promise<void> {
+  const [requiredTermIds, existingTermIds] = await Promise.all([
+    authRepository.findRequiredTermIds(),
+    authRepository.findExistingTermIds(agreedTermIds),
+  ]);
+
+  const agreedSet = new Set(agreedTermIds);
+  const existingSet = new Set(existingTermIds);
+
+  const missingRequired = requiredTermIds.filter((id) => !agreedSet.has(id));
+  const unknownAgreed = agreedTermIds.filter((id) => !existingSet.has(id));
+
+  if (missingRequired.length > 0 || unknownAgreed.length > 0) {
+    throw new AppError("AUTH_4008");
+  }
+}
+
 export async function register(dto: SignupRequestDto) {
   const existingLoginId = await authRepository.findUserByLoginId(dto.loginId);
   if (existingLoginId) {
@@ -77,18 +229,24 @@ export async function register(dto: SignupRequestDto) {
     throw new AppError("AUTH_4092");
   }
 
+  // 필수 약관 동의 여부를 유저 생성 전에 먼저 검증 (실패 시 빠르게 중단)
+  const agreedTermIds = dto.agreedTermsIds.map((id) => BigInt(id));
+  await assertTermsAgreed(agreedTermIds);
+
   const hashedPassword = await bcrypt.hash(dto.password, 10);
   const nickname = await generateUniqueNickname();
 
-  // TODO: agreedTermsIds(dto.agreedTermsIds)를 UserTerms로 저장하는 로직 추가
-  const user = await authRepository.createUser({
-    loginId: dto.loginId,
-    password: hashedPassword,
-    name: dto.name,
-    nickname,
-    email: dto.email,
-    phoneNumber: dto.phoneNumber,
-  });
+  const user = await authRepository.createUserWithTerms(
+    {
+      loginId: dto.loginId,
+      password: hashedPassword,
+      name: dto.name,
+      nickname,
+      email: dto.email,
+      phoneNumber: dto.phoneNumber,
+    },
+    agreedTermIds,
+  );
 
   const { password: _password, ...userWithoutPassword } = user;
 

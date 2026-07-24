@@ -1,6 +1,7 @@
 import { z, ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import type { ErrorCodeType } from "../../common/errorCode.js";
+import type { Provider } from "../../generated/prisma/client.js";
 
 export const signupRequestSchema = z.object({
   loginId: z
@@ -26,6 +27,74 @@ export const signupRequestSchema = z.object({
 });
 
 export type SignupRequestDto = z.infer<typeof signupRequestSchema>;
+
+// 소셜 로그인 요청 (카카오·구글 공통)
+export const socialLoginRequestSchema = z
+  .object({
+    authorizationCode: z.string().min(1, "인가 코드가 필요합니다."),
+    redirectUri: z.string().min(1, "redirectUri가 필요합니다."),
+  })
+  .strict();
+
+export type SocialLoginRequestDto = z.infer<typeof socialLoginRequestSchema>;
+
+// 소셜 로그인 응답: 기존 유저(로그인 완료) | 신규 유저(추가 정보 필요)
+export type SocialLoginResponseData =
+  | {
+      isNewUser: false;
+      user: {
+        id: string;
+        nickname: string | null;
+        email: string | null;
+        profileImageUrl: string | null;
+        provider: Provider;
+      };
+      token: {
+        accessToken: string;
+        refreshToken: string;
+        accessTokenExpiresIn: number;
+        refreshTokenExpiresIn: number;
+      };
+    }
+  | {
+      isNewUser: true;
+      signupToken: string;
+      socialInfo: {
+        id: string;
+        email: string | null;
+        name: string | null;
+        phoneNumber: string | null;
+      };
+    };
+
+// 소셜 회원가입 완료 요청
+export const completeSocialSignupRequestSchema = z
+  .object({
+    agreedTermsIds: z.array(z.number()),
+  })
+  .strict();
+
+export type CompleteSocialSignupRequestDto = z.infer<
+  typeof completeSocialSignupRequestSchema
+>;
+
+export const completeSocialSignupResponseSchema = z.object({
+  user: z.object({
+    id: z.bigint().transform((id) => id.toString()),
+    nickname: z.string().nullable(),
+    provider: z.enum(["KAKAO", "GOOGLE", "APPLE", "LOCAL"]).nullable(),
+  }),
+  token: z.object({
+    accessToken: z.string(),
+    refreshToken: z.string(),
+    accessTokenExpiresIn: z.number(),
+    refreshTokenExpiresIn: z.number(),
+  }),
+});
+
+export type CompleteSocialSignupResponseDto = z.output<
+  typeof completeSocialSignupResponseSchema
+>;
 
 // 로그인은 필수 여부만 검증 (형식 오류도 인증 실패와 동일하게 AUTH_4015로 수렴)
 export const loginRequestSchema = z.object({
@@ -76,15 +145,33 @@ const LOGIN_FIELD_ERROR: Record<string, ErrorCodeType> = {
   password: "AUTH_4015",
 };
 
+// 소셜 로그인 필드 누락은 명세서 에러 코드로 수렴 (코드 → AUTH_4011, redirectUri → AUTH_4001)
+const SOCIAL_LOGIN_FIELD_ERROR: Record<string, ErrorCodeType> = {
+  authorizationCode: "AUTH_4011",
+  redirectUri: "AUTH_4001",
+};
+
 // 토큰 관련 형식 오류는 명세서상 모두 AUTH_4013으로 수렴
 const REFRESH_FIELD_ERROR: Record<string, ErrorCodeType> = {
   refreshToken: "AUTH_4013",
+};
+
+const COMPLETE_SOCIAL_SIGNUP_FIELD_ERROR: Record<string, ErrorCodeType> = {
+  agreedTermsIds: "AUTH_4008",
 };
 
 export const parseSignup = (body: unknown) =>
   parseOrThrow(signupRequestSchema, body, SIGNUP_FIELD_ERROR);
 export const parseLogin = (body: unknown) =>
   parseOrThrow(loginRequestSchema, body, LOGIN_FIELD_ERROR);
+export const parseSocialLogin = (body: unknown) =>
+  parseOrThrow(socialLoginRequestSchema, body, SOCIAL_LOGIN_FIELD_ERROR);
+export const parseCompleteSocialSignup = (body: unknown) =>
+  parseOrThrow(
+    completeSocialSignupRequestSchema,
+    body,
+    COMPLETE_SOCIAL_SIGNUP_FIELD_ERROR,
+  );
 // body를 아예 보내지 않는 (A)안 클라이언트를 위해 undefined/null은 빈 객체로 취급
 export const parseRefresh = (body: unknown) =>
   parseOrThrow(refreshRequestSchema, body ?? {}, REFRESH_FIELD_ERROR);

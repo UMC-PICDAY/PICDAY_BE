@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { AppError } from "../../common/error.js";
 import type { ErrorCodeType } from "../../common/errorCode.js";
+import type { Provider } from "../../generated/prisma/client.js";
 // 현재 JWT 발급 주체가 auth 서비스이므로, 도메인이 소유하도록 구현
 // 추후에 필요시 common 폴더로 옮겨도 됨.
 
@@ -40,11 +41,65 @@ export function signRefreshToken(userId: string): string {
   });
 }
 
-export function signSignupToken(userId: string): string {
-  const payload: TokenPayload = { sub: userId, type: "signup" };
+/**
+ * 소셜 회원가입용 Signup Token payload.
+ * 신규 소셜 유저는 아직 user.id가 없으므로, 회원가입 완료(3번)에 필요한 소셜 정보를
+ * 토큰에 담아 전달한다. (10분 단기 토큰, 클라이언트는 이미 이 정보를 알고 있음)
+ */
+export type SignupTokenPayload = {
+  type: "signup";
+  provider: Provider;
+  providerId: string;
+  email: string | null;
+  name: string | null;
+  phoneNumber: string | null;
+};
+
+export type SocialSignupClaims = Omit<SignupTokenPayload, "type">;
+
+export function signSocialSignupToken(claims: SocialSignupClaims): string {
+  const payload: SignupTokenPayload = { type: "signup", ...claims };
   return jwt.sign(payload, getJwtSecret(), {
     expiresIn: SIGNUP_TOKEN_EXPIRES_IN,
   });
+}
+
+/**
+ * 소셜 Signup Token 검증. (소셜 회원가입 완료 3번에서 사용)
+ * - 서명 불일치·형식 오류·타입 불일치 → AUTH_4013
+ * - 만료 → AUTH_4014
+ */
+export function verifySocialSignupToken(token: string): SignupTokenPayload {
+  let decoded: unknown;
+  try {
+    decoded = jwt.verify(token, getJwtSecret());
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      throw new AppError("AUTH_4014");
+    }
+    throw new AppError("AUTH_4013");
+  }
+
+  const payload = decoded as Partial<SignupTokenPayload>;
+  if (
+    payload?.type !== "signup" ||
+    typeof payload.providerId !== "string" ||
+    (payload.provider !== "KAKAO" && payload.provider !== "GOOGLE")
+  ) {
+    throw new AppError("AUTH_4013");
+  }
+
+  return {
+    type: "signup",
+    provider: payload.provider,
+    providerId: payload.providerId,
+    email:
+      typeof payload.email === "string" && payload.email.trim() !== ""
+        ? payload.email
+        : null,
+    name: payload.name ?? null,
+    phoneNumber: payload.phoneNumber ?? null,
+  };
 }
 
 /**

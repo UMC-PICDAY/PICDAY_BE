@@ -68,9 +68,7 @@ export type GetStudioSlotsRequestDto = {
   date: string | undefined;
 };
 
-export type GetStudioSlotsQuery = z.output<
-  typeof getStudioSlotsRequestSchema
->;
+export type GetStudioSlotsQuery = z.output<typeof getStudioSlotsRequestSchema>;
 
 export function parseGetStudioSlotsRequest(
   input: GetStudioSlotsRequestDto,
@@ -130,6 +128,25 @@ export function parseGetStudioProductsRequest(
   return getStudioProductsRequestSchema.parse(input);
 }
 
+// 헤어메이크업 연계 상세 조회 API
+export const getStudioHairMakeupRequestSchema = z.object({
+  studioId: studioIdSchema,
+});
+
+export type GetStudioHairMakeupRequestDto = z.input<
+  typeof getStudioHairMakeupRequestSchema
+>;
+
+export type GetStudioHairMakeupQuery = z.output<
+  typeof getStudioHairMakeupRequestSchema
+>;
+
+export function parseGetStudioHairMakeupRequest(
+  input: GetStudioHairMakeupRequestDto,
+): GetStudioHairMakeupQuery {
+  return getStudioHairMakeupRequestSchema.parse(input);
+}
+
 function formatTime(date: Date) {
   const hours = date.getUTCHours().toString().padStart(2, "0");
   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
@@ -157,15 +174,11 @@ export type StudioSlotResponseInputDto = z.input<
   typeof studioSlotResponseSchema
 >;
 
-export type StudioSlotResponseDto = z.output<
-  typeof studioSlotResponseSchema
->;
+export type StudioSlotResponseDto = z.output<typeof studioSlotResponseSchema>;
 
 export const studioSlotsResponseSchema = z.array(studioSlotResponseSchema);
 
-export type StudioSlotsResponseDto = z.output<
-  typeof studioSlotsResponseSchema
->;
+export type StudioSlotsResponseDto = z.output<typeof studioSlotsResponseSchema>;
 
 export const getStudioSlotsSuccessResponseSchema = z.object({
   success: z.literal(true),
@@ -247,6 +260,32 @@ export function createStudioProductsResponse(
   input: StudioProductsResponseInputDto,
 ): StudioProductsResponseDto {
   return studioProductsResponseSchema.parse(input);
+}
+
+// 헤어메이크업 연계 상세 조회 응답
+export const studioHairMakeupListItemSchema = z.object({
+  hairMakeupDetailId: z.bigint().transform((id) => id.toString()),
+  partnerName: z.string(),
+  additionalPrice: z.number().int(),
+});
+
+export const studioHairMakeupResponseSchema = z.object({
+  studioId: z.bigint().transform((id) => id.toString()),
+  hairMakeupList: z.array(studioHairMakeupListItemSchema),
+});
+
+export type StudioHairMakeupResponseInputDto = z.input<
+  typeof studioHairMakeupResponseSchema
+>;
+
+export type StudioHairMakeupResponseDto = z.output<
+  typeof studioHairMakeupResponseSchema
+>;
+
+export function createStudioHairMakeupResponse(
+  input: StudioHairMakeupResponseInputDto,
+): StudioHairMakeupResponseDto {
+  return studioHairMakeupResponseSchema.parse(input);
 }
 
 // 사진관 상세 정보 조회 API

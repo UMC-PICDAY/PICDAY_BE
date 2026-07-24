@@ -103,19 +103,31 @@ model TimeSlot {
 // 약관 (Terms) 모델
 // ==========================================
 enum TermsType {
+  // 예약·결제용
   REFUND_POLICY
   PRIVACY_COLLECTION
   THIRD_PARTY
   PAYMENT_AGENCY
+  // 회원가입용
+  SERVICE
+  AGE_OVER_14
+  MARKETING
+}
+
+// 약관이 쓰이는 맥락. 필수 약관(isRequired) 조회를 맥락별로 분리하기 위함.
+enum TermsScope {
+  SIGNUP
+  RESERVATION
 }
 
 model Terms {
-  id         BigInt    @id @default(autoincrement())
+  id         BigInt     @id @default(autoincrement())
   type       TermsType
-  version    String    @db.VarChar(10)
-  content    String    @db.Text
-  isRequired Boolean   @map("is_required")
-  createdAt  DateTime  @default(now()) @map("created_at")
+  scope      TermsScope
+  version    String     @db.VarChar(10)
+  content    String     @db.Text
+  isRequired Boolean    @map("is_required")
+  createdAt  DateTime   @default(now()) @map("created_at")
 
   // 관계 설정 
   reservationTerms ReservationTerms[]

@@ -2,19 +2,23 @@ import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
   createStudioDetailResponse,
+  createStudioHairMakeupResponse,
   createStudioProductsResponse,
   parseGetStudioDetailRequest,
+  parseGetStudioHairMakeupRequest,
   parseGetStudioProductDetailRequest,
   parseGetStudioProductsRequest,
   parseGetStudioSlotsRequest,
   studioProductDetailResponseSchema,
   studioSlotsResponseSchema,
   type GetStudioDetailQuery,
+  type GetStudioHairMakeupQuery,
   type GetStudioProductDetailQuery,
   type GetStudioProductsQuery,
   type GetStudioSlotsQuery,
   type StudioDetailResponseDto,
   type StudioDetailResponseInputDto,
+  type StudioHairMakeupResponseDto,
   type StudioProductDetailResponseDto,
   type StudioProductsResponseDto,
   type StudioProductsResponseInputDto,
@@ -68,17 +72,11 @@ function getKstSlotStartMilliseconds(date: Date, startTime: Date) {
 }
 
 function groupStudioProducts(
-  products: NonNullable<
-    studioRepository.FindStudioProductsResult
-  >["products"],
+  products: NonNullable<studioRepository.FindStudioProductsResult>["products"],
 ): StudioProductsResponseInputDto["productGroups"] {
-  type ProductGroup =
-    StudioProductsResponseInputDto["productGroups"][number];
+  type ProductGroup = StudioProductsResponseInputDto["productGroups"][number];
 
-  const groups = new Map<
-    ProductGroup["shootingCategory"],
-    ProductGroup
-  >();
+  const groups = new Map<ProductGroup["shootingCategory"], ProductGroup>();
 
   for (const product of products) {
     let group = groups.get(product.shootingCategory);
@@ -133,11 +131,10 @@ export async function getStudioSlots(
       throw new AppError("STUDIO_4002");
     }
 
-    const studio =
-      await studioRepository.findStudioWithTimeSlotsByDate(
-        query.studioId,
-        query.dbDate,
-      );
+    const studio = await studioRepository.findStudioWithTimeSlotsByDate(
+      query.studioId,
+      query.dbDate,
+    );
 
     if (!studio) {
       throw new AppError("STUDIO_4041");
@@ -153,8 +150,7 @@ export async function getStudioSlots(
         isAvailable:
           slot.isAvailable &&
           (!isToday ||
-            getTimeSeconds(slot.startTime) >
-              kstNow.secondsSinceMidnight),
+            getTimeSeconds(slot.startTime) > kstNow.secondsSinceMidnight),
       })),
     );
   } catch (error) {
@@ -188,21 +184,16 @@ export async function getStudioProducts(
       throw error;
     }
 
-    const studio = await studioRepository.findStudioProducts(
-      query.studioId,
-    );
+    const studio = await studioRepository.findStudioProducts(query.studioId);
 
     if (!studio) {
       throw new AppError("STUDIO_4041");
     }
 
-    let selectedSlot:
-      | StudioProductsResponseInputDto["selectedSlot"] = null;
+    let selectedSlot: StudioProductsResponseInputDto["selectedSlot"] = null;
 
     if (query.timeSlotId !== undefined) {
-      const slot = await studioRepository.findTimeSlotById(
-        query.timeSlotId,
-      );
+      const slot = await studioRepository.findTimeSlotById(query.timeSlotId);
 
       if (!slot) {
         throw new AppError("STUDIO_4045");
@@ -219,10 +210,8 @@ export async function getStudioProducts(
         endTime: slot.endTime,
         isAvailable:
           slot.isAvailable &&
-          getKstSlotStartMilliseconds(
-            slot.date,
-            slot.startTime,
-          ) > nowProvider(),
+          getKstSlotStartMilliseconds(slot.date, slot.startTime) >
+            nowProvider(),
       };
     }
 
@@ -231,6 +220,54 @@ export async function getStudioProducts(
       studioName: studio.name,
       selectedSlot,
       productGroups: groupStudioProducts(studio.products),
+    });
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+
+    throw new AppError("COMMON_500");
+  }
+}
+
+// === 헤어메이크업 연계 상세 조회 API ===
+export async function getStudioHairMakeup(
+  rawStudioId: string,
+): Promise<StudioHairMakeupResponseDto> {
+  try {
+    let query: GetStudioHairMakeupQuery;
+
+    try {
+      query = parseGetStudioHairMakeupRequest({
+        studioId: rawStudioId,
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new AppError("STUDIO_4001");
+      }
+
+      throw error;
+    }
+
+    const studio = await studioRepository.findStudioHairMakeupDetails(
+      query.studioId,
+    );
+
+    if (!studio) {
+      throw new AppError("STUDIO_4041");
+    }
+
+    const hairMakeupDetails = studio.studioServices.flatMap(
+      (service) => service.hairMakeupDetails,
+    );
+
+    return createStudioHairMakeupResponse({
+      studioId: studio.id,
+      hairMakeupList: hairMakeupDetails.map((detail) => ({
+        hairMakeupDetailId: detail.id,
+        partnerName: detail.partnerName,
+        additionalPrice: detail.additionalPrice,
+      })),
     });
   } catch (error) {
     if (error instanceof AppError) {
@@ -260,27 +297,23 @@ export async function getStudioProductDetail(
           (issue) => issue.path[0] === "studioId",
         );
 
-        throw new AppError(
-          hasStudioIdError ? "STUDIO_40011" : "STUDIO_4006",
-        );
+        throw new AppError(hasStudioIdError ? "STUDIO_40011" : "STUDIO_4006");
       }
 
       throw error;
     }
 
-    const studio =
-      await studioRepository.findStudioForProductDetail(
-        query.studioId,
-      );
+    const studio = await studioRepository.findStudioForProductDetail(
+      query.studioId,
+    );
 
     if (!studio) {
       throw new AppError("STUDIO_4041");
     }
 
-    const product =
-      await studioRepository.findStudioProductDetailById(
-        query.studioProductId,
-      );
+    const product = await studioRepository.findStudioProductDetailById(
+      query.studioProductId,
+    );
 
     if (!product) {
       throw new AppError("STUDIO_4043");
@@ -295,9 +328,7 @@ export async function getStudioProductDetail(
       studioName: studio.name,
       studioProductId: product.id,
       productName: product.name,
-      imageUrls: product.productImages.map(
-        (image) => image.url,
-      ),
+      imageUrls: product.productImages.map((image) => image.url),
     });
   } catch (error) {
     if (error instanceof AppError) {
