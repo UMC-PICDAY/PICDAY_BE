@@ -23,8 +23,8 @@ import {
   type StudioProductsResponseDto,
   type StudioProductsResponseInputDto,
   type StudioSlotsResponseDto,
-} from "./studio.dto.js";
-import * as studioRepository from "./studio.repository.js";
+} from "./studio.detail.dto.js";
+import * as studioRepository from "./studio.detail.repository.js";
 
 const KST_OFFSET_MILLISECONDS = 9 * 60 * 60 * 1000;
 

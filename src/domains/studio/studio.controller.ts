@@ -15,8 +15,10 @@ import type {
   StudioHairMakeupResponseDto,
   StudioProductDetailResponseDto,
   StudioProductsResponseDto,
-} from "./studio.dto.js";
-import * as studioService from "./studio.service.js";
+} from "./studio.detail.dto.js";
+import type { StudioAutocompleteResponseDto } from "./studio.search.dto.js";
+import * as studioDetailService from "./studio.detail.service.js";
+import * as studioSearchService from "./studio.search.service.js";
 
 type AppErrorResponse = {
   success: false;
@@ -32,6 +34,14 @@ type GetStudioProductsSuccessResponseDto = {
   data: StudioProductsResponseDto;
 };
 
+// 사진관 자동완성 검색 API 응답
+type GetStudioAutocompleteSuccessResponseDto = {
+  success: true;
+  code: "STUDIO_200";
+  message: "사진관 자동완성 조회에 성공했습니다.";
+  data: StudioAutocompleteResponseDto;
+};
+
 @Route("studios")
 @Tags("Studio")
 export class StudioController extends Controller {
@@ -44,7 +54,7 @@ export class StudioController extends Controller {
   public async getStudioDetail(
     @Path() studioId: string,
   ): Promise<ApiResponse<StudioDetailResponseDto>> {
-    const data = await studioService.getStudioDetail(studioId);
+    const data = await studioDetailService.getStudioDetail(studioId);
 
     return success(data, "사진관 상세 정보 조회에 성공했습니다.");
   }
@@ -61,7 +71,7 @@ export class StudioController extends Controller {
   public async getStudioHairMakeup(
     @Path() studioId: string,
   ): Promise<ApiResponse<StudioHairMakeupResponseDto>> {
-    const data = await studioService.getStudioHairMakeup(studioId);
+    const data = await studioDetailService.getStudioHairMakeup(studioId);
 
     return success(data, "사진관 헤어메이크업 연계 정보 조회에 성공했습니다.");
   }
@@ -73,7 +83,7 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Query() date?: string,
   ): Promise<GetStudioSlotsSuccessResponseDto> {
-    const data = await studioService.getStudioSlots(studioId, date);
+    const data = await studioDetailService.getStudioSlots(studioId, date);
 
     return {
       success: true,
@@ -93,7 +103,10 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Query() timeSlotId?: string,
   ): Promise<GetStudioProductsSuccessResponseDto> {
-    const data = await studioService.getStudioProducts(studioId, timeSlotId);
+    const data = await studioDetailService.getStudioProducts(
+      studioId,
+      timeSlotId,
+    );
 
     return {
       success: true,
@@ -113,11 +126,27 @@ export class StudioController extends Controller {
     @Path() studioId: string,
     @Path() studioProductId: string,
   ): Promise<ApiResponse<StudioProductDetailResponseDto>> {
-    const data = await studioService.getStudioProductDetail(
+    const data = await studioDetailService.getStudioProductDetail(
       studioId,
       studioProductId,
     );
 
     return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
+  }
+
+  // === 사진관 자동완성 검색 API ===
+  @Get("autocomplete")
+  @SuccessResponse(200, "OK")
+  public async getStudioAutocomplete(
+    @Query() keyword: string,
+  ): Promise<GetStudioAutocompleteSuccessResponseDto> {
+    const data = await studioSearchService.getStudioAutocomplete(keyword);
+
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "사진관 자동완성 조회에 성공했습니다.",
+      data,
+    };
   }
 }
