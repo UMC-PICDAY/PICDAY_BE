@@ -73,9 +73,9 @@ async function main() {
         where: { id: studio.id },
         data: {
           ratingScore: ratingByStudioId.get(studio.id) ?? 0,
-          ratingRank: ratingRankByStudioId.get(studio.id),
+          ratingRank: ratingRankByStudioId.get(studio.id) ?? null,
           reservationCount: reservationCountByStudioId.get(studio.id) ?? 0,
-          reservationRank: reservationRankByStudioId.get(studio.id),
+          reservationRank: reservationRankByStudioId.get(studio.id) ?? null,
         },
       }),
     ),
