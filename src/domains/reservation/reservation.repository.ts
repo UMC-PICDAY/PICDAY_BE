@@ -270,3 +270,13 @@ export const getReservationsByUserId = async (
     orderBy: { createdAt: "desc" },
   });
 };
+
+// 진행 중인 예약이 존재하는지 확인
+export const getActiveReservationByUserId = async (userId: bigint) => {
+  return await prisma.reservation.findFirst({
+    where: {
+      userId,
+      status: "RESERVED",
+    },
+  });
+};

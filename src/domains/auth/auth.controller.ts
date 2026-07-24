@@ -185,4 +185,14 @@ export class AuthController extends Controller {
     const result = await authService.updateNickname(userId, dto);
     return success(result)
   }
+
+  @Security("jwt")
+  @Patch("me/withdraw")
+  @SuccessResponse(200, "OK")
+  public async withdraw(@Request() request: any) {
+    const { userId } = request as AuthenticatedRequest;
+
+    await authService.withdraw(userId);
+    // TODO: 응답 래퍼(success()) 이슈 작업 시 다른 API들과 함께 일괄 정리
+  }
 }

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
 import * as authRepository from "./auth.repository.js";
+import { getActiveReservationByUserId } from "../reservation/reservation.repository.js";
 import {
   buildSocialAuthUrl,
   getSocialProfile,
@@ -374,4 +375,27 @@ export async function updateNickname(
       nickname: user.nickname
     }
   });
+}
+
+export async function withdraw(userId: bigint): Promise<void> {
+  const user = await authRepository.getUserById(userId);
+
+  // 존재하지 않는 회원이라면
+  if (!user) {
+    throw new AppError("AUTH_4041");
+  }
+
+  // 이미 탈퇴한 회원이라면
+  if (user.deletedAt || user.status === "WITHDRAWN") {
+    throw new AppError("AUTH_4095");
+  }
+
+  const hasActiveReservation = await getActiveReservationByUserId(userId);
+
+  // 진행 중인 예약이 존재하면
+  if (hasActiveReservation) {
+    throw new AppError("AUTH_4094");
+  }
+
+  await authRepository.withdrawUser(userId);
 }

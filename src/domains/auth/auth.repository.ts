@@ -216,3 +216,14 @@ export async function updateNickname(userId: bigint, nickname: string){
     data: { nickname }
   })
 }
+
+export async function withdrawUser(userId: bigint) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: {
+      status: "WITHDRAWN",
+      deletedAt: new Date(),
+      refreshToken: null,
+    },
+  });
+}

@@ -395,6 +395,11 @@ export const ErrorCode = {
     code: "AUTH_4017",
     message: "인증이 만료되었습니다. 토큰을 갱신해 주세요.",
   },
+  AUTH_4041: {
+    status: 404,
+    code: "AUTH_4041",
+    message: "존재하지 않는 회원입니다.",
+  },
   AUTH_4091: {
     status: 409,
     code: "AUTH_4091",
@@ -414,6 +419,11 @@ export const ErrorCode = {
     status: 409,
     code: "AUTH_4094",
     message: "진행 중인 예약이 있어 탈퇴할 수 없어요.",
+  },
+  AUTH_4095: {
+    status: 409,
+    code: "AUTH_4095",
+    message: "이미 탈퇴한 회원입니다.",
   },
   AUTH_5021: {
     status: 500,
