@@ -50,7 +50,7 @@ export type SignupTokenPayload = {
   type: "signup";
   provider: Provider;
   providerId: string;
-  email: string;
+  email: string | null;
   name: string | null;
   phoneNumber: string | null;
 };
@@ -93,7 +93,10 @@ export function verifySocialSignupToken(token: string): SignupTokenPayload {
     type: "signup",
     provider: payload.provider,
     providerId: payload.providerId,
-    email: payload.email ?? "",
+    email:
+      typeof payload.email === "string" && payload.email.trim() !== ""
+        ? payload.email
+        : null,
     name: payload.name ?? null,
     phoneNumber: payload.phoneNumber ?? null,
   };

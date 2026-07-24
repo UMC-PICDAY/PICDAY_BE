@@ -61,7 +61,7 @@ export type SocialLoginResponseData =
       signupToken: string;
       socialInfo: {
         id: string;
-        email: string;
+        email: string | null;
         name: string | null;
         phoneNumber: string | null;
       };

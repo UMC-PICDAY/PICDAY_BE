@@ -130,7 +130,7 @@ export async function createUserWithTerms(
 export type CreateSocialUserData = {
   provider: Provider;
   providerId: string;
-  email: string;
+  email: string | null;
   name: string | null;
   phoneNumber: string | null;
   nickname: string;

@@ -20,7 +20,7 @@ export function assertSocialProvider(value: string): SocialProvider {
 export type SocialInfo = {
   provider: Provider;
   providerId: string;
-  email: string;
+  email: string | null;
   name: string | null;
   phoneNumber: string | null;
 };
@@ -202,7 +202,13 @@ function toKakaoSocialInfo(raw: Record<string, unknown>): SocialInfo {
   return {
     provider: "KAKAO",
     providerId: String(raw.id ?? ""),
-    email: typeof account.email === "string" ? account.email : "",
+    // 이메일 미제공/빈 문자열은 null 유지: email은 UNIQUE 컬럼이라 ""로 저장하면
+    // 이메일 없는 회원이 2명 이상일 때 unique 충돌이 발생한다(NULL은 중복 허용).
+    // 이를 방지하기 위한 로직 구현: 이메일 미제공/빈 문자열은 null 유지.
+    email:
+      typeof account.email === "string" && account.email.trim() !== ""
+        ? account.email
+        : null,
     name:
       (typeof account.name === "string" && account.name) ||
       (typeof profile.nickname === "string" && profile.nickname) ||
@@ -215,7 +221,11 @@ function toGoogleSocialInfo(raw: Record<string, unknown>): SocialInfo {
   return {
     provider: "GOOGLE",
     providerId: String(raw.id ?? ""),
-    email: typeof raw.email === "string" ? raw.email : "",
+    // 이메일 미제공/빈 문자열은 null 유지(UNIQUE 충돌 방지, KAKAO와 동일)
+    email:
+      typeof raw.email === "string" && raw.email.trim() !== ""
+        ? raw.email
+        : null,
     name: typeof raw.name === "string" ? raw.name : null,
     // 구글은 기본 scope로 전화번호를 제공하지 않음
     phoneNumber: null,
