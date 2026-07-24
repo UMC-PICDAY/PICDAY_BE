@@ -1,6 +1,3 @@
-// === 홈 화면 조회 API 응답 타입 ===
-
-// 1-1
 export type BannerStudioItem = {
   studioId: string;
   studioName: string;
@@ -8,11 +5,12 @@ export type BannerStudioItem = {
   locationCategory: string;
 };
 
-// 1-2
 export type StudioWithPriceAndRatingItem = BannerStudioItem & {
   minPrice: number | null;
   rating: number;
 };
+
+// ======== 홈 화면 조회 API 응답 타입 ========
 
 // 1. 홈 화면 조회 API 응답 data 타입
 export type GetHomeResponseDtoForLogged = {

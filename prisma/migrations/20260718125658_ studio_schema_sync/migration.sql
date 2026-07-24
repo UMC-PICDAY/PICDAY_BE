@@ -4,7 +4,6 @@
   - You are about to drop the column `description` on the `studio` table. All the data in the column will be lost.
   - You are about to drop the column `facility_description` on the `studio` table. All the data in the column will be lost.
   - You are about to alter the column `station_detail` on the `studio_location` table. The data in that column could be lost. The data in that column will be cast from `VarChar(150)` to `Json`.
-  - Added the required column `base_people` to the `studio_product` table without a default value. This is not possible if the table is not empty.
 
 */
 -- AlterTable
@@ -15,9 +14,6 @@ ALTER TABLE `studio` DROP COLUMN `description`,
 
 -- AlterTable
 ALTER TABLE `studio_location` MODIFY `station_detail` JSON NULL;
-
--- AlterTable
-ALTER TABLE `studio_product` ADD COLUMN `base_people` INTEGER NOT NULL;
 
 -- CreateTable
 CREATE TABLE `studio_service` (
