@@ -259,6 +259,11 @@ export const ErrorCode = {
     code: "REVIEW_4005",
     message: "page/size/sort 형식이 올바르지 않습니다.",
   },
+  REVIEW_4006: {
+    status: 400,
+    code: "REVIEW_4006",
+    message: "올바르지 않은 리뷰 태그입니다.",
+  },
   REVIEW_4031: {
     status: 403,
     code: "REVIEW_4031",
@@ -303,6 +308,23 @@ export const ErrorCode = {
     status: 500,
     code: "REVIEW_5001",
     message: "리뷰 처리 중 오류가 발생했어요.",
+  },
+
+  // Image (리뷰 이미지 업로드)
+  IMAGE_4001: {
+    status: 400,
+    code: "IMAGE_4001",
+    message: "지원하지 않는 파일 형식입니다.",
+  },
+  IMAGE_4002: {
+    status: 400,
+    code: "IMAGE_4002",
+    message: "파일 용량이 초과되었습니다.",
+  },
+  IMAGE_5001: {
+    status: 500,
+    code: "IMAGE_5001",
+    message: "이미지 업로드에 실패했습니다.",
   },
 
   // Auth

@@ -137,3 +137,156 @@ export async function findStudioProductDetailById(
 export type FindStudioProductDetailByIdResult = Awaited<
   ReturnType<typeof findStudioProductDetailById>
 >;
+
+// === 사진관 상세 정보 조회 API ===
+export async function findStudioDetailById(studioId: bigint) {
+  return prisma.studio.findUnique({
+    where: { id: studioId },
+    select: {
+      id: true,
+      name: true,
+      introduction: true,
+      notice: true,
+      location: {
+        select: {
+          locationCategory: true,
+          mainAddress: true,
+          subAddress: true,
+          latitude: true,
+          longitude: true,
+          nearestStation: true,
+          walkingMinutes: true,
+          stationDetail: true,
+        },
+      },
+      products: {
+        orderBy: { id: "asc" },
+        take: 2,
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          productImages: {
+            orderBy: { order: "asc" },
+            take: 1,
+            select: {
+              id: true,
+              url: true,
+              order: true,
+            },
+          },
+        },
+      },
+      studioServices: {
+        orderBy: { serviceCode: "asc" },
+        select: {
+          serviceCode: true,
+          _count: {
+            select: {
+              hairMakeupDetails: true,
+            },
+          },
+        },
+      },
+      studioInfoItems: {
+        orderBy: [{ infoSectionId: "asc" }, { id: "asc" }],
+        select: {
+          content: true,
+          infoSection: {
+            select: {
+              title: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export type FindStudioDetailByIdResult = Awaited<
+  ReturnType<typeof findStudioDetailById>
+>;
+
+export async function findStudioRepresentativeImages(studioId: bigint) {
+  return prisma.productImage.findMany({
+    where: {
+      studioThumbnailOrder: { not: null },
+      studioProduct: { studioId },
+    },
+    orderBy: [{ studioThumbnailOrder: "asc" }, { id: "asc" }],
+    select: {
+      id: true,
+      url: true,
+      studioThumbnailOrder: true,
+    },
+  });
+}
+
+export type FindStudioRepresentativeImagesResult = Awaited<
+  ReturnType<typeof findStudioRepresentativeImages>
+>;
+
+export async function existsWishlist(studioId: bigint, userId: bigint) {
+  const wishlist = await prisma.wishlist.findUnique({
+    where: {
+      userId_studioId: {
+        userId,
+        studioId,
+      },
+    },
+    select: { id: true },
+  });
+
+  return wishlist !== null;
+}
+
+export type ExistsWishlistResult = Awaited<ReturnType<typeof existsWishlist>>;
+
+export async function findStudioReviewSummary(studioId: bigint) {
+  return prisma.review.aggregate({
+    where: { studioId },
+    _avg: { rating: true },
+    _count: { _all: true },
+  });
+}
+
+export type FindStudioReviewSummaryResult = Awaited<
+  ReturnType<typeof findStudioReviewSummary>
+>;
+
+export async function findStudioPreviewReview(studioId: bigint) {
+  return prisma.review.findFirst({
+    where: { studioId },
+    orderBy: [
+      { likes: { _count: "desc" } },
+      { createdAt: "desc" },
+      { id: "desc" },
+    ],
+    select: {
+      id: true,
+      rating: true,
+      createdAt: true,
+      content: true,
+      user: {
+        select: {
+          nickname: true,
+        },
+      },
+      images: {
+        orderBy: { id: "asc" },
+        select: {
+          url: true,
+        },
+      },
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
+    },
+  });
+}
+
+export type FindStudioPreviewReviewResult = Awaited<
+  ReturnType<typeof findStudioPreviewReview>
+>;

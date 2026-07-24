@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Query,
   Request,
   Route,
@@ -12,7 +13,7 @@ import {
 } from "tsoa";
 import { AppError } from "../../common/error.js";
 import { success } from "../../common/response.js";
-import { parseLogin, parseRefresh, parseSignup } from "./auth.dto.js";
+import { parseLogin, parseRefresh, parseSignup, parseUpdateNickname } from "./auth.dto.js";
 import * as authService from "./auth.service.js";
 import { extractBearerToken } from "./auth.token.js";
 
@@ -83,5 +84,31 @@ export class AuthController extends Controller {
   public async checkNickname(@Query() nickname?: string) {
     const result = await authService.checkNicknameAvailability(nickname ?? "");
     return success(result);
+  }
+
+  @Security("jwt")
+  @Get("me")
+  @SuccessResponse(200, "OK")
+  public async getMe(
+    @Request() request: any
+  ){
+      const { userId } = request as AuthenticatedRequest;
+
+      const result = await authService.getMe(userId);
+      return success(result);
+  }
+
+  @Security("jwt")
+  @Patch("me")
+  @SuccessResponse(200, "OK")
+  public async updateMe(
+    @Request() request: any,
+    @Body() body: unknown
+  ){
+    const { userId } = request as AuthenticatedRequest;
+
+    const dto = parseUpdateNickname(body)
+    const result = await authService.updateNickname(userId, dto);
+    return success(result)
   }
 }

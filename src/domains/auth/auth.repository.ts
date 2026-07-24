@@ -67,3 +67,22 @@ export async function createUser(data: CreateUserData) {
     },
   });
 }
+
+export async function getUserById(userId: bigint){
+  return prisma.user.findUnique({
+    where: { id: userId }
+  });
+}
+
+export async function getUserByNickname(nickname: string){
+  return prisma.user.findUnique({
+    where: { nickname: nickname }
+  })
+}
+
+export async function updateNickname(userId: bigint, nickname: string){
+  return prisma.user.update({
+    where: { id: userId },
+    data: { nickname }
+  })
+}
