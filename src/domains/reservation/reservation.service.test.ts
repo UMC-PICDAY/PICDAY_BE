@@ -117,7 +117,7 @@ test("reservation creation service", async (t) => {
     const result = await create(validBody, 9n);
 
     assert.deepEqual(result, {
-      reservationId: "105",
+      reservationId: 105,
       status: "RESERVED",
       totalPrice: 150_000,
       createdAt: "2026-07-04T16:16:26.000Z",
@@ -229,7 +229,7 @@ test("reservation creation service", async (t) => {
     resetRepositoryMock();
     const result = await create(validBody, 9n);
 
-    assert.equal(typeof result.reservationId, "string");
+    assert.equal(typeof result.reservationId, "number");
     assert.equal(typeof result.createdAt, "string");
     assert.equal(new Date(result.createdAt).toISOString(), result.createdAt);
   });

@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Middlewares,
   Path,
   Query,
   Response,
@@ -19,6 +20,11 @@ import type {
 import type { StudioAutocompleteResponseDto } from "./studio.search.dto.js";
 import * as studioDetailService from "./studio.detail.service.js";
 import * as studioSearchService from "./studio.search.service.js";
+import {
+  validateStudioId,
+  validateStudioProductDetailRequestIds,
+  validateStudioProductsRequestIds,
+} from "./studio.middleware.js";
 
 type AppErrorResponse = {
   success: false;
@@ -45,21 +51,35 @@ type GetStudioAutocompleteSuccessResponseDto = {
 @Route("studios")
 @Tags("Studio")
 export class StudioController extends Controller {
-  // === 사진관 상세 정보 조회 API ===
+  /**
+   * 사진관 상세 정보 조회 API
+   *
+   * @isLong studioId 사진관 ID는 정수여야 합니다.
+   * @minimum studioId 1 사진관 ID는 양수여야 합니다.
+   * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
+   */
+  @Middlewares(validateStudioId)
   @Get("{studioId}")
   @SuccessResponse(200, "OK")
   @Response<AppErrorResponse>(400, "STUDIO_4001: 잘못된 요청")
   @Response<AppErrorResponse>(404, "STUDIO_4041: 사진관을 찾을 수 없음")
   @Response<AppErrorResponse>(500, "COMMON_500: 서버 오류")
   public async getStudioDetail(
-    @Path() studioId: string,
+    @Path() studioId: number,
   ): Promise<ApiResponse<StudioDetailResponseDto>> {
     const data = await studioDetailService.getStudioDetail(studioId);
 
     return success(data, "사진관 상세 정보 조회에 성공했습니다.");
   }
 
-  // === 헤어메이크업 연계 상세 조회 API ===
+  /**
+   * 헤어메이크업 연계 상세 조회 API
+   *
+   * @isLong studioId 사진관 ID는 정수여야 합니다.
+   * @minimum studioId 1 사진관 ID는 양수여야 합니다.
+   * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
+   */
+  @Middlewares(validateStudioId)
   @Get("{studioId}/hair-makeup")
   @SuccessResponse("200", "사진관 헤어메이크업 연계 정보 조회 성공")
   @Response<AppErrorResponse>(
@@ -69,18 +89,25 @@ export class StudioController extends Controller {
   @Response<AppErrorResponse>("404", "STUDIO_4041: 존재하지 않는 사진관입니다.")
   @Response<AppErrorResponse>("500", "COMMON_500: 서버 오류가 발생했습니다.")
   public async getStudioHairMakeup(
-    @Path() studioId: string,
+    @Path() studioId: number,
   ): Promise<ApiResponse<StudioHairMakeupResponseDto>> {
     const data = await studioDetailService.getStudioHairMakeup(studioId);
 
     return success(data, "사진관 헤어메이크업 연계 정보 조회에 성공했습니다.");
   }
 
-  // === 예약 가능 시간 조회 API ===
+  /**
+   * 예약 가능 시간 조회 API
+   *
+   * @isLong studioId 사진관 ID는 정수여야 합니다.
+   * @minimum studioId 1 사진관 ID는 양수여야 합니다.
+   * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
+   */
+  @Middlewares(validateStudioId)
   @Get("{studioId}/slots")
   @SuccessResponse(200, "OK")
   public async getStudioSlots(
-    @Path() studioId: string,
+    @Path() studioId: number,
     @Query() date?: string,
   ): Promise<GetStudioSlotsSuccessResponseDto> {
     const data = await studioDetailService.getStudioSlots(studioId, date);
@@ -93,15 +120,25 @@ export class StudioController extends Controller {
     };
   }
 
-  // === 컨셉 목록 조회 API ===
+  /**
+   * 컨셉 목록 조회 API
+   *
+   * @isLong studioId 사진관 ID는 정수여야 합니다.
+   * @minimum studioId 1 사진관 ID는 양수여야 합니다.
+   * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
+   * @isLong timeSlotId 시간 슬롯 ID는 정수여야 합니다.
+   * @minimum timeSlotId 1 시간 슬롯 ID는 양수여야 합니다.
+   * @maximum timeSlotId 9007199254740991 시간 슬롯 ID가 허용 범위를 초과했습니다.
+   */
+  @Middlewares(validateStudioProductsRequestIds)
   @Get("{studioId}/products")
   @SuccessResponse(200, "OK")
   @Response<AppErrorResponse>(400, "잘못된 요청")
   @Response<AppErrorResponse>(404, "대상을 찾을 수 없음")
   @Response<AppErrorResponse>(500, "서버 오류")
   public async getStudioProducts(
-    @Path() studioId: string,
-    @Query() timeSlotId?: string,
+    @Path() studioId: number,
+    @Query() timeSlotId?: number,
   ): Promise<GetStudioProductsSuccessResponseDto> {
     const data = await studioDetailService.getStudioProducts(
       studioId,
@@ -116,15 +153,25 @@ export class StudioController extends Controller {
     };
   }
 
-  // === 컨셉 사진 상세 조회 API ===
+  /**
+   * 컨셉 사진 상세 조회 API
+   *
+   * @isLong studioId 사진관 ID는 정수여야 합니다.
+   * @minimum studioId 1 사진관 ID는 양수여야 합니다.
+   * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
+   * @isLong studioProductId 상품 ID는 정수여야 합니다.
+   * @minimum studioProductId 1 상품 ID는 양수여야 합니다.
+   * @maximum studioProductId 9007199254740991 상품 ID가 허용 범위를 초과했습니다.
+   */
+  @Middlewares(validateStudioProductDetailRequestIds)
   @Get("{studioId}/products/{studioProductId}")
   @SuccessResponse(200, "OK")
   @Response<AppErrorResponse>(400, "잘못된 요청")
   @Response<AppErrorResponse>(404, "대상을 찾을 수 없음")
   @Response<AppErrorResponse>(500, "서버 오류")
   public async getStudioProductDetail(
-    @Path() studioId: string,
-    @Path() studioProductId: string,
+    @Path() studioId: number,
+    @Path() studioProductId: number,
   ): Promise<ApiResponse<StudioProductDetailResponseDto>> {
     const data = await studioDetailService.getStudioProductDetail(
       studioId,
