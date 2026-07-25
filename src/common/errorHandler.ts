@@ -1,12 +1,21 @@
 import type { ErrorRequestHandler } from "express";
 import { AppError } from "./error.js";
 import { ZodError } from "zod";
+import { ValidateError } from "tsoa";
 import { fail } from "./response.js";
 import { HTTP_STATUS } from "./constants.js";
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
     res.status(err.statusCode).json(fail(err.code, err.message));
+    return;
+  }
+
+  if (err instanceof ValidateError) {
+    // tsoa의 요청 검증 실패(경로·쿼리·바디 타입 불일치 등) = 클라이언트 요청 오류
+    res
+      .status(HTTP_STATUS.BAD_REQUEST)
+      .json(fail("COMMON_400", "요청 형식이 올바르지 않습니다."));
     return;
   }
 
