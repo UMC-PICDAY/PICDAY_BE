@@ -5,6 +5,7 @@ import {
   Path,
   Post,
   Patch,
+  Delete,
   Query,
   Request,
   Response,
@@ -201,5 +202,15 @@ export class AuthController extends Controller {
     const dto = parseUpdateNickname(body)
     const result = await authService.updateNickname(userId, dto);
     return success(result)
+  }
+
+  @Security("jwt")
+  @Delete("me")
+  @SuccessResponse(200, "OK")
+  public async withdraw(@Request() request: any) {
+    const { userId } = request as AuthenticatedRequest;
+
+    await authService.withdraw(userId);
+    return success(null);
   }
 }
