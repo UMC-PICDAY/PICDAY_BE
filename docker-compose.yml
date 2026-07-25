@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-0000}
+      MARIADB_DATABASE: ${DB_NAME:-pickday}
+    ports:
+      - "3307:3306" # 로컬 3306과 안 겹치게 호스트 쪽만 3307로 노출 (필요 없으면 이 블록 삭제 가능)
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      DATABASE_URL: "mariadb://root:${DB_ROOT_PASSWORD:-0000}@db:3306/${DB_NAME:-pickday}?allowPublicKeyRetrieval=true&useSSL=false"
+      JWT_SECRET: "${JWT_SECRET:-change-me}"
+      JWT_ACCESS_EXPIRES_IN: "${JWT_ACCESS_EXPIRES_IN:-1h}"
+      JWT_REFRESH_EXPIRES_IN: "${JWT_REFRESH_EXPIRES_IN:-7d}"
+
+volumes:
+  mariadb_data:
