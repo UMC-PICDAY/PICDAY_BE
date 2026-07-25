@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
 import * as authRepository from "./auth.repository.js";
+import { getActiveReservationByUserId } from "../reservation/reservation.repository.js";
 import {
   buildSocialAuthUrl,
   getSocialProfile,
@@ -313,6 +314,17 @@ export async function refresh(userId: bigint, refreshToken: string) {
   return { token };
 }
 
+/**
+ * 로그아웃. 서버에 저장된 Refresh Token을 무효화(null)하여 세션을 종료한다.
+ *
+ * userId는 @Security("jwt")를 통과한 Access Token에서 나온 값이다.
+ * refreshToken을 지우면 이후 토큰 갱신(refresh) 시 DB 대조에서 불일치로 걸러진다.
+ * (Cookie 미사용 — Authorization Header 기반이므로 서버는 refreshToken만 무효화한다)
+ */
+export async function logout(userId: bigint): Promise<void> {
+  await authRepository.updateRefreshToken(userId, null);
+}
+
 export async function checkLoginIdAvailability(rawLoginId: string) {
   const loginId = rawLoginId.toLowerCase();
   if (!LOGIN_ID_REGEX.test(loginId)) {
@@ -374,4 +386,47 @@ export async function updateNickname(
       nickname: user.nickname
     }
   });
+}
+
+export async function withdraw(userId: bigint): Promise<void> {
+  const user = await authRepository.getUserById(userId);
+
+  // 존재하지 않는 회원이라면
+  if (!user) {
+    throw new AppError("AUTH_4041");
+  }
+
+  // 이미 탈퇴한 회원이라면
+  if (user.deletedAt || user.status === "WITHDRAWN") {
+    throw new AppError("AUTH_4095");
+  }
+
+  const hasActiveReservation = await getActiveReservationByUserId(userId);
+
+  // 진행 중인 예약이 존재하면
+  if (hasActiveReservation) {
+    throw new AppError("AUTH_4094");
+  }
+
+  await authRepository.withdrawUser(userId);
+}
+
+const ANONYMIZATION_RETENTION_DAYS = 7;
+
+/** 탈퇴 후 7일 지난 회원 일괄 익명화. 매일 새벽 배치가 호출. */
+export async function anonymizeWithdrawnUsers(): Promise<number> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - ANONYMIZATION_RETENTION_DAYS);
+
+  const targets = await authRepository.findUsersEligibleForAnonymization(cutoff);
+
+  if (targets.length === 0) {
+    return 0;
+  }
+
+  await Promise.all(
+    targets.map((user) => authRepository.anonymizeUser(user.id)),
+  );
+
+  return targets.length;
 }
