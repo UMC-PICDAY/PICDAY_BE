@@ -236,6 +236,7 @@ export const getReservationById = async (reservationId: bigint) => {
       studioProduct: {
         include: { studio: true },
       },
+      review: { select: { id: true }}
     },
   });
 };
@@ -275,6 +276,7 @@ export const getReservationsByUserId = async (
         include: { studio: true },
       },
       timeSlot: true,
+      review: { select: { id: true } },
     },
     orderBy: { createdAt: "desc" },
   });
