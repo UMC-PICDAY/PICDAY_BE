@@ -117,7 +117,7 @@ export async function socialLogin(
       data: {
         isNewUser: false,
         user: {
-          id: account.user.id.toString(),
+          id: Number(account.user.id),
           nickname: account.user.nickname,
           email: account.user.email,
           // 스키마에 profileImageUrl 컬럼이 없어 현재는 null (getMe와 동일)
@@ -253,7 +253,7 @@ export async function register(dto: SignupRequestDto) {
 
   return {
     ...userWithoutPassword,
-    id: user.id.toString(),
+    id: Number(user.id),
   };
 }
 
@@ -275,7 +275,7 @@ export async function login(dto: LoginRequestDto) {
 
   return {
     user: {
-      id: user.id.toString(),
+      id: Number(user.id),
       loginId: user.loginId,
       nickname: user.nickname,
       provider: user.provider,
