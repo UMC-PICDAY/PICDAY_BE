@@ -138,6 +138,11 @@ export const getReservationDetailResponseSchema = z.object({
     startTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
     endTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
   }),
+  reviewId: z
+    .bigint()
+    .nullable()
+    .transform((id) => (id === null ? null : toApiId(id))),
+  checklist: z.array(z.string()),
   createdAt: z.date().transform((date) => date.toISOString()),
   canceledAt: z
     .date()
@@ -169,6 +174,10 @@ export const getMyReservationListResponseSchema = z.array(
     reservationTime: z.string(),
     totalPrice: z.number(),
     status: reservationStatusEnum,
+    reviewId: z
+      .bigint()
+      .nullable()
+      .transform((id) => (id === null ? null : toApiId(id))),
   }),
 );
 

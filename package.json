@@ -13,6 +13,7 @@
     "prisma:validate": "prisma validate",
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
+    "rank:recalculate": "tsx src/recalculatePopularityRank.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"

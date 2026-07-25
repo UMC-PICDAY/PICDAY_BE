@@ -1,4 +1,5 @@
 // src/seed.ts
+// 시드데이터 확인 : pnpm exec tsx src/seed.ts
 import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -22,17 +23,44 @@ const AUTH_TERMS: ReadonlyArray<{
   isRequired: boolean;
   file: string;
 }> = [
-  { type: "SERVICE", scope: "SIGNUP", version: "v1", isRequired: true, file: "service.md" },
-  { type: "PRIVACY_COLLECTION", scope: "SIGNUP", version: "v1", isRequired: true, file: "privacy.md" },
-  { type: "AGE_OVER_14", scope: "SIGNUP", version: "v1", isRequired: true, file: "over14.md" },
-  { type: "MARKETING", scope: "SIGNUP", version: "v1", isRequired: false, file: "marketing.md" },
+  {
+    type: "SERVICE",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: true,
+    file: "service.md",
+  },
+  {
+    type: "PRIVACY_COLLECTION",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: true,
+    file: "privacy.md",
+  },
+  {
+    type: "AGE_OVER_14",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: true,
+    file: "over14.md",
+  },
+  {
+    type: "MARKETING",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: false,
+    file: "marketing.md",
+  },
 ];
 
 async function seedAuthTerms() {
   const seeded: { type: TermsType; id: bigint }[] = [];
 
   for (const term of AUTH_TERMS) {
-    const content = readFileSync(join(TERMS_AUTH_DIR, term.file), "utf-8").trim();
+    const content = readFileSync(
+      join(TERMS_AUTH_DIR, term.file),
+      "utf-8",
+    ).trim();
 
     // (type, version) 유니크 기준 upsert — 재실행해도 중복 생성되지 않음
     const row = await prisma.terms.upsert({
