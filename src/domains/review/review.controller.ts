@@ -52,7 +52,7 @@ export class ReviewController extends Controller {
   @Patch("{reviewId}")
   @SuccessResponse(200, "OK")
   public async update(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Body() body: UpdateReviewRequestDto,
     @Request() request: any,
   ): Promise<UpdateReviewSuccessResponseDto> {
@@ -71,7 +71,7 @@ export class ReviewController extends Controller {
   @Delete("{reviewId}")
   @SuccessResponse(200, "OK")
   public async remove(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Request() request: any,
   ): Promise<DeleteReviewSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
@@ -89,7 +89,7 @@ export class ReviewController extends Controller {
   @Post("{reviewId}/like")
   @SuccessResponse(201, "Created")
   public async addLike(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Request() request: any,
   ): Promise<AddReviewLikeSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
@@ -108,7 +108,7 @@ export class ReviewController extends Controller {
   @Delete("{reviewId}/like")
   @SuccessResponse(200, "OK")
   public async removeLike(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Request() request: any,
   ): Promise<RemoveReviewLikeSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;

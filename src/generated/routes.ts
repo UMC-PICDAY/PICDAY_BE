@@ -717,12 +717,12 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsStudioReviewController_listByStudio: Record<string, TsoaRoute.ParameterSchema> = {
-                studioId: {"in":"path","name":"studioId","required":true,"dataType":"string"},
+                studioId: {"in":"path","name":"studioId","required":true,"dataType":"double"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 sort: {"in":"query","name":"sort","dataType":"string"},
-                photoOnly: {"in":"query","name":"photoOnly","dataType":"string"},
-                page: {"in":"query","name":"page","dataType":"string"},
-                size: {"in":"query","name":"size","dataType":"string"},
+                photoOnly: {"in":"query","name":"photoOnly","dataType":"boolean"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                size: {"in":"query","name":"size","dataType":"double"},
         };
         app.get('/api/v1/studios/:studioId/reviews',
             authenticateMiddleware([{"jwt":[]}]),
@@ -785,7 +785,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsReviewController_update: Record<string, TsoaRoute.ParameterSchema> = {
-                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"string"},
+                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"double"},
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateReviewRequestDto"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
@@ -818,7 +818,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsReviewController_remove: Record<string, TsoaRoute.ParameterSchema> = {
-                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"string"},
+                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"double"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/api/v1/reviews/:reviewId',
@@ -850,7 +850,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsReviewController_addLike: Record<string, TsoaRoute.ParameterSchema> = {
-                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"string"},
+                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"double"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/api/v1/reviews/:reviewId/like',
@@ -882,7 +882,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsReviewController_removeLike: Record<string, TsoaRoute.ParameterSchema> = {
-                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"string"},
+                reviewId: {"in":"path","name":"reviewId","required":true,"dataType":"double"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/api/v1/reviews/:reviewId/like',
