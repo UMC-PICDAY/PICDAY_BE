@@ -237,7 +237,7 @@ export async function detail(
       startTime: reservation.timeSlot.startTime,
       endTime: reservation.timeSlot.endTime,
     },
-    resviewId: reservation.review?.id ?? null,
+    reviewId: reservation.review?.id ?? null,
     checklist: RESERVATION_CHECKLIST_ITEMS,
     createdAt: reservation.createdAt,
     canceledAt: reservation.canceledAt,
@@ -262,6 +262,8 @@ export async function list(
     reservationTime: reservation.timeSlot.startTime.toISOString().slice(11, 16),
     totalPrice: reservation.totalPrice,
     status: reservation.status,
+    reviewId: reservation.review?.id ?? null,   // 이 줄 추가
+
   }));
 
   return getMyReservationListResponseSchema.parse(data);
