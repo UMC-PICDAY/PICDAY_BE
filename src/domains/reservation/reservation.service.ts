@@ -15,6 +15,13 @@ import {
 } from "./reservation.dto.js";
 import * as reservationRepository from "./reservation.repository.js";
 
+export const RESERVATION_CHECKLIST_ITEMS = [
+  "의상 준비",
+  "헤어·메이크업 준비",
+  "위치 확인",
+  "소품 챙기기",
+] as const;
+
 // ====== 예약 생성 ======
 const REQUIRED_RESERVEE_FIELDS = new Set(["reserveeName", "reserveePhone"]);
 
@@ -195,7 +202,7 @@ export async function cancel(
 }
 
 // ===== 예약 상세조회 =====
-export async function getDetail(
+export async function detail(
   reservationId: bigint,
   userId: bigint,
 ): Promise<GetReservationDetailResponseDto> {
@@ -230,6 +237,8 @@ export async function getDetail(
       startTime: reservation.timeSlot.startTime,
       endTime: reservation.timeSlot.endTime,
     },
+    resviewId: reservation.review?.id ?? null,
+    checklist: RESERVATION_CHECKLIST_ITEMS,
     createdAt: reservation.createdAt,
     canceledAt: reservation.canceledAt,
   });

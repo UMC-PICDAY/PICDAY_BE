@@ -106,7 +106,7 @@ export class ReservationController extends Controller {
     });
 
     const { userId } = request as AuthenticatedRequest;
-    const result = await reservationService.getDetail(BigInt(id), userId);
+    const result = await reservationService.detail(BigInt(id), userId);
 
     return success(result);
   }
