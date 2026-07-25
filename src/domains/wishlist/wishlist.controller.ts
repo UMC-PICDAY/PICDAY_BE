@@ -32,8 +32,8 @@ export class WishlistController extends Controller {
   @SuccessResponse(200, "OK")
   public async list(
     @Request() request: any,
-    @Query() page?: string,
-    @Query() size?: string,
+    @Query() page?: number,
+    @Query() size?: number,
   ): Promise<GetWishlistsSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
     const data = await wishlistService.getWishlists(userId, {
@@ -72,7 +72,7 @@ export class WishlistController extends Controller {
   @Delete("{studioId}")
   @SuccessResponse(200, "OK")
   public async remove(
-    @Path() studioId: string,
+    @Path() studioId: number,
     @Request() request: any,
   ): Promise<DeleteWishlistSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
