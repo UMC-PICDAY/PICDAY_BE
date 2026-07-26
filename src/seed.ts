@@ -880,6 +880,32 @@ async function main() {
     });
   }
 
+  // 최근 본 사진관 (홈 화면 API의 recentStudios 테스트용)
+  // studioA가 더 최근에 봤으므로 recentStudios 조회 시 studioA가 studioB보다 먼저 나와야 함
+  for (const recentView of [
+    {
+      userId: user.id,
+      studioId: studioB.id,
+      viewedAt: new Date("2030-12-20T10:00:00.000Z"),
+    },
+    {
+      userId: user.id,
+      studioId: studioA.id,
+      viewedAt: new Date("2030-12-21T10:00:00.000Z"),
+    },
+  ]) {
+    await prisma.recentStudioView.upsert({
+      where: {
+        userId_studioId: {
+          userId: recentView.userId,
+          studioId: recentView.studioId,
+        },
+      },
+      update: { viewedAt: recentView.viewedAt },
+      create: recentView,
+    });
+  }
+
   const seededTerms = await seedAuthTerms();
 
   console.log("✅ 시드 완료");
@@ -910,6 +936,15 @@ async function main() {
   console.log("미래 가용 슬롯 ID           :", availableSlot.id.toString());
   console.log("미래 마감 슬롯 ID           :", unavailableSlot.id.toString());
   console.log("다른 사진관 슬롯 ID         :", otherStudioSlot.id.toString());
+
+  console.log("\n--- 홈 화면(getHome) API 테스트용 ---");
+  console.log(
+    "testuser01의 최근 본 사진관(최신순): studioA(",
+    studioA.id.toString(),
+    "), studioB(",
+    studioB.id.toString(),
+    ")",
+  );
 
   console.log("\n--- 예약 API 테스트용 ---");
   console.log("정상 취소용 예약 ID         :", normalReservation.id.toString());
