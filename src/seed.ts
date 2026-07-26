@@ -1,6 +1,7 @@
 // src/seed.ts
 // 시드데이터 확인 : pnpm exec tsx src/seed.ts
 import "dotenv/config";
+import bcrypt from "bcrypt";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -271,13 +272,22 @@ async function upsertReviewImage(reviewId: bigint, url: string) {
   });
 }
 
+// Postman 등에서 로그인 테스트용으로 쓸 평문 비밀번호. 아래 seed 유저들이 모두 이 비밀번호를 쓴다.
+// Postman 테스트 방법:
+//   POST http://localhost:3000/api/v1/auth/login
+//   Body(raw, JSON): { "loginId": "testuser01", "password": "test1234!" }
+//   (loginId 자리에 reviewuser02, reviewuser03도 동일한 비밀번호로 로그인 가능)
+const SEED_USER_PASSWORD = "test1234!";
+
 async function main() {
+  const hashedPassword = await bcrypt.hash(SEED_USER_PASSWORD, 10);
+
   const user = await prisma.user.upsert({
     where: {
       loginId: "testuser01",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "홍길동",
       nickname: "테스트유저",
       email: "test@example.com",
@@ -285,7 +295,7 @@ async function main() {
     },
     create: {
       loginId: "testuser01",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "홍길동",
       nickname: "테스트유저",
       email: "test@example.com",
@@ -298,7 +308,7 @@ async function main() {
       loginId: "reviewuser02",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "김리뷰",
       nickname: "리뷰어둘",
       email: "reviewer2@example.com",
@@ -306,7 +316,7 @@ async function main() {
     },
     create: {
       loginId: "reviewuser02",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "김리뷰",
       nickname: "리뷰어둘",
       email: "reviewer2@example.com",
@@ -319,7 +329,7 @@ async function main() {
       loginId: "reviewuser03",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "이리뷰",
       nickname: "리뷰어셋",
       email: "reviewer3@example.com",
@@ -327,7 +337,7 @@ async function main() {
     },
     create: {
       loginId: "reviewuser03",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "이리뷰",
       nickname: "리뷰어셋",
       email: "reviewer3@example.com",
@@ -870,6 +880,32 @@ async function main() {
     });
   }
 
+  // 최근 본 사진관 (홈 화면 API의 recentStudios 테스트용)
+  // studioA가 더 최근에 봤으므로 recentStudios 조회 시 studioA가 studioB보다 먼저 나와야 함
+  for (const recentView of [
+    {
+      userId: user.id,
+      studioId: studioB.id,
+      viewedAt: new Date("2030-12-20T10:00:00.000Z"),
+    },
+    {
+      userId: user.id,
+      studioId: studioA.id,
+      viewedAt: new Date("2030-12-21T10:00:00.000Z"),
+    },
+  ]) {
+    await prisma.recentStudioView.upsert({
+      where: {
+        userId_studioId: {
+          userId: recentView.userId,
+          studioId: recentView.studioId,
+        },
+      },
+      update: { viewedAt: recentView.viewedAt },
+      create: recentView,
+    });
+  }
+
   const seededTerms = await seedAuthTerms();
 
   console.log("✅ 시드 완료");
@@ -900,6 +936,15 @@ async function main() {
   console.log("미래 가용 슬롯 ID           :", availableSlot.id.toString());
   console.log("미래 마감 슬롯 ID           :", unavailableSlot.id.toString());
   console.log("다른 사진관 슬롯 ID         :", otherStudioSlot.id.toString());
+
+  console.log("\n--- 홈 화면(getHome) API 테스트용 ---");
+  console.log(
+    "testuser01의 최근 본 사진관(최신순): studioA(",
+    studioA.id.toString(),
+    "), studioB(",
+    studioB.id.toString(),
+    ")",
+  );
 
   console.log("\n--- 예약 API 테스트용 ---");
   console.log("정상 취소용 예약 ID         :", normalReservation.id.toString());

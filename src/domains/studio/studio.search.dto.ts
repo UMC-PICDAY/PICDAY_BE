@@ -2,7 +2,7 @@
 // ======================== 홈 화면  ========================
 // ========================================================
 export type BannerStudioItem = {
-  studioId: string;
+  studioId: number;
   studioName: string;
   thumbnailUrl: string | null;
   locationCategory: string;
