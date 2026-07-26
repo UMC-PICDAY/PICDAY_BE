@@ -71,6 +71,30 @@ export async function createReview(
   }
 }
 
+// 리뷰 단건 조회 (마이페이지 "내 리뷰" 화면)
+// 사진관명·컨셉명·촬영일은 예약 → 상품/슬롯 경로로 함께 조회
+export async function findReviewDetail(reviewId: bigint) {
+  return prisma.review.findUnique({
+    where: { id: reviewId },
+    select: {
+      id: true,
+      userId: true,
+      rating: true,
+      content: true,
+      createdAt: true,
+      images: { select: { url: true } },
+      keywords: { select: { keyword: true } },
+      studio: { select: { name: true } },
+      reservation: {
+        select: {
+          studioProduct: { select: { name: true } },
+          timeSlot: { select: { date: true } },
+        },
+      },
+    },
+  });
+}
+
 export async function findReviewOwner(reviewId: bigint) {
   return prisma.review.findUnique({
     where: { id: reviewId },
