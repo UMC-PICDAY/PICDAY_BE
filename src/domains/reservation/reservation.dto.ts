@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { id } from "zod/locales";
+import { isValidApiIdNumber, toApiId, toDomainId } from "../../common/apiId.js";
 
 export const reservationStatusEnum = z.enum([
   "RESERVED",
@@ -11,9 +11,7 @@ export type ReservationStatus = z.infer<typeof reservationStatusEnum>;
 // 예약 생성 API
 const requestIdSchema = z
   .number()
-  .int("ID는 정수여야 합니다.")
-  .positive("ID는 양수여야 합니다.")
-  .max(Number.MAX_SAFE_INTEGER, "ID가 허용 범위를 초과했습니다.");
+  .refine(isValidApiIdNumber, "ID는 안전한 양의 정수여야 합니다.");
 
 export const paymentMethodSchema = z.enum([
   "KAKAOPAY",
@@ -69,15 +67,15 @@ export function parseCreateReservationRequest(
 
   return {
     ...request,
-    studioId: BigInt(request.studioId),
-    studioProductId: BigInt(request.studioProductId),
-    timeSlotId: BigInt(request.timeSlotId),
-    agreedTermIds: request.agreedTermIds.map((termId) => BigInt(termId)),
+    studioId: toDomainId(request.studioId),
+    studioProductId: toDomainId(request.studioProductId),
+    timeSlotId: toDomainId(request.timeSlotId),
+    agreedTermIds: request.agreedTermIds.map(toDomainId),
   };
 }
 
 export const createReservationResponseSchema = z.object({
-  reservationId: z.bigint().transform((id) => id.toString()),
+  reservationId: z.bigint().transform(toApiId),
   status: z.literal("RESERVED"),
   totalPrice: z.number().int().nonnegative(),
   createdAt: z.date().transform((date) => date.toISOString()),
@@ -100,14 +98,17 @@ export type CreateReservationSuccessResponseDto = z.output<
 
 // 파라미터 검증
 export const reservationIdParamsSchema = z.object({
-  reservationId: z.string().regex(/^\d+$/, "유효하지 않은 예약 ID입니다."),
+  reservationId: z
+    .number()
+    .refine(isValidApiIdNumber, "유효하지 않은 예약 ID입니다.")
+    .transform(toDomainId),
 });
 export type ReservationIdParams = z.infer<typeof reservationIdParamsSchema>;
 
 // 예약 취소 API
 
 export const cancelReservationResponseSchema = z.object({
-  reservationId: z.bigint().transform((id) => id.toString()),
+  reservationId: z.bigint().transform(toApiId),
   status: z.literal("CANCELLED"),
   canceledAt: z.date().transform((date) => date.toISOString()),
 });
@@ -118,17 +119,17 @@ export type CancelReservationResponseDto = z.infer<
 // 예약 상세조회 API
 
 export const getReservationDetailResponseSchema = z.object({
-  reservationId: z.bigint().transform((id) => id.toString()),
+  reservationId: z.bigint().transform(toApiId),
   status: reservationStatusEnum,
   reserveeName: z.string(),
   reserveePhone: z.string(),
   totalPrice: z.number().int().nonnegative(),
   studio: z.object({
-    id: z.bigint().transform((id) => id.toString()),
+    id: z.bigint().transform(toApiId),
     name: z.string(),
   }),
   studioProduct: z.object({
-    id: z.bigint().transform((id) => id.toString()),
+    id: z.bigint().transform(toApiId),
     name: z.string(),
     price: z.number().int().nonnegative(),
   }),
@@ -137,7 +138,10 @@ export const getReservationDetailResponseSchema = z.object({
     startTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
     endTime: z.date().transform((date) => date.toISOString().slice(11, 16)),
   }),
-  reviewId: z.bigint().nullable().transform((id) => id === null ? null : Number(id)),
+  reviewId: z
+    .bigint()
+    .nullable()
+    .transform((id) => (id === null ? null : toApiId(id))),
   checklist: z.array(z.string()),
   createdAt: z.date().transform((date) => date.toISOString()),
   canceledAt: z
@@ -163,16 +167,19 @@ export type GetMyReservationsQuery = z.infer<
 
 export const getMyReservationListResponseSchema = z.array(
   z.object({
-    reservationId: z.bigint().transform((id) => id.toString()),
+    reservationId: z.bigint().transform(toApiId),
     studioName: z.string(),
     conceptName: z.string(),
     reservationDate: z.date().transform((d) => d.toISOString().slice(0, 10)),
     reservationTime: z.string(),
     totalPrice: z.number(),
     status: reservationStatusEnum,
-    reviewId: z.bigint().nullable().transform((id) => id === null ? null : Number(id)),
+    reviewId: z
+      .bigint()
+      .nullable()
+      .transform((id) => (id === null ? null : toApiId(id))),
   }),
-)
+);
 
 export type GetMyReservationListResponseDto = z.infer<
   typeof getMyReservationListResponseSchema

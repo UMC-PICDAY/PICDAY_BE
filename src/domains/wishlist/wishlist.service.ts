@@ -159,7 +159,7 @@ export async function addWishlist(
 // ====== 위시리스트 삭제 ======
 export async function removeWishlist(
   userId: bigint,
-  studioIdParam: string,
+  studioIdParam: number,
 ): Promise<null> {
   try {
     let studioId: bigint;
