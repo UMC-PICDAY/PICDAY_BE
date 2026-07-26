@@ -134,7 +134,7 @@ type BannerListRow = {
 function toBannerListItem(studio: BannerListRow): BannerStudioItem {
   // dto로 변환시키는 함수 정의
   return {
-    studioId: studio.id.toString(),
+    studioId: Number(studio.id),
     studioName: studio.name,
     thumbnailUrl: pickThumbnail(studio.products),
     locationCategory: studio.location?.locationCategory ?? "",
@@ -152,7 +152,7 @@ type StudioListRow = {
 
 function toStudioListItem(studio: StudioListRow): StudioWithPriceAndRatingItem {
   return {
-    studioId: studio.id.toString(),
+    studioId: Number(studio.id),
     studioName: studio.name,
     thumbnailUrl: pickThumbnail(studio.products),
     locationCategory: studio.location?.locationCategory ?? "",
