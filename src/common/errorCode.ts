@@ -163,7 +163,7 @@ export const ErrorCode = {
     status: 400,
     code: "STUDIO_40012",
     message:
-      "검색 조건은 location, date, concept, name 중 최소 1개 이상 필요합니다.",
+      "검색 조건은 location, date, concept 중 최소 1개 이상 필요합니다.",
   },
   STUDIO_40013: {
     status: 400,
