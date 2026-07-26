@@ -1,12 +1,26 @@
 import type { ErrorRequestHandler } from "express";
 import { AppError } from "./error.js";
 import { ZodError } from "zod";
+// tsoa가 생성한 라우터(src/generated/routes.ts)가 경로/쿼리/바디 타입 검증에 실패하면 던지는 에러 클래스
+import { ValidateError } from "tsoa";
 import { fail } from "./response.js";
 import { HTTP_STATUS } from "./constants.js";
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
     res.status(err.statusCode).json(fail(err.code, err.message));
+    return;
+  }
+
+  if (err instanceof ValidateError) {
+    // tsoa의 요청 검증 실패(경로·쿼리·바디 타입 불일치 등) = 클라이언트가 잘못된 요청을 보낸 것
+    // studioId 등 id 관련 커스텀 미들웨어(validateStudioId 등)가 대부분 먼저 걸러내지만,
+    // 미들웨어가 없는 라우트나 바디의 세부 필드 타입은 tsoa가 최종적으로 검증하며 여기서 잡힘
+    // 이 분기가 없으면 아래 catch-all(500)로 빠져 클라이언트 잘못인데도 서버 에러로 응답하게 됨
+    console.warn("[ValidateError]", err.fields);
+    res
+      .status(HTTP_STATUS.BAD_REQUEST)
+      .json(fail("COMMON_400", "요청 형식이 올바르지 않습니다."));
     return;
   }
 
