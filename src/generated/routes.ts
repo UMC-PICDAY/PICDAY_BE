@@ -406,8 +406,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
     
         const argsWishlistController_list: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
-                page: {"in":"query","name":"page","dataType":"string"},
-                size: {"in":"query","name":"size","dataType":"string"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                size: {"in":"query","name":"size","dataType":"double"},
         };
         app.get('/api/v1/wishlists',
             authenticateMiddleware([{"jwt":[]}]),
@@ -470,7 +470,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsWishlistController_remove: Record<string, TsoaRoute.ParameterSchema> = {
-                studioId: {"in":"path","name":"studioId","required":true,"dataType":"string"},
+                studioId: {"in":"path","name":"studioId","required":true,"dataType":"double"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/api/v1/wishlists/:studioId',
