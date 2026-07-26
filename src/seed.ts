@@ -16,6 +16,14 @@ const TERMS_AUTH_DIR = join(
   "auth",
 );
 
+// 예약 약관 원본(.md)은 repo 루트 terms/reservation 에 있음
+const TERMS_RESERVATION_DIR = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "terms",
+  "reservation",
+);
+
 // 메타데이터는 여기서 타입 안전하게 관리, 본문은 .md 파일에서 로드
 const AUTH_TERMS: ReadonlyArray<{
   type: TermsType;
@@ -54,12 +62,84 @@ const AUTH_TERMS: ReadonlyArray<{
   },
 ];
 
+// 예약 생성 시 필요한 필수 약관 (scope: RESERVATION)
+// PRIVACY_COLLECTION은 AUTH_TERMS 쪽과 내용이 달라 version을 구분함 (type_version 유니크 제약)
+const RESERVATION_TERMS: ReadonlyArray<{
+  type: TermsType;
+  scope: TermsScope;
+  version: string;
+  isRequired: boolean;
+  file: string;
+}> = [
+  {
+    type: "REFUND_POLICY",
+    scope: "RESERVATION",
+    version: "v1",
+    isRequired: true,
+    file: "refund.md",
+  },
+  {
+    type: "PRIVACY_COLLECTION",
+    scope: "RESERVATION",
+    version: "v1-reserv",
+    isRequired: true,
+    file: "privacy.md",
+  },
+  {
+    type: "THIRD_PARTY",
+    scope: "RESERVATION",
+    version: "v1",
+    isRequired: true,
+    file: "third_party.md",
+  },
+  {
+    type: "PAYMENT_AGENCY",
+    scope: "RESERVATION",
+    version: "v1",
+    isRequired: true,
+    file: "payment_agency.md",
+  },
+];
+
 async function seedAuthTerms() {
   const seeded: { type: TermsType; id: bigint }[] = [];
 
   for (const term of AUTH_TERMS) {
     const content = readFileSync(
       join(TERMS_AUTH_DIR, term.file),
+      "utf-8",
+    ).trim();
+
+    // (type, version) 유니크 기준 upsert — 재실행해도 중복 생성되지 않음
+    const row = await prisma.terms.upsert({
+      where: { type_version: { type: term.type, version: term.version } },
+      update: {
+        content,
+        scope: term.scope,
+        isRequired: term.isRequired,
+      },
+      create: {
+        type: term.type,
+        scope: term.scope,
+        version: term.version,
+        isRequired: term.isRequired,
+        content,
+      },
+      select: { id: true, type: true },
+    });
+
+    seeded.push(row);
+  }
+
+  return seeded;
+}
+
+async function seedReservationTerms() {
+  const seeded: { type: TermsType; id: bigint }[] = [];
+
+  for (const term of RESERVATION_TERMS) {
+    const content = readFileSync(
+      join(TERMS_RESERVATION_DIR, term.file),
       "utf-8",
     ).trim();
 
@@ -907,11 +987,17 @@ async function main() {
   }
 
   const seededTerms = await seedAuthTerms();
+  const seededReservationTerms = await seedReservationTerms();
 
   console.log("✅ 시드 완료");
 
   console.log("\n--- 회원가입 약관(SIGNUP) 테스트용 ---");
   for (const term of seededTerms) {
+    console.log(`${term.type.padEnd(20)} ID:`, term.id.toString());
+  }
+
+  console.log("\n--- 예약 약관(RESERVATION) 테스트용 ---");
+  for (const term of seededReservationTerms) {
     console.log(`${term.type.padEnd(20)} ID:`, term.id.toString());
   }
 
