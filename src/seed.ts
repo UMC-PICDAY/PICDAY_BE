@@ -1,6 +1,7 @@
 // src/seed.ts
 // 시드데이터 확인 : pnpm exec tsx src/seed.ts
 import "dotenv/config";
+import bcrypt from "bcrypt";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -271,13 +272,22 @@ async function upsertReviewImage(reviewId: bigint, url: string) {
   });
 }
 
+// Postman 등에서 로그인 테스트용으로 쓸 평문 비밀번호. 아래 seed 유저들이 모두 이 비밀번호를 쓴다.
+// Postman 테스트 방법:
+//   POST http://localhost:3000/api/v1/auth/login
+//   Body(raw, JSON): { "loginId": "testuser01", "password": "test1234!" }
+//   (loginId 자리에 reviewuser02, reviewuser03도 동일한 비밀번호로 로그인 가능)
+const SEED_USER_PASSWORD = "test1234!";
+
 async function main() {
+  const hashedPassword = await bcrypt.hash(SEED_USER_PASSWORD, 10);
+
   const user = await prisma.user.upsert({
     where: {
       loginId: "testuser01",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "홍길동",
       nickname: "테스트유저",
       email: "test@example.com",
@@ -285,7 +295,7 @@ async function main() {
     },
     create: {
       loginId: "testuser01",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "홍길동",
       nickname: "테스트유저",
       email: "test@example.com",
@@ -298,7 +308,7 @@ async function main() {
       loginId: "reviewuser02",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "김리뷰",
       nickname: "리뷰어둘",
       email: "reviewer2@example.com",
@@ -306,7 +316,7 @@ async function main() {
     },
     create: {
       loginId: "reviewuser02",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "김리뷰",
       nickname: "리뷰어둘",
       email: "reviewer2@example.com",
@@ -319,7 +329,7 @@ async function main() {
       loginId: "reviewuser03",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "이리뷰",
       nickname: "리뷰어셋",
       email: "reviewer3@example.com",
@@ -327,7 +337,7 @@ async function main() {
     },
     create: {
       loginId: "reviewuser03",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "이리뷰",
       nickname: "리뷰어셋",
       email: "reviewer3@example.com",
