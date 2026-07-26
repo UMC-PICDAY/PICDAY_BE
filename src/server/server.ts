@@ -1,4 +1,5 @@
 import express, { Router } from "express";
+import cors from "cors";
 import "dotenv/config";
 import { errorHandler } from "../common/errorHandler.js";
 import { success } from "../common/response.js";
@@ -7,6 +8,16 @@ import { setupSwagger } from "../config/swagger.js";
 import { startAnonymizeWithdrawnUsersBatch } from "../batch/anonymizeWithdrawnUsers.batch.js";
 
 const app = express();
+
+const allowedOrigins: string[] = [
+    "http://localhost:3000",
+    process.env.FE_ORIGIN,
+].filter((origin): origin is string => Boolean(origin));
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
 app.use(express.json());
 
 app.get("/health", (_req, res) => res.json(success("ok")));
