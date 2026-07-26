@@ -30,7 +30,7 @@ function toValidationError(error: ZodError): AppError {
   return new AppError("COMMON_400");
 }
 
-function parseReviewId(reviewIdParam: string): bigint {
+function parseReviewId(reviewIdParam: number): bigint {
   try {
     const params = reviewIdParamsSchema.parse({ reviewId: reviewIdParam });
     return BigInt(params.reviewId);
@@ -42,7 +42,7 @@ function parseReviewId(reviewIdParam: string): bigint {
   }
 }
 
-function parseStudioId(studioIdParam: string): bigint {
+function parseStudioId(studioIdParam: number): bigint {
   try {
     const params = studioIdParamsSchema.parse({ studioId: studioIdParam });
     return BigInt(params.studioId);
@@ -57,7 +57,7 @@ function parseStudioId(studioIdParam: string): bigint {
 // ====== 리뷰 목록 조회 ======
 export async function getReviews(
   userId: bigint,
-  studioIdParam: string,
+  studioIdParam: number,
   query: unknown,
 ): Promise<GetReviewsResponseDto> {
   try {
@@ -125,7 +125,7 @@ export async function getReviews(
 // ====== 리뷰 추천 ======
 export async function addLike(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
 ): Promise<ReviewLikeResponseDto> {
   try {
     const reviewId = parseReviewId(reviewIdParam);
@@ -153,7 +153,7 @@ export async function addLike(
 // ====== 리뷰 추천 취소 ======
 export async function removeLike(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
 ): Promise<ReviewLikeResponseDto> {
   try {
     const reviewId = parseReviewId(reviewIdParam);
@@ -235,7 +235,7 @@ export async function createReview(
 // ====== 리뷰 수정 ======
 export async function updateReview(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
   body: unknown,
 ): Promise<{ reviewId: number }> {
   try {
@@ -280,7 +280,7 @@ export async function updateReview(
 // ====== 리뷰 삭제 ======
 export async function removeReview(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
 ): Promise<null> {
   try {
     const reviewId = parseReviewId(reviewIdParam);
