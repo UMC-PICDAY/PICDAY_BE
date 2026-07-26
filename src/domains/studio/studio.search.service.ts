@@ -252,24 +252,29 @@ type OptionalUser = {
 };
 
 function resolveOptionalUser(authorization?: string): OptionalUser {
-  // Authorization 헤더가 아예 없으면 비로그인 사용자
   if (!authorization) {
     // authorization : Authorization: Bearer <token>
-    return { userId: null };
+    return { userId: null }; // 상황 1: Authorization 헤더 자체가 없음 → 비로그인
   }
 
   // Authorization: Bearer <token> 에서 token만 추출
   const token = extractBearerToken(authorization); // token 값 : 로그인 -> <token> 리턴, 비로그인 -> null 리턴
 
   if (!token) {
-    return { userId: null };
+    return { userId: null }; // 상황 2: 헤더는 있지만 "Bearer <token>" 형식이 아니거나 토큰이 빈 문자열 → 비로그인
   }
 
-  // access token 검증
-  // verifyToken 내부에서 만료/서명 오류/타입 오류를 AppError로 던짐
-  const payload = verifyToken(token, "access");
-
-  return { userId: BigInt(payload.sub) };
+  try {
+    const payload = verifyToken(token, "access"); // verifyToken 내부에서 만료/서명 오류/타입 오류를 AppError로 던짐
+    return { userId: BigInt(payload.sub) }; // 상황 3: 토큰 검증 성공 → 로그인 사용자
+  } catch (error) {
+    // 토큰이 만료/무효해도 홈 화면은 에러 없이 비로그인으로 보여줌
+    console.log(
+      "토큰이 만료되었거나 유효하지 않아 비로그인으로 처리합니다.",
+      error,
+    );
+    return { userId: null }; // 상황 4: 토큰은 있지만 만료/서명오류/타입불일치 → 비로그인
+  }
 }
 
 // 4. 홈 화면 조회 API
