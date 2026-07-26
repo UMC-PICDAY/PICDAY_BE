@@ -149,6 +149,11 @@ export const ErrorCode = {
     code: "STUDIO_4009",
     message: "올바르지 않은 서비스 태그입니다.",
   },
+  STUDIO_40010: {
+    status: 400,
+    code: "STUDIO_40010",
+    message: "과거 날짜는 검색할 수 없습니다.",
+  },
   STUDIO_40011: {
     status: 400,
     code: "STUDIO_40011",
