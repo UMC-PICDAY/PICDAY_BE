@@ -334,7 +334,7 @@ export async function getHome(
       },
     };
   } catch (error) {
-    // console.error("getHome error:", error);
+    console.error("getHome error:", error);
 
     if (error instanceof AppError) {
       throw error;
