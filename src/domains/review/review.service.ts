@@ -7,6 +7,7 @@ import {
   studioIdParamsSchema,
   updateReviewRequestSchema,
   type GetReviewsResponseDto,
+  type ReviewDetailDto,
   type ReviewLikeResponseDto,
 } from "./review.dto.js";
 import * as reviewRepository from "./review.repository.js";
@@ -113,6 +114,43 @@ export async function getReviews(
         isBest: bestReviewId !== null && row.id === bestReviewId,
         createdAt: row.createdAt.toISOString(),
       })),
+    };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("REVIEW_5001");
+  }
+}
+
+// ====== 리뷰 단건 조회 (마이페이지 "내 리뷰") ======
+export async function getReviewDetail(
+  userId: bigint,
+  reviewIdParam: number,
+): Promise<ReviewDetailDto> {
+  try {
+    const reviewId = parseReviewId(reviewIdParam);
+
+    const review = await reviewRepository.findReviewDetail(reviewId);
+
+    if (!review) {
+      throw new AppError("REVIEW_4042");
+    }
+    if (review.userId !== userId) {
+      throw new AppError("REVIEW_4032");
+    }
+
+    return {
+      reviewId: Number(review.id),
+      studioName: review.studio.name,
+      conceptName: review.reservation.studioProduct.name,
+      // 촬영일: YYYY-MM-DD (DB의 @db.Date 값)
+      shootingDate: review.reservation.timeSlot.date.toISOString().slice(0, 10),
+      rating: review.rating,
+      keywords: review.keywords.map((tag) => tag.keyword),
+      images: review.images.map((image) => image.url),
+      content: review.content,
+      createdAt: review.createdAt.toISOString(),
     };
   } catch (error) {
     if (error instanceof AppError) {

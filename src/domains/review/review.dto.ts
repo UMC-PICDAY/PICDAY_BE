@@ -139,6 +139,26 @@ export type GetReviewsSuccessResponseDto = {
   data: GetReviewsResponseDto;
 };
 
+// 리뷰 단건 조회 API (마이페이지 "내 리뷰")
+export type ReviewDetailDto = {
+  reviewId: number;
+  studioName: string;
+  conceptName: string;
+  shootingDate: string;
+  rating: number;
+  keywords: ReviewKeywordValue[];
+  images: string[];
+  content: string;
+  createdAt: string;
+};
+
+export type GetReviewDetailSuccessResponseDto = {
+  success: true;
+  code: "COMMON_200";
+  message: string;
+  data: ReviewDetailDto;
+};
+
 // 리뷰 추천 / 추천 취소 API
 export type ReviewLikeResponseDto = {
   reviewId: number;

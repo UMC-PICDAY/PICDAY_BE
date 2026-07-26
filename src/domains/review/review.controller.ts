@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Patch,
   Path,
   Post,
@@ -16,6 +17,7 @@ import type {
   CreateReviewRequestDto,
   CreateReviewSuccessResponseDto,
   DeleteReviewSuccessResponseDto,
+  GetReviewDetailSuccessResponseDto,
   RemoveReviewLikeSuccessResponseDto,
   UpdateReviewRequestDto,
   UpdateReviewSuccessResponseDto,
@@ -44,6 +46,24 @@ export class ReviewController extends Controller {
       success: true,
       code: "COMMON_201",
       message: "리뷰가 등록되었습니다.",
+      data,
+    };
+  }
+
+  /** 리뷰 단건 조회 (마이페이지 "내 리뷰", 본인 리뷰만) */
+  @Get("{reviewId}")
+  @SuccessResponse(200, "OK")
+  public async detail(
+    @Path() reviewId: number,
+    @Request() request: any,
+  ): Promise<GetReviewDetailSuccessResponseDto> {
+    const { userId } = request as AuthenticatedRequest;
+    const data = await reviewService.getReviewDetail(userId, reviewId);
+
+    return {
+      success: true,
+      code: "COMMON_200",
+      message: "리뷰 조회에 성공했습니다.",
       data,
     };
   }
