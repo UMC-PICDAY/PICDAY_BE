@@ -3,10 +3,12 @@ import {
   Get,
   Middlewares,
   Path,
+  Post,
   Query,
   Request,
   Response,
   Route,
+  Security,
   SuccessResponse,
   Tags,
 } from "tsoa";
@@ -22,6 +24,7 @@ import type {
   GetHomeResponseDto,
   StudioAutocompleteResponseDto,
   SearchStudiosSuccessResponseDto,
+  SaveRecentStudioViewSuccessResponseDto,
 } from "./studio.search.dto.js";
 import * as studioDetailService from "./studio.detail.service.js";
 import * as studioSearchService from "./studio.search.service.js";
@@ -29,6 +32,7 @@ import {
   validateStudioId,
   validateStudioProductDetailRequestIds,
   validateStudioProductsRequestIds,
+  validateRecentStudioViewRequestId,
 } from "./studio.middleware.js";
 
 type AppErrorResponse = {
@@ -37,6 +41,9 @@ type AppErrorResponse = {
   message: string;
   data: null;
 };
+
+// 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다 (@Security("jwt") 붙은 라우트 전용)
+type AuthenticatedRequest = { userId: bigint };
 
 type GetStudioProductsSuccessResponseDto = {
   success: true;
@@ -191,6 +198,45 @@ export class StudioController extends Controller {
     const data = await studioDetailService.getStudioDetail(studioId);
 
     return success(data, "사진관 상세 정보 조회에 성공했습니다.");
+  }
+
+  /**
+   * 최근 본 사진관 저장 API
+   *
+   * 사진관 상세 페이지 진입 시 호출한다. 로그인한 사용자만 호출 가능(Access Token 필수),
+   * 이미 조회한 사진관이면 viewedAt만 최신 시간으로 갱신한다.
+   *
+   * @isLong studioId 사진관 ID는 정수여야 합니다.
+   * @minimum studioId 1 사진관 ID는 양수여야 합니다.
+   * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
+   */
+  @Middlewares(validateRecentStudioViewRequestId)
+  @Security("jwt")
+  @Post("{studioId}/recent-view")
+  @SuccessResponse(200, "OK")
+  @Response<AppErrorResponse>(400, "STUDIO_40011: 올바르지 않은 사진관 ID입니다.")
+  @Response<AppErrorResponse>(
+    401,
+    "AUTH_4013: 유효하지 않은 토큰입니다.\nAUTH_4017: 만료된 토큰입니다.",
+  )
+  @Response<AppErrorResponse>(404, "STUDIO_4041: 존재하지 않는 사진관입니다.")
+  @Response<AppErrorResponse>(500, "COMMON_500: 서버 내부 오류가 발생했습니다.")
+  public async saveRecentStudioView(
+    @Path() studioId: number,
+    @Request() request: any,
+  ): Promise<SaveRecentStudioViewSuccessResponseDto> {
+    const { userId } = request as AuthenticatedRequest;
+    const data = await studioSearchService.saveRecentStudioView(
+      userId,
+      studioId,
+    );
+
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "최근 본 사진관 저장에 성공했습니다.",
+      data,
+    };
   }
 
   /**

@@ -321,6 +321,40 @@ export type FindStudiosBySearchFiltersResult = Awaited<
   ReturnType<typeof findStudiosBySearchFilters>
 >;
 
+// ========================================================
+// ==================== 최근 본 사진관 저장 ====================
+// ========================================================
+
+// 사진관 존재 여부 확인 (404 STUDIO_4041 판단용)
+export async function existsStudioById(studioId: bigint): Promise<boolean> {
+  const studio = await prisma.studio.findUnique({
+    where: { id: studioId },
+    select: { id: true },
+  });
+
+  return studio !== null;
+}
+
+// 조회 기록이 있으면 viewedAt만 최신 시간으로 갱신, 없으면 새로 생성 (userId+studioId 유니크 제약 이용)
+export async function upsertRecentStudioView(userId: bigint, studioId: bigint) {
+  return prisma.recentStudioView.upsert({
+    where: {
+      userId_studioId: { userId, studioId },
+    },
+    update: {
+      viewedAt: new Date(),
+    },
+    create: {
+      userId,
+      studioId,
+    },
+    select: {
+      studioId: true,
+      viewedAt: true,
+    },
+  });
+}
+
 // 검색 결과 카드용 스튜디오별 리뷰 건수 집계 (검색 기능 전용, 다른 도메인 의존성 없이 자체 보유)
 export async function findReviewCountsByStudioIds(studioIds: bigint[]) {
   if (studioIds.length === 0) {
