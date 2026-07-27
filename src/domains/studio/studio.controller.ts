@@ -126,33 +126,33 @@ export class StudioController extends Controller {
    *
    * Authorization 헤더는 선택이며, 없으면 비로그인 사용자로 처리해 isWishlisted를 false로 반환한다.
    */
-  // @Get("search/name")
-  // @SuccessResponse(200, "OK")
-  // @Response<AppErrorResponse>(
-  //   400,
-  //   "STUDIO_4009: 올바르지 않은 서비스 태그입니다.\nSTUDIO_40014: 올바르지 않은 정렬 기준입니다.\nSTUDIO_4003: 잘못된 필터 조건입니다.",
-  // )
-  // public async searchStudiosByName(
-  //   @Request() request: any,
-  //   @Query() studioName: string,
-  //   @Query() sort?: string,
-  //   @Query() minPrice?: number,
-  //   @Query() maxPrice?: number,
-  //   @Query() serviceCode?: string[],
-  //   @Query() minRating?: number,
-  // ): Promise<SearchStudiosSuccessResponseDto> {
-  //   const data = await studioSearchService.searchStudiosByName(
-  //     request.headers.authorization,
-  //     { studioName, sort, minPrice, maxPrice, serviceCode, minRating },
-  //   );
+  @Get("search/name")
+  @SuccessResponse(200, "OK")
+  @Response<AppErrorResponse>(
+    400,
+    "STUDIO_40016: 스튜디오 이름 검색어가 올바르지 않습니다.\nSTUDIO_4009: 올바르지 않은 서비스 태그입니다.\nSTUDIO_40014: 올바르지 않은 정렬 기준입니다.\nSTUDIO_4003: 잘못된 필터 조건입니다.",
+  )
+  public async searchStudiosByName(
+    @Request() request: any,
+    @Query() studioName?: string,
+    @Query() sort?: string,
+    @Query() minPrice?: number,
+    @Query() maxPrice?: number,
+    @Query() serviceCode?: string[],
+    @Query() minRating?: number,
+  ): Promise<SearchStudiosSuccessResponseDto> {
+    const data = await studioSearchService.searchStudiosByName(
+      request.headers.authorization,
+      { studioName, sort, minPrice, maxPrice, serviceCode, minRating },
+    );
 
-  //   return {
-  //     success: true,
-  //     code: "STUDIO_200",
-  //     message: "사진관 검색 결과 조회에 성공했습니다.",
-  //     data,
-  //   };
-  // }
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "사진관 검색 결과 조회에 성공했습니다.",
+      data,
+    };
+  }
 
   // === 사진관 자동완성 검색 API ===
   // {studioId}보다 반드시 먼저 선언해야 한다. tsoa는 메서드 선언 순서 그대로 Express 라우트를

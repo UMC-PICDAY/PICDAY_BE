@@ -7,7 +7,7 @@ import {
   parseGetStudioAutocompleteRequest, // 자동완성검색
   createStudioSearchResponse, // 검색 결과 조회
   parseSearchStudiosRequest, // 검색 결과 조회
-  // parseSearchStudiosByNameRequest, // 이름 검색 - dto에서 잠깐 주석 처리해둔 상태라 같이 비활성화
+  parseSearchStudiosByNameRequest, // 이름 검색
   StudioSort, // 검색 결과 조회
 } from "./studio.search.dto.js";
 import type {
@@ -16,7 +16,7 @@ import type {
   StudioWithPriceAndRatingItem,
   StudioAutocompleteResponseDto, // 자동완성검색
   RawSearchStudiosRequestDto, // 검색 결과 조회
-  // RawSearchStudiosByNameRequestDto, // 이름 검색 - dto에서 잠깐 주석 처리해둔 상태라 같이 비활성화
+  RawSearchStudiosByNameRequestDto, // 이름 검색
   StudioSearchResponseDto, // 검색 결과 조회
   StudioSearchResponseInputDto, // 검색 결과 조회
 } from "./studio.search.dto.js";
@@ -408,16 +408,15 @@ export async function getStudioAutocomplete(
 // =================== 사진관 검색 결과 조회 ===================
 // ========================================================
 
-// ===== 함수 =====
+// ===== 0. 함수 =====
 
-// 1.1 썸네일 이미지 url(string) 2장 추출
+// 썸네일 이미지 url(string) 2장 추출
 type StudioSearchRow = FindStudiosBySearchFiltersResult[number]; // repository 함수 호출
 
 // 카드(스튜디오)당 썸네일 장수
 const STUDIO_THUMBNAIL_COUNT = 2;
 
-// 1.2 썸네일 URL 목록 (최대 2장)
-// 하나도 없으면 null.
+// 썸네일 URL 목록 (최대 2장)
 function pickThumbnails(
   products: Array<{ productImages: ProductImageRow[] }>,
 ): string[] | null {
@@ -438,7 +437,7 @@ function pickThumbnails(
     }
   }
 
-  return thumbnails.length > 0 ? thumbnails : null;
+  return thumbnails.length > 0 ? thumbnails : null; // url이 0개이면 null 리턴
 }
 
 function toSearchItemInput(
@@ -607,41 +606,40 @@ export async function searchStudios(
 }
 
 // === 2. 스튜디오 이름 검색 조회 ===
-// dto의 이름 검색 스키마를 잠깐 주석 처리해둔 상태라 같이 비활성화 (통합 검색 리뷰 끝나면 복구)
-// export async function searchStudiosByName(
-//   authHeader: string | undefined,
-//   rawQuery: RawSearchStudiosByNameRequestDto,
-// ): Promise<StudioSearchResponseDto> {
-//   try {
-//     const query = parseSearchStudiosByNameRequest(rawQuery);
-//     const { userId } = resolveOptionalUser(authHeader);
+export async function searchStudiosByName(
+  authHeader: string | undefined,
+  rawQuery: RawSearchStudiosByNameRequestDto,
+): Promise<StudioSearchResponseDto> {
+  try {
+    const query = parseSearchStudiosByNameRequest(rawQuery);
+    const { userId } = resolveOptionalUser(authHeader);
 
-//     return await buildSearchResponse(
-//       {
-//         studioName: query.studioName,
-//         minPrice: query.minPrice,
-//         maxPrice: query.maxPrice,
-//         serviceCodes: query.serviceCode,
-//         minRating: query.minRating,
-//       },
-//       query.sort,
-//       {
-//         locationCategory: null,
-//         date: null,
-//         shootingCategories: [],
-//         studioName: query.studioName,
-//         sort: query.sort,
-//         minPrice: query.minPrice ?? null,
-//         maxPrice: query.maxPrice ?? null,
-//         serviceCodes: query.serviceCode ?? [],
-//         minRating: query.minRating ?? null,
-//       },
-//       userId,
-//     );
-//   } catch (error) {
-//     if (error instanceof AppError) {
-//       throw error;
-//     }
-//     throw new AppError("COMMON_500");
-//   }
-// }
+    return await buildSearchResponse(
+      {
+        studioName: query.studioName,
+        minPrice: query.minPrice,
+        maxPrice: query.maxPrice,
+        serviceCodes: query.serviceCode,
+        minRating: query.minRating,
+      },
+      query.sort,
+      {
+        locationCategory: null,
+        date: null,
+        shootingCategories: [],
+        studioName: query.studioName,
+        sort: query.sort,
+        minPrice: query.minPrice ?? null,
+        maxPrice: query.maxPrice ?? null,
+        serviceCodes: query.serviceCode ?? [],
+        minRating: query.minRating ?? null,
+      },
+      userId,
+    );
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("COMMON_500");
+  }
+}

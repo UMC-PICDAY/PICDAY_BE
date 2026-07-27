@@ -306,55 +306,69 @@ export function parseSearchStudiosRequest(
 // ============== 사진관 검색 결과 조회 - 요청 (스튜디오 이름 검색) ================
 // ======================================================================
 
-// export const searchStudiosByNameRequestSchema = z.object({
-//   studioName: z.string().min(1, "스튜디오 이름을 입력해 주세요."),
-//   sort: z.enum(StudioSort).default(StudioSort.RECOMMENDED),
-//   minPrice: z.number().int().nonnegative().optional(),
-//   maxPrice: z.number().int().nonnegative().optional(),
-//   serviceCode: z.array(z.enum(ServiceCode)).optional(),
-//   minRating: z.literal(MIN_RATING_OPTIONS).optional(),
-// });
+// 1. raw 입력 : service.ts에서 호출되는 parseSearchStudiosByNameRequest의 인풋 타입
+// studioName도 optional로 둬서 tsoa가 "필수 파라미터 누락"을 자체 에러(COMMON_400)로 먼저
+// 가로채지 않게 하고, 아래 스키마가 "누락"과 "빈 문자열"을 똑같이 STUDIO_40016로 처리하게 함.
+export type RawSearchStudiosByNameRequestDto = {
+  studioName?: string | undefined;
+  sort?: string | undefined;
+  minPrice?: number | undefined;
+  maxPrice?: number | undefined;
+  serviceCode?: string[] | undefined;
+  minRating?: number | undefined;
+};
 
-// export type SearchStudiosByNameQuery = z.output<
-//   typeof searchStudiosByNameRequestSchema
-// >;
+// 2. 기본적인 raw 입력의 타입 검증
+export const searchStudiosByNameRequestSchema = z
+  .object({
+    studioName: z.string().min(1, "스튜디오 이름 검색어가 올바르지 않습니다."), // STUDIO_40016
+    sort: z.enum(StudioSort).default(StudioSort.RECOMMENDED), // STUDIO_40014
+    minPrice: z.number().int().nonnegative().optional(), //  + isMinPriceBigThanMaxPrice (STUDIO_4003)
+    maxPrice: z.number().int().nonnegative().optional(),
+    serviceCode: z.array(z.enum(ServiceCode)).optional(), // STUDIO_4009
+    minRating: z.literal(MIN_RATING_OPTIONS).optional(), // STUDIO_4003 : 전체(0)/4.0/4.5/4.8만 허용
+  })
+  .transform((data) => ({
+    ...data,
+    // 통합 검색과 동일 — UI에 없는 WIFI는 검색 조건에서 조용히 제외
+    serviceCode: data.serviceCode?.filter((code) =>
+      SEARCHABLE_SERVICE_CODES.includes(code),
+    ),
+  }));
 
-// export type RawSearchStudiosByNameRequestDto = {
-//   studioName: string;
-//   sort?: string | undefined;
-//   minPrice?: number | undefined;
-//   maxPrice?: number | undefined;
-//   serviceCode?: string[] | undefined;
-//   minRating?: number | undefined;
-// };
+const SEARCH_STUDIOS_BY_NAME_FIELD_ERROR: Record<string, ErrorCodeType> = {
+  studioName: "STUDIO_40016",
+  serviceCode: "STUDIO_4009",
+  sort: "STUDIO_40014",
+  minPrice: "STUDIO_4003",
+  maxPrice: "STUDIO_4003",
+  minRating: "STUDIO_4003",
+};
 
-// const SEARCH_STUDIOS_BY_NAME_FIELD_ERROR: Record<string, ErrorCodeType> = {
-//   studioName: "COMMON_400",
-//   serviceCode: "STUDIO_4009",
-//   sort: "STUDIO_40014",
-//   minPrice: "STUDIO_4003",
-//   maxPrice: "STUDIO_4003",
-//   minRating: "STUDIO_4003",
-// };
+// 3. service.ts에서 호출되는 parseSearchStudiosByNameRequest의 리턴 타입
+export type SearchStudiosByNameQuery = z.output<
+  typeof searchStudiosByNameRequestSchema
+>;
 
-// export function parseSearchStudiosByNameRequest(
-//   input: RawSearchStudiosByNameRequestDto,
-// ): SearchStudiosByNameQuery {
-//   const result = searchStudiosByNameRequestSchema.safeParse(input);
+// 4. service.ts에서 호출되는 parseSearchStudiosByNameRequest 함수
+export function parseSearchStudiosByNameRequest(
+  input: RawSearchStudiosByNameRequestDto,
+): SearchStudiosByNameQuery {
+  const result = searchStudiosByNameRequestSchema.safeParse(input);
 
-//   if (!result.success) {
-//     const field = result.error.issues[0]?.path[0];
-//     const code =
-//       typeof field === "string"
-//         ? SEARCH_STUDIOS_BY_NAME_FIELD_ERROR[field]
-//         : undefined;
-//     throw new AppError(code ?? "COMMON_400");
-//   }
+  if (!result.success) {
+    const field = result.error.issues[0]?.path[0];
+    const code =
+      typeof field === "string"
+        ? SEARCH_STUDIOS_BY_NAME_FIELD_ERROR[field]
+        : undefined;
+    throw new AppError(code ?? "COMMON_400");
+  }
 
-//   isMinPriceBigThanMaxPrice(result.data.minPrice, result.data.maxPrice);
+  isMinPriceBigThanMaxPrice(result.data.minPrice, result.data.maxPrice);
 
-//   return result.data;
-// }
+  return result.data;
+}
 
 // ================================================================
 // ================= 사진관 검색 결과 조회 - 응답 DTO ===================
