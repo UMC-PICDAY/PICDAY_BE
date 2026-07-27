@@ -36,6 +36,20 @@ export const validateStudioProductsRequestIds: RequestHandler = (
   next();
 };
 
+// {studioId}/recent-view 라우트 전용 검증
+export const validateRecentStudioViewRequestId: RequestHandler = (
+  req,
+  _res,
+  next,
+) => {
+  if (!isValidRawApiId(req.params.studioId)) {
+    next(new AppError("STUDIO_40011"));
+    return;
+  }
+
+  next();
+};
+
 export const validateStudioProductDetailRequestIds: RequestHandler = (
   req,
   _res,
