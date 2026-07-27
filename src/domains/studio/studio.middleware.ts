@@ -53,3 +53,34 @@ export const validateStudioProductDetailRequestIds: RequestHandler = (
 
   next();
 };
+
+// GET /studios/compare/purposes?studioIds=1&studioIds=2 에서
+// studioIds 각각이 유효한 양의 정수 문자열 형식인지만 검증한다.
+// (개수가 2~3개인지, 중복이 없는지는 서비스 레이어의 zod 스키마에서 검증)
+export const validateStudioCompareRequestIds: RequestHandler = (
+  req,
+  _res,
+  next,
+) => {
+  const rawStudioIds = req.query.studioIds;
+
+  if (rawStudioIds === undefined) {
+    next(new AppError("STUDIO_40013"));
+    return;
+  }
+
+  const studioIds = Array.isArray(rawStudioIds)
+    ? rawStudioIds
+    : [rawStudioIds];
+
+  const isAllValidFormat = studioIds.every(
+    (id) => typeof id === "string" && isValidRawApiId(id),
+  );
+
+  if (!isAllValidFormat) {
+    next(new AppError("STUDIO_40011"));
+    return;
+  }
+
+  next();
+};
