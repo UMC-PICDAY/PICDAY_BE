@@ -180,6 +180,11 @@ export const ErrorCode = {
     code: "STUDIO_40015",
     message: "해당 시간 슬롯은 요청한 사진관에 속하지 않습니다.",
   },
+  STUDIO_40016: {
+    status: 400,
+    code: "STUDIO_40016",
+    message: "스튜디오 이름 검색어가 올바르지 않습니다.",
+  },
   STUDIO_4041: {
     status: 404,
     code: "STUDIO_4041",
