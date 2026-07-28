@@ -376,6 +376,20 @@ export function parseSearchStudiosByNameRequest(
 //
 // // 통합 검색 / 이름 검색 둘 다 이 형태로 응답
 
+// 검색 조건
+export const studioSearchAppliedFiltersSchema = z.object({
+  locationCategory: z.enum(LocationCategory).nullable(),
+  date: z.string().nullable(),
+  shootingCategories: z.array(z.enum(ShootingCategory)),
+  studioId: z.number().nullable(),
+  sort: z.enum(StudioSort),
+  minPrice: z.number().nullable(),
+  maxPrice: z.number().nullable(),
+  serviceCodes: z.array(z.enum(ServiceCode)),
+  minRating: z.number().nullable(),
+});
+
+// 결과 있음 : 검색 결과 스튜디오 목록
 const studioSearchProductSummarySchema = z.object({
   productId: z.bigint().transform(toApiId),
   productName: z.string(),
@@ -399,24 +413,44 @@ export const studioSearchItemSchema = z.object({
   productSummaries: z.array(studioSearchProductSummarySchema),
 });
 
-export const studioSearchAppliedFiltersSchema = z.object({
+export type StudioSearchItemInputDto = z.input<typeof studioSearchItemSchema>;
+
+// 결과 없음 : 추천 스튜디오 목록
+export const recommendStudioItemSchema = z.object({
+  studioId: z.bigint().transform(toApiId),
+  studioName: z.string(),
+  thumbnailUrl: z.url().nullable(),
   locationCategory: z.enum(LocationCategory).nullable(),
-  date: z.string().nullable(),
-  shootingCategories: z.array(z.enum(ShootingCategory)),
-  studioId: z.number().nullable(),
-  sort: z.enum(StudioSort),
-  minPrice: z.number().nullable(),
-  maxPrice: z.number().nullable(),
-  serviceCodes: z.array(z.enum(ServiceCode)),
-  minRating: z.number().nullable(),
+  minPrice: z.number().int().nonnegative().nullable(),
+  rating: z.number().min(0).max(5),
+  shootingCategory: z.array(z.enum(ShootingCategory)),
 });
 
-export const studioSearchResponseSchema = z.object({
-  hasResult: z.boolean(),
+export type RecommendStudioItemInputDto = z.input<
+  typeof recommendStudioItemSchema
+>;
+
+// 1. 검색 결과가 존재할 때 응답 DTO
+export const studioSearchFoundResponseSchema = z.object({
+  hasResult: z.literal(true),
   totalCount: z.number().int().nonnegative(),
   appliedFilters: studioSearchAppliedFiltersSchema,
   studios: z.array(studioSearchItemSchema),
 });
+
+// 2. 검색 결과가 없을 때 응답 DTO
+export const studioSearchNotFoundResponseSchema = z.object({
+  hasResult: z.literal(false),
+  totalCount: z.literal(0),
+  appliedFilters: studioSearchAppliedFiltersSchema,
+  recommendStudios: z.array(recommendStudioItemSchema),
+});
+
+// hasResult 값을 보고 위 두 스키마 중 어느 쪽으로 검증할지 판별한다
+export const studioSearchResponseSchema = z.discriminatedUnion("hasResult", [
+  studioSearchFoundResponseSchema,
+  studioSearchNotFoundResponseSchema,
+]);
 
 export type StudioSearchResponseInputDto = z.input<
   typeof studioSearchResponseSchema
@@ -469,3 +503,4 @@ export type SaveRecentStudioViewSuccessResponseDto = {
   message: string;
   data: RecentStudioViewResponseDto;
 };
+ㅔㅜ;

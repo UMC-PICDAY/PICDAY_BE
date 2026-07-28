@@ -130,7 +130,9 @@ export class StudioController extends Controller {
     return {
       success: true,
       code: "STUDIO_200",
-      message: "사진관 검색 결과 조회에 성공했습니다.",
+      message: data.hasResult
+        ? "사진관 검색 결과 조회에 성공했습니다."
+        : "조건에 맞는 사진관이 없습니다.",
       data,
     };
   }
@@ -166,7 +168,9 @@ export class StudioController extends Controller {
     return {
       success: true,
       code: "STUDIO_200",
-      message: "사진관 검색 결과 조회에 성공했습니다.",
+      message: data.hasResult
+        ? "사진관 검색 결과 조회에 성공했습니다."
+        : "조건에 맞는 사진관이 없습니다.",
       data,
     };
   }
