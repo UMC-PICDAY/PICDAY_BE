@@ -307,10 +307,10 @@ export function parseSearchStudiosRequest(
 // ======================================================================
 
 // 1. raw 입력 : service.ts에서 호출되는 parseSearchStudiosByNameRequest의 인풋 타입
-// studioName도 optional로 둬서 tsoa가 "필수 파라미터 누락"을 자체 에러(COMMON_400)로 먼저
-// 가로채지 않게 하고, 아래 스키마가 "누락"과 "빈 문자열"을 똑같이 STUDIO_40016로 처리하게 함.
+// studioId도 optional로 둬서 tsoa가 "필수 파라미터 누락"을 자체 에러(COMMON_400)로 먼저
+// 가로채지 않게 하고, 아래 스키마가 "누락"과 "잘못된 값"을 똑같이 STUDIO_40011로 처리하게 함.
 export type RawSearchStudiosByNameRequestDto = {
-  studioName?: string | undefined;
+  studioId?: number | undefined;
   sort?: string | undefined;
   minPrice?: number | undefined;
   maxPrice?: number | undefined;
@@ -321,7 +321,7 @@ export type RawSearchStudiosByNameRequestDto = {
 // 2. 기본적인 raw 입력의 타입 검증
 export const searchStudiosByNameRequestSchema = z
   .object({
-    studioName: z.string().min(1, "스튜디오 이름 검색어가 올바르지 않습니다."), // STUDIO_40016
+    studioId: z.number().int().positive(), // STUDIO_40011
     sort: z.enum(StudioSort).default(StudioSort.RECOMMENDED), // STUDIO_40014
     minPrice: z.number().int().nonnegative().optional(), //  + isMinPriceBigThanMaxPrice (STUDIO_4003)
     maxPrice: z.number().int().nonnegative().optional(),
@@ -337,7 +337,7 @@ export const searchStudiosByNameRequestSchema = z
   }));
 
 const SEARCH_STUDIOS_BY_NAME_FIELD_ERROR: Record<string, ErrorCodeType> = {
-  studioName: "STUDIO_40016",
+  studioId: "STUDIO_40011",
   serviceCode: "STUDIO_4009",
   sort: "STUDIO_40014",
   minPrice: "STUDIO_4003",
@@ -403,7 +403,7 @@ export const studioSearchAppliedFiltersSchema = z.object({
   locationCategory: z.enum(LocationCategory).nullable(),
   date: z.string().nullable(),
   shootingCategories: z.array(z.enum(ShootingCategory)),
-  studioName: z.string().nullable(),
+  studioId: z.number().nullable(),
   sort: z.enum(StudioSort),
   minPrice: z.number().nullable(),
   maxPrice: z.number().nullable(),

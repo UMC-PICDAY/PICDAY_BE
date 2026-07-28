@@ -591,7 +591,7 @@ export async function searchStudios(
         locationCategory: query.locationCategory ?? null,
         date: query.date ?? null,
         shootingCategories: query.shootingCategory ?? [],
-        studioName: null,
+        studioId: null,
         sort: query.sort,
         minPrice: query.minPrice ?? null,
         maxPrice: query.maxPrice ?? null,
@@ -617,9 +617,16 @@ export async function searchStudiosByName(
     const query = parseSearchStudiosByNameRequest(rawQuery);
     const { userId } = resolveOptionalUser(authHeader);
 
+    const studioId = toDomainId(query.studioId);
+    const studioExists =
+      await studioSearchRepository.existsStudioById(studioId);
+    if (!studioExists) {
+      throw new AppError("STUDIO_4041");
+    }
+
     return await buildSearchResponse(
       {
-        studioName: query.studioName,
+        studioId,
         minPrice: query.minPrice,
         maxPrice: query.maxPrice,
         serviceCodes: query.serviceCode,
@@ -630,7 +637,7 @@ export async function searchStudiosByName(
         locationCategory: null,
         date: null,
         shootingCategories: [],
-        studioName: query.studioName,
+        studioId: query.studioId,
         sort: query.sort,
         minPrice: query.minPrice ?? null,
         maxPrice: query.maxPrice ?? null,

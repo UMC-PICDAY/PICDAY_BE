@@ -236,7 +236,7 @@ export type StudioSearchFilters = {
   locationCategory?: LocationCategory | undefined;
   date?: Date | undefined;
   shootingCategories?: ShootingCategory[] | undefined;
-  studioName?: string | undefined;
+  studioId?: bigint | undefined;
   minPrice?: number | undefined;
   maxPrice?: number | undefined;
   serviceCodes?: ServiceCode[] | undefined;
@@ -267,7 +267,7 @@ export async function findStudiosBySearchFilters(filters: StudioSearchFilters) {
 
   return prisma.studio.findMany({
     where: {
-      ...(filters.studioName && { name: { contains: filters.studioName } }),
+      ...(filters.studioId !== undefined && { id: filters.studioId }),
       ...(filters.locationCategory && {
         location: { locationCategory: filters.locationCategory },
       }),

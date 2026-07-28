@@ -136,19 +136,21 @@ export class StudioController extends Controller {
   }
 
   /**
-   * 사진관 검색 결과 조회 API (스튜디오 이름 검색)
+   * 사진관 검색 결과 조회 API (자동완성에서 선택한 스튜디오 ID로 조회)
    *
+   * 이름 검색 자동완성 목록에서 사용자가 특정 사진관을 선택했을 때 호출한다.
    * Authorization 헤더는 선택이며, 없으면 비로그인 사용자로 처리해 isWishlisted를 false로 반환한다.
    */
   @Get("search/name")
   @SuccessResponse(200, "OK")
   @Response<AppErrorResponse>(
     400,
-    "STUDIO_40016: 스튜디오 이름 검색어가 올바르지 않습니다.\nSTUDIO_4009: 올바르지 않은 서비스 태그입니다.\nSTUDIO_40014: 올바르지 않은 정렬 기준입니다.\nSTUDIO_4003: 잘못된 필터 조건입니다.",
+    "STUDIO_40011: 올바르지 않은 사진관 ID입니다.\nSTUDIO_4009: 올바르지 않은 서비스 태그입니다.\nSTUDIO_40014: 올바르지 않은 정렬 기준입니다.\nSTUDIO_4003: 잘못된 필터 조건입니다.",
   )
+  @Response<AppErrorResponse>(404, "STUDIO_4041: 존재하지 않는 사진관입니다.")
   public async searchStudiosByName(
     @Request() request: any,
-    @Query() studioName?: string,
+    @Query() studioId?: number,
     @Query() sort?: string,
     @Query() minPrice?: number,
     @Query() maxPrice?: number,
@@ -157,7 +159,7 @@ export class StudioController extends Controller {
   ): Promise<SearchStudiosSuccessResponseDto> {
     const data = await studioSearchService.searchStudiosByName(
       request.headers.authorization,
-      { studioName, sort, minPrice, maxPrice, serviceCode, minRating },
+      { studioId, sort, minPrice, maxPrice, serviceCode, minRating },
     );
 
     return {
