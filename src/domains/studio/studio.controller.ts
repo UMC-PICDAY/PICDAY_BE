@@ -26,13 +26,17 @@ import type {
   SearchStudiosSuccessResponseDto,
   SaveRecentStudioViewSuccessResponseDto,
 } from "./studio.search.dto.js";
+import type { StudioComparePurposesResponseDto } from "./studio.compare.dto.js";
+
 import * as studioDetailService from "./studio.detail.service.js";
 import * as studioSearchService from "./studio.search.service.js";
+import * as studioCompareService from "./studio.compare.service.js"
 import {
   validateStudioId,
   validateStudioProductDetailRequestIds,
   validateStudioProductsRequestIds,
   validateRecentStudioViewRequestId,
+  validateStudioCompareRequestIds
 } from "./studio.middleware.js";
 
 type AppErrorResponse = {
@@ -346,5 +350,24 @@ export class StudioController extends Controller {
     );
 
     return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
+  }
+
+  // === 비교 목적 조회 API ===
+  @Middlewares(validateStudioCompareRequestIds)
+  @Get("compare/purposes")
+  @SuccessResponse(200, "OK")
+  @Response<AppErrorResponse>(
+    400,
+    "STUDIO_40011: 올바르지 않은 사진관 ID / STUDIO_40013: 비교 대상 개수(2~3개) 또는 중복 오류",
+  )
+  @Response<AppErrorResponse>(404, "STUDIO_4041: 존재하지 않는 사진관이 포함됨")
+  @Response<AppErrorResponse>(500, "COMMON_500: 서버 오류")
+  public async getStudioComparePurposes(
+    @Query() studioIds: string[],
+  ): Promise<ApiResponse<StudioComparePurposesResponseDto>> {
+    const data =
+      await studioCompareService.getStudioComparePurposes(studioIds);
+
+    return success(data, "비교 목적 조회에 성공했습니다.");
   }
 }
