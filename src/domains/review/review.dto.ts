@@ -111,6 +111,7 @@ export const studioIdParamsSchema = z.object({
 export type ReviewListItemDto = {
   reviewId: number;
   writerNickname: string | null;
+  conceptName: string;
   rating: number;
   content: string;
   keywords: ReviewKeywordValue[];
