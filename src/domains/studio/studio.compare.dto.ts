@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { ShootingCategory } from "../../generated/prisma/enums.js";
+import { 
+  LocationCategory,
+  ServiceCode,
+  ShootingCategory
+} from "../../generated/prisma/enums.js";
 
 // ========================================================
 // ================= 사진관 촬영 목적 비교 조회 =================
@@ -69,4 +73,96 @@ export function createStudioComparePurposesResponse(
   input: StudioComparePurposesResponseInputDto,
 ): StudioComparePurposesResponseDto {
   return studioComparePurposesResponseSchema.parse(input);
+}
+
+// ========================================================
+// ================= 사진관 비교 결과 조회 =================
+// ========================================================
+
+const SHOOTING_PURPOSE_DISPLAY_NAME_BY_CATEGORY = new Map(
+  SHOOTING_PURPOSE_DISPLAY_ORDER.map(({ shootingCategory, displayName }) => [
+    shootingCategory,
+    displayName,
+  ]),
+);
+
+export function getShootingPurposeDisplayName(
+  shootingCategory: ShootingCategory,
+): string {
+  return SHOOTING_PURPOSE_DISPLAY_NAME_BY_CATEGORY.get(shootingCategory)!;
+}
+
+// ======== 요청 ========
+export const getStudioCompareResultRequestSchema = z
+  .object({
+    studioIds: z.array(compareStudioIdSchema).min(2).max(3),
+    shootingCategory: z.enum(ShootingCategory),
+  })
+  .refine((data) => new Set(data.studioIds).size === data.studioIds.length, {
+    message: "중복된 사진관 ID가 포함되어 있습니다.",
+    path: ["studioIds"],
+  });
+
+export type GetStudioCompareResultQuery = z.output<typeof getStudioCompareResultRequestSchema>;
+
+export function parseGetStudioCompareResultRequest(input: {
+  studioIds: string[];
+  shootingCategory: string | undefined;
+}): GetStudioCompareResultQuery {
+  return getStudioCompareResultRequestSchema.parse(input);
+}
+
+// ======== 응답 ========
+function formatDateOnly(date: Date) {
+  return [
+    date.getUTCFullYear().toString().padStart(4, "0"),
+    (date.getUTCMonth() + 1).toString().padStart(2, "0"),
+    date.getUTCDate().toString().padStart(2, "0"),
+  ].join("-");
+}
+
+const compareResultLocationSchema = z
+  .object({
+    locationCategory: z.enum(LocationCategory),
+    nearestStation: z.string(),
+    walkingMinutes: z.number().int().nonnegative(),
+  })
+  .nullable();
+
+const compareResultProductInformationSchema = z.object({
+  minimumPrice: z.number().int().nonnegative(),
+  hasPriceRange: z.boolean(),
+  comparisonSummary: z.string().nullable(),
+  hasAdditionalPrice: z.boolean(),
+});
+
+const compareResultStudioSchema = z.object({
+  studioId: z.bigint().transform((id) => id.toString()),
+  studioName: z.string(),
+  thumbnailUrl: z.url().nullable(),
+  rating: z.number().nonnegative(),
+  reviewCount: z.number().int().nonnegative(),
+  productInformation: compareResultProductInformationSchema,
+  serviceTags: z.array(z.enum(ServiceCode)),
+  location: compareResultLocationSchema,
+  earliestReservationDate: z
+    .date()
+    .nullable()
+    .transform((date) => (date ? formatDateOnly(date) : null)),
+});
+
+export const studioCompareResultResponseSchema = z.object({
+  shootingCategory: z.enum(ShootingCategory),
+  displayName: z.string(),
+  studios: z.array(compareResultStudioSchema),
+});
+
+export type StudioCompareResultResponseInputDto = z.input<typeof studioCompareResultResponseSchema>;
+
+export type StudioCompareResultResponseDto = z.output<typeof studioCompareResultResponseSchema>;
+
+export function createStudioCompareResultResponse(
+  input: StudioCompareResultResponseInputDto,
+): StudioCompareResultResponseDto {
+  return studioCompareResultResponseSchema.parse(input);
 }
