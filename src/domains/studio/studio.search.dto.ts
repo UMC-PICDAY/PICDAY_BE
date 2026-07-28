@@ -503,4 +503,3 @@ export type SaveRecentStudioViewSuccessResponseDto = {
   message: string;
   data: RecentStudioViewResponseDto;
 };
-ㅔㅜ;
