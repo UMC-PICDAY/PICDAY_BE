@@ -1,5 +1,8 @@
 import { prisma } from "../../config/prisma.js";
-import { Prisma, type LocationCategory } from "../../generated/prisma/client.js";
+import {
+  Prisma,
+  type LocationCategory,
+} from "../../generated/prisma/client.js";
 
 export type WishlistPageRow = {
   id: bigint;

@@ -5,13 +5,22 @@ import * as studioSearchRepository from "./studio.search.repository.js";
 import {
   createStudioAutocompleteResponse, // 자동완성검색
   parseGetStudioAutocompleteRequest, // 자동완성검색
+  createStudioSearchResponse, // 검색 결과 조회
+  parseSearchStudiosRequest, // 검색 결과 조회
+  parseSearchStudiosByNameRequest, // 이름 검색
+  StudioSort, // 검색 결과 조회
 } from "./studio.search.dto.js";
 import type {
   BannerStudioItem,
   GetHomeResponseDto,
   StudioWithPriceAndRatingItem,
   StudioAutocompleteResponseDto, // 자동완성검색
+  RawSearchStudiosRequestDto, // 검색 결과 조회
+  RawSearchStudiosByNameRequestDto, // 이름 검색
+  StudioSearchResponseDto, // 검색 결과 조회
+  StudioSearchResponseInputDto, // 검색 결과 조회
 } from "./studio.search.dto.js";
+import type { FindStudiosBySearchFiltersResult } from "./studio.search.repository.js";
 
 import { LocationCategory } from "../../generated/prisma/enums.js";
 
@@ -387,6 +396,246 @@ export async function getStudioAutocomplete(
         };
       }),
     });
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("COMMON_500");
+  }
+}
+
+// ========================================================
+// =================== 사진관 검색 결과 조회 ===================
+// ========================================================
+
+// ===== 0. 함수 =====
+
+// 썸네일 이미지 url(string) 2장 추출
+type StudioSearchRow = FindStudiosBySearchFiltersResult[number]; // repository 함수 호출
+
+// 카드(스튜디오)당 썸네일 장수
+const STUDIO_THUMBNAIL_COUNT = 2;
+
+// 썸네일 URL 목록 (최대 2장)
+function pickThumbnails(
+  products: Array<{ productImages: ProductImageRow[] }>,
+): string[] | null {
+  const thumbnails: string[] = [];
+
+  for (const product of products) {
+    if (thumbnails.length >= STUDIO_THUMBNAIL_COUNT) {
+      break;
+    }
+    if (product.productImages[0]) {
+      thumbnails.push(product.productImages[0].url);
+    }
+    if (
+      thumbnails.length < STUDIO_THUMBNAIL_COUNT &&
+      product.productImages[1]
+    ) {
+      thumbnails.push(product.productImages[1].url);
+    }
+  }
+
+  return thumbnails.length > 0 ? thumbnails : null; // url이 0개이면 null 리턴
+}
+
+function toSearchItemInput(
+  studio: StudioSearchRow,
+  reviewCountByStudioId: Map<bigint, number>,
+  wishlistedStudioIds: Set<bigint>,
+): StudioSearchResponseInputDto["studios"][number] {
+  const category = studio.location?.locationCategory ?? null;
+
+  return {
+    studioId: studio.id,
+    studioName: studio.name,
+    thumbnailUrls: pickThumbnails(studio.products),
+    locationCategory: category,
+    latitude: studio.location?.latitude
+      ? Number(studio.location.latitude)
+      : null,
+    longitude: studio.location?.longitude
+      ? Number(studio.location.longitude)
+      : null,
+    minPrice: pickMinPrice(studio.products),
+    // ratingScore는 배치가 평균값 그대로(반올림 없이) 저장해두므로, 내보낼 때 소수 첫째 자리로 반올림
+    // (wishlist.service.ts/review.service.ts와 동일한 규칙)
+    rating: Math.round((studio.ratingScore ?? 0) * 10) / 10,
+    reviewCount: reviewCountByStudioId.get(studio.id) ?? 0,
+    shootingCategories: [
+      ...new Set(studio.products.map((product) => product.shootingCategory)),
+    ],
+    serviceCodes: studio.studioServices.map((service) => service.serviceCode),
+    isWishlisted: wishlistedStudioIds.has(studio.id),
+    productSummaries: studio.products.map((product) => ({
+      productId: product.id,
+      productName: product.name,
+      shootingCategory: product.shootingCategory,
+      price: product.price,
+    })),
+  };
+}
+
+const SORT_FALLBACK = Number.POSITIVE_INFINITY;
+
+function compareBigintAsc(a: bigint, b: bigint): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+// StudioSort별 정렬. 동률이면 항상 id 오름차순으로 고정해, 정렬 기준을 바꿔도 순서가 안정적이도록 함.
+// 추천순/별점순은 배치가 미리 계산해 둔 reservationRank/ratingRank 컬럼을 그대로 쓴다(findPopularStudios/findHighRatedStudios와 동일 기준).
+function sortStudioRows(
+  rows: StudioSearchRow[],
+  reviewCountByStudioId: Map<bigint, number>,
+  sort: StudioSort,
+): StudioSearchRow[] {
+  const sorted = [...rows];
+
+  switch (sort) {
+    case StudioSort.PRICE_LOW:
+      sorted.sort((a, b) => {
+        const priceA = pickMinPrice(a.products) ?? SORT_FALLBACK;
+        const priceB = pickMinPrice(b.products) ?? SORT_FALLBACK;
+        return priceA !== priceB
+          ? priceA - priceB
+          : compareBigintAsc(a.id, b.id);
+      });
+      return sorted;
+
+    case StudioSort.RATING_HIGH:
+      sorted.sort((a, b) => {
+        const rankA = a.ratingRank ?? SORT_FALLBACK;
+        const rankB = b.ratingRank ?? SORT_FALLBACK;
+        return rankA !== rankB ? rankA - rankB : compareBigintAsc(a.id, b.id);
+      });
+      return sorted;
+
+    case StudioSort.REVIEW_COUNT:
+      sorted.sort((a, b) => {
+        const countA = reviewCountByStudioId.get(a.id) ?? 0;
+        const countB = reviewCountByStudioId.get(b.id) ?? 0;
+        return countB !== countA
+          ? countB - countA
+          : compareBigintAsc(a.id, b.id);
+      });
+      return sorted;
+
+    case StudioSort.RECOMMENDED:
+      sorted.sort((a, b) => {
+        const rankA = a.reservationRank ?? SORT_FALLBACK;
+        const rankB = b.reservationRank ?? SORT_FALLBACK;
+        return rankA !== rankB ? rankA - rankB : compareBigintAsc(a.id, b.id);
+      });
+      return sorted;
+  }
+}
+
+async function buildSearchResponse(
+  filters: studioSearchRepository.StudioSearchFilters,
+  sort: StudioSort,
+  appliedFilters: StudioSearchResponseInputDto["appliedFilters"],
+  userId: bigint | null,
+) {
+  const rows = await studioSearchRepository.findStudiosBySearchFilters(filters);
+  const studioIds = rows.map((row) => row.id);
+
+  const [reviewCountRows, wishlistedStudioIds] = await Promise.all([
+    studioSearchRepository.findReviewCountsByStudioIds(studioIds),
+    userId
+      ? studioSearchRepository.findWishlistedStudioIds(userId, studioIds)
+      : Promise.resolve(new Set<bigint>()),
+  ]);
+
+  const reviewCountByStudioId = new Map(
+    reviewCountRows.map((row) => [row.studioId, row._count._all]),
+  );
+
+  const studios = sortStudioRows(rows, reviewCountByStudioId, sort).map((row) =>
+    toSearchItemInput(row, reviewCountByStudioId, wishlistedStudioIds),
+  );
+
+  return createStudioSearchResponse({
+    hasResult: studios.length > 0,
+    totalCount: studios.length,
+    appliedFilters,
+    studios,
+  });
+}
+
+// === 1. 통합 검색 조회 (위치/날짜/컨셉) ===
+export async function searchStudios(
+  authHeader: string | undefined,
+  rawQuery: RawSearchStudiosRequestDto,
+): Promise<StudioSearchResponseDto> {
+  try {
+    const query = parseSearchStudiosRequest(rawQuery);
+
+    const { userId } = resolveOptionalUser(authHeader);
+
+    return await buildSearchResponse(
+      {
+        locationCategory: query.locationCategory,
+        date: query.dbDate,
+        shootingCategories: query.shootingCategory,
+        minPrice: query.minPrice,
+        maxPrice: query.maxPrice,
+        serviceCodes: query.serviceCode,
+        minRating: query.minRating,
+      },
+      query.sort,
+      {
+        locationCategory: query.locationCategory ?? null,
+        date: query.date ?? null,
+        shootingCategories: query.shootingCategory ?? [],
+        studioName: null,
+        sort: query.sort,
+        minPrice: query.minPrice ?? null,
+        maxPrice: query.maxPrice ?? null,
+        serviceCodes: query.serviceCode ?? [],
+        minRating: query.minRating ?? null,
+      },
+      userId,
+    );
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("COMMON_500");
+  }
+}
+
+// === 2. 스튜디오 이름 검색 조회 ===
+export async function searchStudiosByName(
+  authHeader: string | undefined,
+  rawQuery: RawSearchStudiosByNameRequestDto,
+): Promise<StudioSearchResponseDto> {
+  try {
+    const query = parseSearchStudiosByNameRequest(rawQuery);
+    const { userId } = resolveOptionalUser(authHeader);
+
+    return await buildSearchResponse(
+      {
+        studioName: query.studioName,
+        minPrice: query.minPrice,
+        maxPrice: query.maxPrice,
+        serviceCodes: query.serviceCode,
+        minRating: query.minRating,
+      },
+      query.sort,
+      {
+        locationCategory: null,
+        date: null,
+        shootingCategories: [],
+        studioName: query.studioName,
+        sort: query.sort,
+        minPrice: query.minPrice ?? null,
+        maxPrice: query.maxPrice ?? null,
+        serviceCodes: query.serviceCode ?? [],
+        minRating: query.minRating ?? null,
+      },
+      userId,
+    );
   } catch (error) {
     if (error instanceof AppError) {
       throw error;

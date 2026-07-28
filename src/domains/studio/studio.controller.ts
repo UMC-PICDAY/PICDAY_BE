@@ -21,6 +21,7 @@ import type {
 import type {
   GetHomeResponseDto,
   StudioAutocompleteResponseDto,
+  SearchStudiosSuccessResponseDto,
 } from "./studio.search.dto.js";
 import type { StudioComparePurposesResponseDto } from "./studio.compare.dto.js";
 
@@ -79,6 +80,102 @@ export class HomeController extends Controller {
 @Route("studios")
 @Tags("Studio")
 export class StudioController extends Controller {
+  /**
+   * 사진관 검색 결과 조회 API (통합 검색: 위치/날짜/컨셉)
+   *
+   * locationCategory, date, shootingCategory 중 최소 1개는 있어야 한다.
+   * Authorization 헤더는 선택이며, 없으면 비로그인 사용자로 처리해 isWishlisted를 false로 반환한다.
+   */
+  @Get("search")
+  @SuccessResponse(200, "OK")
+  @Response<AppErrorResponse>(
+    400,
+    "STUDIO_40012: 검색 조건은 location, date, concept 중 최소 1개 이상 필요합니다.\nSTUDIO_4008: 올바르지 않은 지역입니다.\nSTUDIO_4004: 날짜 형식이 올바르지 않습니다.\nSTUDIO_40010: 과거 날짜는 검색할 수 없습니다.\nSTUDIO_4007: 올바르지 않은 촬영 컨셉입니다.\nSTUDIO_4009: 올바르지 않은 서비스 태그입니다.\nSTUDIO_40014: 올바르지 않은 정렬 기준입니다.\nSTUDIO_4003: 잘못된 필터 조건입니다.",
+  )
+  public async searchStudios(
+    @Request() request: any,
+    @Query() locationCategory?: string,
+    @Query() date?: string,
+    @Query() shootingCategory?: string[],
+    @Query() sort?: string,
+    @Query() minPrice?: number,
+    @Query() maxPrice?: number,
+    @Query() serviceCode?: string[],
+    @Query() minRating?: number,
+  ): Promise<SearchStudiosSuccessResponseDto> {
+    const data = await studioSearchService.searchStudios(
+      request.headers.authorization,
+      {
+        locationCategory,
+        date,
+        shootingCategory,
+        sort,
+        minPrice,
+        maxPrice,
+        serviceCode,
+        minRating,
+      },
+    );
+
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "사진관 검색 결과 조회에 성공했습니다.",
+      data,
+    };
+  }
+
+  /**
+   * 사진관 검색 결과 조회 API (스튜디오 이름 검색)
+   *
+   * Authorization 헤더는 선택이며, 없으면 비로그인 사용자로 처리해 isWishlisted를 false로 반환한다.
+   */
+  @Get("search/name")
+  @SuccessResponse(200, "OK")
+  @Response<AppErrorResponse>(
+    400,
+    "STUDIO_40016: 스튜디오 이름 검색어가 올바르지 않습니다.\nSTUDIO_4009: 올바르지 않은 서비스 태그입니다.\nSTUDIO_40014: 올바르지 않은 정렬 기준입니다.\nSTUDIO_4003: 잘못된 필터 조건입니다.",
+  )
+  public async searchStudiosByName(
+    @Request() request: any,
+    @Query() studioName?: string,
+    @Query() sort?: string,
+    @Query() minPrice?: number,
+    @Query() maxPrice?: number,
+    @Query() serviceCode?: string[],
+    @Query() minRating?: number,
+  ): Promise<SearchStudiosSuccessResponseDto> {
+    const data = await studioSearchService.searchStudiosByName(
+      request.headers.authorization,
+      { studioName, sort, minPrice, maxPrice, serviceCode, minRating },
+    );
+
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "사진관 검색 결과 조회에 성공했습니다.",
+      data,
+    };
+  }
+
+  // === 사진관 자동완성 검색 API ===
+  // {studioId}보다 반드시 먼저 선언해야 한다. tsoa는 메서드 선언 순서 그대로 Express 라우트를
+  // 생성하고, Express는 등록 순서대로 매칭하므로 뒤에 있으면 "autocomplete"이 {studioId}로 잡혀버린다.
+  @Get("autocomplete")
+  @SuccessResponse(200, "OK")
+  public async getStudioAutocomplete(
+    @Query() keyword: string,
+  ): Promise<GetStudioAutocompleteSuccessResponseDto> {
+    const data = await studioSearchService.getStudioAutocomplete(keyword);
+
+    return {
+      success: true,
+      code: "STUDIO_200",
+      message: "사진관 자동완성 조회에 성공했습니다.",
+      data,
+    };
+  }
+
   /**
    * 사진관 상세 정보 조회 API
    *
@@ -207,22 +304,6 @@ export class StudioController extends Controller {
     );
 
     return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
-  }
-
-  // === 사진관 자동완성 검색 API ===
-  @Get("autocomplete")
-  @SuccessResponse(200, "OK")
-  public async getStudioAutocomplete(
-    @Query() keyword: string,
-  ): Promise<GetStudioAutocompleteSuccessResponseDto> {
-    const data = await studioSearchService.getStudioAutocomplete(keyword);
-
-    return {
-      success: true,
-      code: "STUDIO_200",
-      message: "사진관 자동완성 조회에 성공했습니다.",
-      data,
-    };
   }
 
   // === 비교 목적 조회 API ===
