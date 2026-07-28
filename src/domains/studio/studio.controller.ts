@@ -28,18 +28,18 @@ import type {
 } from "./studio.search.dto.js";
 import type {
   StudioComparePurposesResponseDto,
-  StudioCompareResultResponseDto
- } from "./studio.compare.dto.js";
+  StudioCompareResultResponseDto,
+} from "./studio.compare.dto.js";
 
 import * as studioDetailService from "./studio.detail.service.js";
 import * as studioSearchService from "./studio.search.service.js";
-import * as studioCompareService from "./studio.compare.service.js"
+import * as studioCompareService from "./studio.compare.service.js";
 import {
   validateStudioId,
   validateStudioProductDetailRequestIds,
   validateStudioProductsRequestIds,
-  validateRecentStudioViewRequestId,
-  validateStudioCompareRequestIds
+  validateStudioIdFormat,
+  validateStudioCompareRequestIds,
 } from "./studio.middleware.js";
 
 type AppErrorResponse = {
@@ -141,6 +141,7 @@ export class StudioController extends Controller {
    * 이름 검색 자동완성 목록에서 사용자가 특정 사진관을 선택했을 때 호출한다.
    * Authorization 헤더는 선택이며, 없으면 비로그인 사용자로 처리해 isWishlisted를 false로 반환한다.
    */
+  @Middlewares(validateStudioIdFormat)
   @Get("search/name")
   @SuccessResponse(200, "OK")
   @Response<AppErrorResponse>(
@@ -219,11 +220,14 @@ export class StudioController extends Controller {
    * @minimum studioId 1 사진관 ID는 양수여야 합니다.
    * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
    */
-  @Middlewares(validateRecentStudioViewRequestId)
+  @Middlewares(validateStudioIdFormat)
   @Security("jwt")
   @Post("{studioId}/recent-view")
   @SuccessResponse(200, "OK")
-  @Response<AppErrorResponse>(400, "STUDIO_40011: 올바르지 않은 사진관 ID입니다.")
+  @Response<AppErrorResponse>(
+    400,
+    "STUDIO_40011: 올바르지 않은 사진관 ID입니다.",
+  )
   @Response<AppErrorResponse>(
     401,
     "AUTH_4013: 유효하지 않은 토큰입니다.\nAUTH_4017: 만료된 토큰입니다.",
@@ -370,8 +374,7 @@ export class StudioController extends Controller {
   public async getStudioComparePurposes(
     @Query() studioIds: string[],
   ): Promise<ApiResponse<StudioComparePurposesResponseDto>> {
-    const data =
-      await studioCompareService.getStudioComparePurposes(studioIds);
+    const data = await studioCompareService.getStudioComparePurposes(studioIds);
 
     return success(data, "비교 목적 조회에 성공했습니다.");
   }
@@ -399,6 +402,4 @@ export class StudioController extends Controller {
 
     return success(data, "비교 결과 조회에 성공했습니다.");
   }
-
 }
-
