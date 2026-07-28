@@ -8,6 +8,7 @@ import {
   createStudioSearchResponse, // 검색 결과 조회
   parseSearchStudiosRequest, // 검색 결과 조회
   parseSearchStudiosByNameRequest, // 이름 검색
+  createRecentStudioViewResponse, // 최근 본 사진관 저장
   StudioSort, // 검색 결과 조회
 } from "./studio.search.dto.js";
 import type {
@@ -19,8 +20,10 @@ import type {
   RawSearchStudiosByNameRequestDto, // 이름 검색
   StudioSearchResponseDto, // 검색 결과 조회
   StudioSearchResponseInputDto, // 검색 결과 조회
+  RecentStudioViewResponseDto, // 최근 본 사진관 저장
 } from "./studio.search.dto.js";
 import type { FindStudiosBySearchFiltersResult } from "./studio.search.repository.js";
+import { toDomainId } from "../../common/apiId.js";
 
 import { LocationCategory } from "../../generated/prisma/enums.js";
 
@@ -636,6 +639,38 @@ export async function searchStudiosByName(
       },
       userId,
     );
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("COMMON_500");
+  }
+}
+
+// ========================================================
+// ==================== 최근 본 사진관 저장 ====================
+// ========================================================
+
+// === 3. 최근 본 사진관 저장 (사진관 상세 페이지 진입 시 호출, 로그인 필수) ===
+export async function saveRecentStudioView(
+  userId: bigint,
+  studioIdParam: number,
+): Promise<RecentStudioViewResponseDto> {
+  try {
+    const studioId = toDomainId(studioIdParam); // number -> bigint 변환 (컨트롤러 미들웨어가 이미 형식 검증을 마쳤음)
+
+    const studioExists =
+      await studioSearchRepository.existsStudioById(studioId);
+    if (!studioExists) {
+      throw new AppError("STUDIO_4041");
+    }
+
+    const view = await studioSearchRepository.upsertRecentStudioView(
+      userId,
+      studioId,
+    );
+
+    return createRecentStudioViewResponse(view);
   } catch (error) {
     if (error instanceof AppError) {
       throw error;

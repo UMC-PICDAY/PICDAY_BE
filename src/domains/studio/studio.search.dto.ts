@@ -438,3 +438,34 @@ export type SearchStudiosSuccessResponseDto = {
   message: string;
   data: StudioSearchResponseDto;
 };
+
+// ================================================================
+// ==================== 최근 본 사진관 저장 - 응답 ====================
+// ================================================================
+
+// DB에서 나온 studioId(bigint)/viewedAt(Date)를 API 응답용(number/ISO 문자열)으로 변환
+export const recentStudioViewResponseSchema = z.object({
+  studioId: z.bigint().transform(toApiId),
+  viewedAt: z.date().transform((date) => date.toISOString()),
+});
+
+export type RecentStudioViewResponseInputDto = z.input<
+  typeof recentStudioViewResponseSchema
+>;
+
+export type RecentStudioViewResponseDto = z.output<
+  typeof recentStudioViewResponseSchema
+>;
+
+export function createRecentStudioViewResponse(
+  input: RecentStudioViewResponseInputDto,
+): RecentStudioViewResponseDto {
+  return recentStudioViewResponseSchema.parse(input);
+}
+
+export type SaveRecentStudioViewSuccessResponseDto = {
+  success: true;
+  code: "STUDIO_200";
+  message: string;
+  data: RecentStudioViewResponseDto;
+};
