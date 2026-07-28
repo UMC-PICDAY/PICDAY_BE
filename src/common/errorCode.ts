@@ -195,6 +195,11 @@ export const ErrorCode = {
     code: "STUDIO_4045",
     message: "존재하지 않는 시간 슬롯입니다.",
   },
+  STUDIO_4046: {
+    status: 404,
+    code: "STUDIO_4046",
+    message: "선택한 촬영 목적을 지원하지 않는 사진관이 포함되어 있습니다.",
+  },
   STUDIO_5001: {
     status: 500,
     code: "STUDIO_5001",
