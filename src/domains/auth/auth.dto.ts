@@ -180,9 +180,9 @@ export const parseRefresh = (body: unknown) =>
 export const getMeResponseSchema = z.object({
   user: z.object({
     id: z.bigint().transform((id) => Number(id)),
-    name: z.string(),
-    nickname: z.string(),
-    email: z.email(),
+    name: z.string().nullable(),
+    nickname: z.string().nullable(),
+    email: z.email().nullable(),
     //profileImageUrl: z.url().nullable(),
     provider: z.enum(["KAKAO", "GOOGLE", "APPLE", "LOCAL"]),
     // notification: z.object({
