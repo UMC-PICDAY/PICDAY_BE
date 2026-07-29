@@ -205,6 +205,7 @@ export type ReviewListRow = {
   user: { nickname: string | null };
   images: { url: string }[];
   keywords: { keyword: ReviewKeyword }[];
+  reservation: { studioProduct: { name: string } };
   _count: { likes: number };
 };
 
@@ -233,6 +234,8 @@ export async function findReviewPage(params: {
       user: { select: { nickname: true } },
       images: { select: { url: true } },
       keywords: { select: { keyword: true } },
+      // 촬영 컨셉명 (리뷰 카드에 표시)
+      reservation: { select: { studioProduct: { select: { name: true } } } },
       _count: { select: { likes: true } },
     },
   });

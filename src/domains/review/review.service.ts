@@ -105,6 +105,7 @@ export async function getReviews(
       items: rows.map((row) => ({
         reviewId: Number(row.id),
         writerNickname: row.user.nickname,
+        conceptName: row.reservation.studioProduct.name,
         rating: row.rating,
         content: row.content,
         keywords: row.keywords.map((tag) => tag.keyword),
