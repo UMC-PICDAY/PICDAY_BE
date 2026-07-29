@@ -20,9 +20,14 @@ import type {
   RawSearchStudiosByNameRequestDto, // 이름 검색
   StudioSearchResponseDto, // 검색 결과 조회
   StudioSearchResponseInputDto, // 검색 결과 조회
+  StudioSearchItemInputDto, // 검색 결과 조회
+  RecommendStudioItemInputDto, // 검색 결과 없음
   RecentStudioViewResponseDto, // 최근 본 사진관 저장
 } from "./studio.search.dto.js";
-import type { FindStudiosBySearchFiltersResult } from "./studio.search.repository.js";
+import type {
+  FindStudiosBySearchFiltersResult,
+  FindRecommendedStudiosResult,
+} from "./studio.search.repository.js";
 import { toDomainId } from "../../common/apiId.js";
 
 import { LocationCategory } from "../../generated/prisma/enums.js";
@@ -447,7 +452,7 @@ function toSearchItemInput(
   studio: StudioSearchRow,
   reviewCountByStudioId: Map<bigint, number>,
   wishlistedStudioIds: Set<bigint>,
-): StudioSearchResponseInputDto["studios"][number] {
+): StudioSearchItemInputDto {
   const category = studio.location?.locationCategory ?? null;
 
   return {
@@ -477,6 +482,23 @@ function toSearchItemInput(
       shootingCategory: product.shootingCategory,
       price: product.price,
     })),
+  };
+}
+
+// 결과없음 화면의 recommendStudios 카드로 변환 (검색 조건과 무관, 리뷰 많은순 상위 스튜디오)
+function toRecommendStudioItemInput(
+  studio: FindRecommendedStudiosResult[number],
+): RecommendStudioItemInputDto {
+  return {
+    studioId: studio.id,
+    studioName: studio.name,
+    thumbnailUrl: pickThumbnail(studio.products),
+    locationCategory: studio.location?.locationCategory ?? null,
+    minPrice: pickMinPrice(studio.products),
+    rating: Math.round((studio.ratingScore ?? 0) * 10) / 10,
+    shootingCategory: [
+      ...new Set(studio.products.map((product) => product.shootingCategory)),
+    ],
   };
 }
 
@@ -558,8 +580,19 @@ async function buildSearchResponse(
     toSearchItemInput(row, reviewCountByStudioId, wishlistedStudioIds),
   );
 
+  if (studios.length === 0) {
+    const recommendRows = await studioSearchRepository.findRecommendedStudios();
+
+    return createStudioSearchResponse({
+      hasResult: false,
+      totalCount: 0,
+      appliedFilters,
+      recommendStudios: recommendRows.map(toRecommendStudioItemInput),
+    });
+  }
+
   return createStudioSearchResponse({
-    hasResult: studios.length > 0,
+    hasResult: true,
     totalCount: studios.length,
     appliedFilters,
     studios,
@@ -591,7 +624,7 @@ export async function searchStudios(
         locationCategory: query.locationCategory ?? null,
         date: query.date ?? null,
         shootingCategories: query.shootingCategory ?? [],
-        studioName: null,
+        studioId: null,
         sort: query.sort,
         minPrice: query.minPrice ?? null,
         maxPrice: query.maxPrice ?? null,
@@ -617,9 +650,16 @@ export async function searchStudiosByName(
     const query = parseSearchStudiosByNameRequest(rawQuery);
     const { userId } = resolveOptionalUser(authHeader);
 
+    const studioId = toDomainId(query.studioId);
+    const studioExists =
+      await studioSearchRepository.existsStudioById(studioId);
+    if (!studioExists) {
+      throw new AppError("STUDIO_4041");
+    }
+
     return await buildSearchResponse(
       {
-        studioName: query.studioName,
+        studioId,
         minPrice: query.minPrice,
         maxPrice: query.maxPrice,
         serviceCodes: query.serviceCode,
@@ -630,7 +670,7 @@ export async function searchStudiosByName(
         locationCategory: null,
         date: null,
         shootingCategories: [],
-        studioName: query.studioName,
+        studioId: query.studioId,
         sort: query.sort,
         minPrice: query.minPrice ?? null,
         maxPrice: query.maxPrice ?? null,

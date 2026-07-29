@@ -36,13 +36,14 @@ export const validateStudioProductsRequestIds: RequestHandler = (
   next();
 };
 
-// {studioId}/recent-view 라우트 전용 검증
-export const validateRecentStudioViewRequestId: RequestHandler = (
-  req,
-  _res,
-  next,
-) => {
-  if (!isValidRawApiId(req.params.studioId)) {
+// studioId 하나만 형식 검증하면 되는 라우트에서 사용 (STUDIO_40011)
+// 사용하는 라우트:
+// - POST /studios/{studioId}/recent-view (params)
+// - GET /studios/search/name?studioId=... (query)
+export const validateStudioIdFormat: RequestHandler = (req, _res, next) => {
+  const studioId = req.params.studioId ?? req.query.studioId;
+
+  if (!isValidRawApiId(studioId)) {
     next(new AppError("STUDIO_40011"));
     return;
   }
@@ -83,9 +84,7 @@ export const validateStudioCompareRequestIds: RequestHandler = (
     return;
   }
 
-  const studioIds = Array.isArray(rawStudioIds)
-    ? rawStudioIds
-    : [rawStudioIds];
+  const studioIds = Array.isArray(rawStudioIds) ? rawStudioIds : [rawStudioIds];
 
   const isAllValidFormat = studioIds.every(
     (id) => typeof id === "string" && isValidRawApiId(id),

@@ -307,10 +307,10 @@ export function parseSearchStudiosRequest(
 // ======================================================================
 
 // 1. raw 입력 : service.ts에서 호출되는 parseSearchStudiosByNameRequest의 인풋 타입
-// studioName도 optional로 둬서 tsoa가 "필수 파라미터 누락"을 자체 에러(COMMON_400)로 먼저
-// 가로채지 않게 하고, 아래 스키마가 "누락"과 "빈 문자열"을 똑같이 STUDIO_40016로 처리하게 함.
+// studioId도 optional로 둬서 tsoa가 "필수 파라미터 누락"을 자체 에러(COMMON_400)로 먼저
+// 가로채지 않게 하고, 아래 스키마가 "누락"과 "잘못된 값"을 똑같이 STUDIO_40011로 처리하게 함.
 export type RawSearchStudiosByNameRequestDto = {
-  studioName?: string | undefined;
+  studioId?: number | undefined;
   sort?: string | undefined;
   minPrice?: number | undefined;
   maxPrice?: number | undefined;
@@ -321,7 +321,7 @@ export type RawSearchStudiosByNameRequestDto = {
 // 2. 기본적인 raw 입력의 타입 검증
 export const searchStudiosByNameRequestSchema = z
   .object({
-    studioName: z.string().min(1, "스튜디오 이름 검색어가 올바르지 않습니다."), // STUDIO_40016
+    studioId: z.number().int().positive(), // STUDIO_40011
     sort: z.enum(StudioSort).default(StudioSort.RECOMMENDED), // STUDIO_40014
     minPrice: z.number().int().nonnegative().optional(), //  + isMinPriceBigThanMaxPrice (STUDIO_4003)
     maxPrice: z.number().int().nonnegative().optional(),
@@ -337,7 +337,7 @@ export const searchStudiosByNameRequestSchema = z
   }));
 
 const SEARCH_STUDIOS_BY_NAME_FIELD_ERROR: Record<string, ErrorCodeType> = {
-  studioName: "STUDIO_40016",
+  studioId: "STUDIO_40011",
   serviceCode: "STUDIO_4009",
   sort: "STUDIO_40014",
   minPrice: "STUDIO_4003",
@@ -376,6 +376,20 @@ export function parseSearchStudiosByNameRequest(
 //
 // // 통합 검색 / 이름 검색 둘 다 이 형태로 응답
 
+// 검색 조건
+export const studioSearchAppliedFiltersSchema = z.object({
+  locationCategory: z.enum(LocationCategory).nullable(),
+  date: z.string().nullable(),
+  shootingCategories: z.array(z.enum(ShootingCategory)),
+  studioId: z.number().nullable(),
+  sort: z.enum(StudioSort),
+  minPrice: z.number().nullable(),
+  maxPrice: z.number().nullable(),
+  serviceCodes: z.array(z.enum(ServiceCode)),
+  minRating: z.number().nullable(),
+});
+
+// 결과 있음 : 검색 결과 스튜디오 목록
 const studioSearchProductSummarySchema = z.object({
   productId: z.bigint().transform(toApiId),
   productName: z.string(),
@@ -399,24 +413,44 @@ export const studioSearchItemSchema = z.object({
   productSummaries: z.array(studioSearchProductSummarySchema),
 });
 
-export const studioSearchAppliedFiltersSchema = z.object({
+export type StudioSearchItemInputDto = z.input<typeof studioSearchItemSchema>;
+
+// 결과 없음 : 추천 스튜디오 목록
+export const recommendStudioItemSchema = z.object({
+  studioId: z.bigint().transform(toApiId),
+  studioName: z.string(),
+  thumbnailUrl: z.url().nullable(),
   locationCategory: z.enum(LocationCategory).nullable(),
-  date: z.string().nullable(),
-  shootingCategories: z.array(z.enum(ShootingCategory)),
-  studioName: z.string().nullable(),
-  sort: z.enum(StudioSort),
-  minPrice: z.number().nullable(),
-  maxPrice: z.number().nullable(),
-  serviceCodes: z.array(z.enum(ServiceCode)),
-  minRating: z.number().nullable(),
+  minPrice: z.number().int().nonnegative().nullable(),
+  rating: z.number().min(0).max(5),
+  shootingCategory: z.array(z.enum(ShootingCategory)),
 });
 
-export const studioSearchResponseSchema = z.object({
-  hasResult: z.boolean(),
+export type RecommendStudioItemInputDto = z.input<
+  typeof recommendStudioItemSchema
+>;
+
+// 1. 검색 결과가 존재할 때 응답 DTO
+export const studioSearchFoundResponseSchema = z.object({
+  hasResult: z.literal(true),
   totalCount: z.number().int().nonnegative(),
   appliedFilters: studioSearchAppliedFiltersSchema,
   studios: z.array(studioSearchItemSchema),
 });
+
+// 2. 검색 결과가 없을 때 응답 DTO
+export const studioSearchNotFoundResponseSchema = z.object({
+  hasResult: z.literal(false),
+  totalCount: z.literal(0),
+  appliedFilters: studioSearchAppliedFiltersSchema,
+  recommendStudios: z.array(recommendStudioItemSchema),
+});
+
+// hasResult 값을 보고 위 두 스키마 중 어느 쪽으로 검증할지 판별한다
+export const studioSearchResponseSchema = z.discriminatedUnion("hasResult", [
+  studioSearchFoundResponseSchema,
+  studioSearchNotFoundResponseSchema,
+]);
 
 export type StudioSearchResponseInputDto = z.input<
   typeof studioSearchResponseSchema

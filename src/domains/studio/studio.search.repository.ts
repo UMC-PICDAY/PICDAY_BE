@@ -236,7 +236,7 @@ export type StudioSearchFilters = {
   locationCategory?: LocationCategory | undefined;
   date?: Date | undefined;
   shootingCategories?: ShootingCategory[] | undefined;
-  studioName?: string | undefined;
+  studioId?: bigint | undefined;
   minPrice?: number | undefined;
   maxPrice?: number | undefined;
   serviceCodes?: ServiceCode[] | undefined;
@@ -267,7 +267,7 @@ export async function findStudiosBySearchFilters(filters: StudioSearchFilters) {
 
   return prisma.studio.findMany({
     where: {
-      ...(filters.studioName && { name: { contains: filters.studioName } }),
+      ...(filters.studioId !== undefined && { id: filters.studioId }),
       ...(filters.locationCategory && {
         location: { locationCategory: filters.locationCategory },
       }),
@@ -367,3 +367,60 @@ export async function findReviewCountsByStudioIds(studioIds: bigint[]) {
     _count: { _all: true },
   });
 }
+
+const RECOMMEND_STUDIO_COUNT = 6;
+
+// 검색 결과 없음 화면의 "이런 사진관은 어때요?" 추천 목록.
+// 검색 조건과 무관하게, 리뷰 많은순 상위 6개 스튜디오를 뽑는다.
+export async function findRecommendedStudios() {
+  const topReviewCounts = await prisma.review.groupBy({
+    by: ["studioId"],
+    _count: { _all: true },
+    orderBy: { _count: { studioId: "desc" } },
+    take: RECOMMEND_STUDIO_COUNT,
+  });
+
+  const studioIds = topReviewCounts.map((row) => row.studioId);
+
+  if (studioIds.length === 0) {
+    return [];
+  }
+
+  const studios = await prisma.studio.findMany({
+    where: { id: { in: studioIds } },
+    select: {
+      id: true,
+      name: true,
+      ratingScore: true,
+      location: { select: { locationCategory: true } },
+      products: {
+        select: {
+          price: true,
+          shootingCategory: true,
+          productImages: {
+            orderBy: [
+              { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
+              { id: "asc" },
+            ],
+            take: 1,
+            select: { url: true, studioThumbnailOrder: true },
+          },
+        },
+      },
+    },
+  });
+
+  // where...in은 studioIds 배열 순서를 보장하지 않으므로, topReviewCounts에서
+  // 정해진 "리뷰 많은순" 순서를 기준으로 다시 정렬한다.
+  const studioById = new Map(studios.map((studio) => [studio.id, studio]));
+
+  return studioIds
+    .map((id) => studioById.get(id))
+    .filter(
+      (studio): studio is (typeof studios)[number] => studio !== undefined,
+    );
+}
+
+export type FindRecommendedStudiosResult = Awaited<
+  ReturnType<typeof findRecommendedStudios>
+>;
