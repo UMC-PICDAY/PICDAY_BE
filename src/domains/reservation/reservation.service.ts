@@ -15,6 +15,8 @@ import {
 } from "./reservation.dto.js";
 import * as reservationRepository from "./reservation.repository.js";
 
+
+
 export const RESERVATION_CHECKLIST_ITEMS = [
   "의상 준비",
   "헤어·메이크업 준비",
@@ -244,6 +246,30 @@ export async function detail(
   });
 }
 
+// 대표 썸네일 = studio_thumbnail_order가 가장 낮은 상품 이미지
+type ProductImageRow = { url: string; studioThumbnailOrder: number | null };
+
+function pickThumbnail(
+  products: Array<{ productImages: ProductImageRow[] }>,
+): string | null {
+  let thumbnail: string | null = null;
+  let thumbnailOrder = Number.POSITIVE_INFINITY;
+
+  for (const product of products) {
+    for (const image of product.productImages) {
+      if (
+        image.studioThumbnailOrder !== null &&
+        image.studioThumbnailOrder < thumbnailOrder
+      ) {
+        thumbnailOrder = image.studioThumbnailOrder;
+        thumbnail = image.url;
+      }
+    }
+  }
+
+  return thumbnail;
+}
+
 // ====== 내 예약 조회 ======
 export async function list(
   userId: bigint,
@@ -257,6 +283,7 @@ export async function list(
   const data = reservations.map((reservation) => ({
     reservationId: reservation.id,
     studioName: reservation.studioProduct.studio.name,
+    thumbnailUrl: pickThumbnail(reservation.studioProduct.studio.products), // 추가
     conceptName: reservation.studioProduct.name,
     reservationDate: reservation.timeSlot.date,
     reservationTime: reservation.timeSlot.startTime.toISOString().slice(11, 16),

@@ -273,7 +273,19 @@ export const getReservationsByUserId = async (
     },
     include: {
       studioProduct: {
-        include: { studio: true },
+        include: { studio: {
+          include:{
+            products:{
+              select:{
+                productImages:{
+                  where: { studioThumbnailOrder : { not : null } },
+                  orderBy: [{ studioThumbnailOrder: "asc" },{ id:"asc" }],
+                  select: { url:true, studioThumbnailOrder:true }
+                },
+              },
+            },
+          },
+        } },
       },
       timeSlot: true,
       review: { select: { id: true } },
