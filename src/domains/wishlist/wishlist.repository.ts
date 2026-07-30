@@ -9,6 +9,8 @@ export type WishlistPageRow = {
   studioId: bigint;
   studio: {
     name: string;
+    // 평균 평점 — 배치가 하루 1회 산출해 채우는 컬럼 (아직 산출 전이면 null)
+    ratingScore: number | null;
     location: { locationCategory: LocationCategory } | null;
     products: {
       price: number;
@@ -39,6 +41,7 @@ export async function findWishlistPage(
         studio: {
           select: {
             name: true,
+            ratingScore: true,
             location: { select: { locationCategory: true } },
             products: {
               select: {
@@ -56,18 +59,6 @@ export async function findWishlistPage(
   ]);
 
   return { totalCount, wishlists };
-}
-
-export async function findStudioRatings(studioIds: bigint[]) {
-  if (studioIds.length === 0) {
-    return [];
-  }
-
-  return prisma.review.groupBy({
-    by: ["studioId"],
-    where: { studioId: { in: studioIds } },
-    _avg: { rating: true },
-  });
 }
 
 export async function findStudioById(studioId: bigint) {
