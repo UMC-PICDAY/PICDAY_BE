@@ -1,14 +1,24 @@
 import { prisma } from "../../config/prisma.js";
-import type { PaymentMethod } from "../../generated/prisma/client.js";
-import { PaymentStatus } from "../../generated/prisma/client.js";
+import {
+  PaymentStatus,
+  ReservationStatus,
+  type PaymentMethod,
+} from "../../generated/prisma/client.js";
 import type { CreateReservationCommand } from "./reservation.dto.js";
-
-import { type ReservationStatus } from "./reservation.dto.js";
 
 type ReservationReferenceIds = Pick<
   CreateReservationCommand,
   "studioId" | "studioProductId" | "timeSlotId"
 >;
+
+const RESERVATION_COMPLETION_CANDIDATE_BATCH_SIZE = 500;
+
+export class ReservationCancellationConflictError extends Error {
+  constructor(public readonly reservationId: bigint) {
+    super("예약이 더 이상 예약 상태가 아니어서 취소할 수 없습니다.");
+    this.name = "ReservationCancellationConflictError";
+  }
+}
 
 export type CreateReservationRepositoryInput = Omit<
   CreateReservationCommand,
@@ -236,28 +246,102 @@ export const getReservationById = async (reservationId: bigint) => {
       studioProduct: {
         include: { studio: true },
       },
-      review: { select: { id: true }}
+      review: { select: { id: true } },
     },
   });
+};
+
+// 촬영 완료 판정을 위한 예약 후보 조회
+export const findReservedCompletionCandidates = async (
+  cutoffDate: Date,
+  afterId?: bigint,
+) => {
+  return await prisma.reservation.findMany({
+    where: {
+      status: ReservationStatus.RESERVED,
+      ...(afterId !== undefined && { id: { gt: afterId } }),
+      timeSlot: {
+        date: { lte: cutoffDate },
+      },
+    },
+    orderBy: { id: "asc" },
+    take: RESERVATION_COMPLETION_CANDIDATE_BATCH_SIZE,
+    select: {
+      id: true,
+      status: true,
+      timeSlot: {
+        select: {
+          date: true,
+          startTime: true,
+          endTime: true,
+        },
+      },
+    },
+  });
+};
+
+// 예약 상태가 RESERVED인 경우에만 촬영 완료 처리
+export const completeReservationsIfReserved = async (
+  reservationIds: bigint[],
+): Promise<number> => {
+  if (reservationIds.length === 0) {
+    return 0;
+  }
+
+  const result = await prisma.reservation.updateMany({
+    where: {
+      id: { in: reservationIds },
+      status: ReservationStatus.RESERVED,
+    },
+    data: {
+      status: ReservationStatus.COMPLETED,
+    },
+  });
+
+  return result.count;
 };
 
 // 예약 취소
 export const cancelReservation = async (reservationId: bigint) => {
   return await prisma.$transaction(async (tx) => {
-    const reservation = await tx.reservation.update({
+    const reservation = await tx.reservation.findUnique({
       where: { id: reservationId },
-      data: {
-        status: "CANCELLED",
-        canceledAt: new Date(),
+      select: {
+        id: true,
+        timeSlotId: true,
       },
     });
+
+    if (!reservation) {
+      throw new ReservationCancellationConflictError(reservationId);
+    }
+
+    const canceledAt = new Date();
+    const result = await tx.reservation.updateMany({
+      where: {
+        id: reservationId,
+        status: ReservationStatus.RESERVED,
+      },
+      data: {
+        status: ReservationStatus.CANCELLED,
+        canceledAt,
+      },
+    });
+
+    if (result.count !== 1) {
+      throw new ReservationCancellationConflictError(reservationId);
+    }
 
     await tx.timeSlot.update({
       where: { id: reservation.timeSlotId },
       data: { isAvailable: true },
     });
 
-    return reservation;
+    return {
+      id: reservation.id,
+      status: ReservationStatus.CANCELLED,
+      canceledAt,
+    };
   });
 };
 
@@ -273,19 +357,21 @@ export const getReservationsByUserId = async (
     },
     include: {
       studioProduct: {
-        include: { studio: {
-          include:{
-            products:{
-              select:{
-                productImages:{
-                  where: { studioThumbnailOrder : { not : null } },
-                  orderBy: [{ studioThumbnailOrder: "asc" },{ id:"asc" }],
-                  select: { url:true, studioThumbnailOrder:true }
+        include: {
+          studio: {
+            include: {
+              products: {
+                select: {
+                  productImages: {
+                    where: { studioThumbnailOrder: { not: null } },
+                    orderBy: [{ studioThumbnailOrder: "asc" }, { id: "asc" }],
+                    select: { url: true, studioThumbnailOrder: true },
+                  },
                 },
               },
             },
           },
-        } },
+        },
       },
       timeSlot: true,
       review: { select: { id: true } },
