@@ -4,6 +4,7 @@ import {
   ServiceCode,
   ShootingCategory
 } from "../../generated/prisma/enums.js";
+import { toApiId } from "../../common/apiId.js";
 
 // ========================================================
 // ================= 사진관 촬영 목적 비교 조회 =================
@@ -49,14 +50,14 @@ export function parseGetStudioComparePurposesRequest(input: {
 
 // ======== 응답 ========
 const compareStudioSchema = z.object({
-  studioId: z.bigint().transform((id) => id.toString()),
+  studioId: z.bigint().transform(toApiId),
   studioName: z.string(),
 });
 
 const shootingPurposeCompareSchema = z.object({
   shootingCategory: z.enum(ShootingCategory),
   displayName: z.string(),
-  supportedStudioIds: z.array(z.bigint().transform((id) => id.toString())),
+  supportedStudioIds: z.array(z.bigint().transform(toApiId)),
   unsupportedStudios: z.array(compareStudioSchema),
 });
 
@@ -137,7 +138,7 @@ const compareResultProductInformationSchema = z.object({
 });
 
 const compareResultStudioSchema = z.object({
-  studioId: z.bigint().transform((id) => id.toString()),
+  studioId: z.bigint().transform(toApiId),
   studioName: z.string(),
   thumbnailUrl: z.url().nullable(),
   rating: z.number().nonnegative(),

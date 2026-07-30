@@ -232,7 +232,12 @@ function resolveHomeLocationCategory(
   latitude?: number,
   longitude?: number,
 ): LocationCategory {
-  if (latitude == null || longitude == null) {
+  if (
+    latitude === null ||
+    latitude === undefined ||
+    longitude === null ||
+    longitude === undefined
+  ) {
     return LocationCategory.HONGDAE;
   }
 
