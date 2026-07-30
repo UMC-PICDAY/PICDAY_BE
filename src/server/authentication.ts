@@ -18,7 +18,12 @@ const SECURITY_TO_TOKEN_TYPE: Record<string, TokenType> = {
 };
 
 export type AuthenticatedUser = { userId: bigint };
+export type OptionalAuthenticatedUser = { userId?: bigint };
 export type AuthenticatedSignup = { signupInfo: SignupTokenPayload };
+export type AuthenticationResult =
+  | AuthenticatedUser
+  | OptionalAuthenticatedUser
+  | AuthenticatedSignup;
 
 /**
  * tsoa 인증 훅. @Security()가 붙은 라우트 진입 시 자동 호출된다.
@@ -29,7 +34,15 @@ export async function expressAuthentication(
   request: Request,
   securityName: string,
   _scopes?: string[],
-): Promise<AuthenticatedUser | AuthenticatedSignup> {
+): Promise<AuthenticationResult> {
+  if (securityName === "optionalJwt") {
+    if (request.headers.authorization === undefined) {
+      return {};
+    }
+
+    return expressAuthentication(request, "jwt", _scopes);
+  }
+
   const token = extractBearerToken(request.headers.authorization);
   if (!token) {
     throw new AppError("AUTH_4013");
