@@ -714,8 +714,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsStudioController_getStudioDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 studioId: {"in":"path","name":"studioId","required":true,"dataType":"long","validators":{"isLong":{"errorMsg":"사진관 ID는 정수여야 합니다."},"minimum":{"errorMsg":"사진관 ID는 양수여야 합니다.","value":1},"maximum":{"errorMsg":"사진관 ID가 허용 범위를 초과했습니다.","value":9007199254740991}}},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/api/v1/studios/:studioId',
+            authenticateMiddleware([{"optionalJwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StudioController)),
             ...(fetchMiddlewares<RequestHandler>(StudioController.prototype.getStudioDetail)),
 

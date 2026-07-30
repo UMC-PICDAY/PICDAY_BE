@@ -12,7 +12,9 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
+import type { Request as ExpressRequest } from "express";
 import { success, type ApiResponse } from "../../common/response.js";
+import type { OptionalAuthenticatedUser } from "../../server/authentication.js";
 import type {
   GetStudioSlotsSuccessResponseDto,
   StudioDetailResponseDto,
@@ -51,6 +53,7 @@ type AppErrorResponse = {
 
 // 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다 (@Security("jwt") 붙은 라우트 전용)
 type AuthenticatedRequest = { userId: bigint };
+type OptionalAuthenticatedRequest = ExpressRequest & OptionalAuthenticatedUser;
 
 type GetStudioProductsSuccessResponseDto = {
   success: true;
@@ -201,6 +204,7 @@ export class StudioController extends Controller {
    * @maximum studioId 9007199254740991 사진관 ID가 허용 범위를 초과했습니다.
    */
   @Middlewares(validateStudioId)
+  @Security("optionalJwt")
   @Get("{studioId}")
   @SuccessResponse(200, "OK")
   @Response<AppErrorResponse>(400, "STUDIO_4001: 잘못된 요청")
@@ -208,8 +212,12 @@ export class StudioController extends Controller {
   @Response<AppErrorResponse>(500, "COMMON_500: 서버 오류")
   public async getStudioDetail(
     @Path() studioId: number,
+    @Request() request: OptionalAuthenticatedRequest,
   ): Promise<ApiResponse<StudioDetailResponseDto>> {
-    const data = await studioDetailService.getStudioDetail(studioId);
+    const data = await studioDetailService.getStudioDetail(
+      studioId,
+      request.userId,
+    );
 
     return success(data, "사진관 상세 정보 조회에 성공했습니다.");
   }
