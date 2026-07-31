@@ -409,25 +409,19 @@ export async function detail(
 // 대표 썸네일 = studio_thumbnail_order가 가장 낮은 상품 이미지
 type ProductImageRow = { url: string; studioThumbnailOrder: number | null };
 
-function pickThumbnail(
+function pickThumbnails(
   products: Array<{ productImages: ProductImageRow[] }>,
-): string | null {
-  let thumbnail: string | null = null;
-  let thumbnailOrder = Number.POSITIVE_INFINITY;
+  count: number,
+): (string | null)[] {
+  const orderedImages = products
+    .flatMap((product) => product.productImages)
+    .filter((image) => image.studioThumbnailOrder !== null)
+    .sort((a, b) => a.studioThumbnailOrder! - b.studioThumbnailOrder!);
 
-  for (const product of products) {
-    for (const image of product.productImages) {
-      if (
-        image.studioThumbnailOrder !== null &&
-        image.studioThumbnailOrder < thumbnailOrder
-      ) {
-        thumbnailOrder = image.studioThumbnailOrder;
-        thumbnail = image.url;
-      }
-    }
-  }
-
-  return thumbnail;
+  return Array.from(
+    { length: count },
+    (_, index) => orderedImages[index]?.url ?? null,
+  );
 }
 
 // ====== 내 예약 조회 ======
@@ -440,17 +434,25 @@ export async function list(
     status,
   );
 
-  const data = reservations.map((reservation) => ({
+  const data = reservations.map((reservation) => {
+  const [thumbnailUrl, secondThumbnailUrl] = pickThumbnails(
+    reservation.studioProduct.studio.products,
+    2,
+  );
+
+  return {
     reservationId: reservation.id,
     studioName: reservation.studioProduct.studio.name,
-    thumbnailUrl: pickThumbnail(reservation.studioProduct.studio.products), // 추가
+    thumbnailUrl,
+    secondThumbnailUrl,
     conceptName: reservation.studioProduct.name,
     reservationDate: reservation.timeSlot.date,
     reservationTime: reservation.timeSlot.startTime.toISOString().slice(11, 16),
     totalPrice: reservation.totalPrice,
     status: reservation.status,
-    reviewId: reservation.review?.id ?? null, // 이 줄 추가
-  }));
+    reviewId: reservation.review?.id ?? null,
+    };
+  });
 
   return getMyReservationListResponseSchema.parse(data);
 }

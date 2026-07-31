@@ -170,6 +170,7 @@ export const getMyReservationListResponseSchema = z.array(
     reservationId: z.bigint().transform(toApiId),
     studioName: z.string(),
     thumbnailUrl: z.url().nullable(),
+    secondThumbnailUrl: z.url().nullable(),
     conceptName: z.string(),
     reservationDate: z.date().transform((d) => d.toISOString().slice(0, 10)),
     reservationTime: z.string(),
