@@ -1,0 +1,5220 @@
+[
+  {
+    "excelId": "HD-01",
+    "name": "스튜디오하루",
+    "introduction": "자연광을 살린 개인화보·자연스러운 가족 사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 3.7,
+    "reservationCount": 37,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "와우산로 8",
+      "locationCategory": "HONGDAE",
+      "latitude": "37.557307",
+      "longitude": "126.924345",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 11,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "증명사진",
+        "price": 21000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-01_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "개인화보",
+        "price": 77000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-01_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "가족사진",
+        "price": 203000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "21:00"
+        ],
+        "weekend": [
+          "11:00",
+          "21:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 11:00-21:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 2일 전까지\n스튜디오하루 (사업자등록번호 292-34-50678) / 대표번호 02-990-5493",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "HD-02",
+    "name": "선셋포토",
+    "introduction": "감성적인 톤의 개인화보·단정한 인상의 취업사진 전문 스튜디오입니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 3.8,
+    "reservationCount": 25,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "와우산로 179",
+      "locationCategory": "HONGDAE",
+      "latitude": "37.556062",
+      "longitude": "126.923143",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 12,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "취업사진",
+        "price": 35000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-02_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "가족사진",
+        "price": 136000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-02_family_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "개인화보",
+        "price": 157000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-02_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 자정까지\n선셋포토 (사업자등록번호 129-50-80821) / 대표번호 02-951-9599",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (의상 대여 별도 유료 ₩10,000~)\n와이파이: O\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "HD-03",
+    "name": "스튜디오오늘룸",
+    "introduction": "친구들과의 추억을 담은 우정 스냅·감성적인 톤의 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 예약 후 안내 메시지로 준비물과 유의사항을 미리 전달합니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 3.8,
+    "reservationCount": 33,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "와우산로 73",
+      "locationCategory": "HONGDAE",
+      "latitude": "37.554928",
+      "longitude": "126.924395",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 12,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "우정사진",
+        "price": 64000,
+        "shootingCategory": "FRIENDSHIP",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-03_friendship_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "가족사진",
+        "price": 100000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-03_family_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "개인화보",
+        "price": 127000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-03_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 자정까지\n스튜디오오늘룸 (사업자등록번호 368-91-25305) / 대표번호 02-882-4953",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "HD-06",
+    "name": "스튜디오모먼트룸",
+    "introduction": "자연스러운 가족 사진·정확한 색감의 증명사진 전문 스튜디오입니다.",
+    "notice": "성수기(3~5월, 9~11월) 예약이 빠르게 마감되니 서둘러 예약해 주세요.",
+    "ratingScore": 4.2,
+    "reservationCount": 59,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "어울마당로 139",
+      "locationCategory": "HONGDAE",
+      "latitude": "37.555263",
+      "longitude": "126.924655",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 7,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(시크·자연광)",
+        "price": 148000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-06_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-06_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 36000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-06_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 75000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-06_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 58000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 33000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n스튜디오모먼트룸 (사업자등록번호 206-11-11160) / 대표번호 02-583-3826",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "HD-10",
+    "name": "결그레이스튜디오",
+    "introduction": "깔끔한 프로필사진·친구들과의 추억을 담은 우정 스냅 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 3.6,
+    "reservationCount": 40,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "어울마당로 21",
+      "locationCategory": "HONGDAE",
+      "latitude": "37.55653",
+      "longitude": "126.923017",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 11,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(여름한조각·모노톤·시크)",
+        "price": 73000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_personal_portrait_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 90000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 52000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "무드바이",
+        "additionalPrice": 28000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 37000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 자정까지\n결그레이스튜디오 (사업자등록번호 176-71-27977) / 대표번호 02-354-7572",
+      "주차 정보": "O (인근 유료 공영주차장 연계)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n반려동물 동반 촬영 가능(사전 문의 필요).",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "GN-06",
+    "name": "나무볕스튜디오",
+    "introduction": "단정한 비즈니스 프로필·신뢰감 있는 취업사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.9,
+    "reservationCount": 38,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "테헤란로 179",
+      "locationCategory": "GANGNAM",
+      "latitude": "37.498441",
+      "longitude": "127.026124",
+      "nearestStation": "강남역",
+      "walkingMinutes": 8,
+      "stationDetail": [
+        2,
+        13
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-06_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "여권",
+        "price": 30000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "취업",
+        "price": 55000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-06_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 51000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-06_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "우정",
+        "price": 54000,
+        "shootingCategory": "FRIENDSHIP",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-06_friendship_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n나무볕스튜디오 (사업자등록번호 771-24-19259) / 대표번호 02-870-6655",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "GN-01",
+    "name": "포레스트메이스튜디오",
+    "introduction": "친구들과의 추억을 담은 우정 스냅·세대가 함께하는 가족 스냅 전문 스튜디오입니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.6,
+    "reservationCount": 5,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "강남대로 174",
+      "locationCategory": "GANGNAM",
+      "latitude": "37.497222",
+      "longitude": "127.028296",
+      "nearestStation": "강남역",
+      "walkingMinutes": 4,
+      "stationDetail": [
+        2,
+        13
+      ]
+    },
+    "products": [
+      {
+        "name": "가족(장수사진·소가족·리마인드웨딩)",
+        "price": 118000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-01_family_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-01_family_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-01_family_photo_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 35000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 49000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 54000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 연중무휴\n예약 마감: 촬영 1일 전 18시까지\n포레스트메이스튜디오 (사업자등록번호 291-12-91277) / 대표번호 02-603-1002",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (의상 대여 별도 유료 ₩10,000~)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "GN-04",
+    "name": "스튜디오포레스트룸",
+    "introduction": "단정한 인상의 취업사진·깐깐하게 리터칭한 증명사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 자연광과 조명을 함께 활용해 다양한 톤의 결과물을 뽑아냅니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.5,
+    "reservationCount": 31,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "논현로 115",
+      "locationCategory": "GANGNAM",
+      "latitude": "37.499499",
+      "longitude": "127.026305",
+      "nearestStation": "강남역",
+      "walkingMinutes": 12,
+      "stationDetail": [
+        2,
+        13
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 27000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-04_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 32000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 51000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-04_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 76000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-04_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-04_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-04_profile_photo_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "모이헤어메이크업",
+        "additionalPrice": 59000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "무드바이",
+        "additionalPrice": 38000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n스튜디오포레스트룸 (사업자등록번호 438-67-77713) / 대표번호 02-592-3619",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n반려동물 동반 촬영 가능(사전 문의 필요).",
+      "환불 안내": "예약일 기준 1일 전까지 100% 환불, 촬영 당일 취소·노쇼 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "GN-03",
+    "name": "쉼포토",
+    "introduction": "감성적인 톤의 개인화보·따뜻한 분위기의 가족사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.3,
+    "reservationCount": 30,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "논현로 18",
+      "locationCategory": "GANGNAM",
+      "latitude": "37.497048",
+      "longitude": "127.026253",
+      "nearestStation": "강남역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        2,
+        13
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(필름톤)",
+        "price": 130000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-03_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 37000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-03_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-03_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "린메이크업",
+        "additionalPrice": 54000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 당일 오전 9시까지\n쉼포토 (사업자등록번호 276-50-91008) / 대표번호 02-913-6607",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: X\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "GN-09",
+    "name": "리브하우스",
+    "introduction": "깔끔한 프로필사진·깐깐하게 리터칭한 증명사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.3,
+    "reservationCount": 23,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "논현로 56",
+      "locationCategory": "GANGNAM",
+      "latitude": "37.499321",
+      "longitude": "127.028655",
+      "nearestStation": "강남역",
+      "walkingMinutes": 7,
+      "stationDetail": [
+        2,
+        13
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(여름한조각·필름톤·시크)",
+        "price": 128000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_personal_portrait_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 26000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 67000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "무드바이",
+        "additionalPrice": 59000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "21:00"
+        ],
+        "weekend": [
+          "11:00",
+          "21:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 11:00-21:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 2일 전까지\n리브하우스 (사업자등록번호 590-88-94920) / 대표번호 02-544-5639",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "SS-02",
+    "name": "스튜디오플랫",
+    "introduction": "단정한 인상의 취업사진·자연스러운 가족 사진 전문 스튜디오입니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 5.0,
+    "reservationCount": 28,
+    "location": {
+      "mainAddress": "서울 성동구",
+      "subAddress": "성수이로 161",
+      "locationCategory": "SEONGSU",
+      "latitude": "37.546325",
+      "longitude": "127.057544",
+      "nearestStation": "성수역",
+      "walkingMinutes": 11,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-02_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 30000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 50000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-02_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 85000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-02_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 36000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 18시까지\n스튜디오플랫 (사업자등록번호 943-17-14953) / 대표번호 02-790-4611",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "예약일 기준 1일 전까지 100% 환불, 촬영 당일 취소·노쇼 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "SS-04",
+    "name": "오늘소요스튜디오",
+    "introduction": "전문적인 인상의 프로필사진·트렌디한 SNS 프로필용 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.9,
+    "reservationCount": 34,
+    "location": {
+      "mainAddress": "서울 성동구",
+      "subAddress": "성수이로 60",
+      "locationCategory": "SEONGSU",
+      "latitude": "37.544727",
+      "longitude": "127.05459",
+      "nearestStation": "성수역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(굿나잇버니)",
+        "price": 60000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-04_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-04_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 60000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-04_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n오늘소요스튜디오 (사업자등록번호 647-96-77392) / 대표번호 02-430-6199",
+      "주차 정보": "O (인근 유료 공영주차장 연계)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "SS-07",
+    "name": "스튜디오결룸",
+    "introduction": "정확한 색감의 증명사진·발랄한 우정사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 소품과 세트를 주기적으로 교체해 매번 다른 느낌의 사진을 남길 수 있습니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.8,
+    "reservationCount": 14,
+    "location": {
+      "mainAddress": "서울 성동구",
+      "subAddress": "성수이로 21",
+      "locationCategory": "SEONGSU",
+      "latitude": "37.545936",
+      "longitude": "127.055252",
+      "nearestStation": "성수역",
+      "walkingMinutes": 3,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 20000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-07_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 47000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-07_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-07_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "모이헤어메이크업",
+        "additionalPrice": 55000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 18시까지\n스튜디오결룸 (사업자등록번호 850-27-63792) / 대표번호 02-431-3684",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (의상 대여 별도 유료 ₩10,000~)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "SS-05",
+    "name": "스튜디오아워스튜디오",
+    "introduction": "경쾌한 톤의 우정사진·단정한 비즈니스 프로필 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.4,
+    "reservationCount": 49,
+    "location": {
+      "mainAddress": "서울 성동구",
+      "subAddress": "아차산로 164",
+      "locationCategory": "SEONGSU",
+      "latitude": "37.543643",
+      "longitude": "127.056519",
+      "nearestStation": "성수역",
+      "walkingMinutes": 12,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 36000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-05_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 41000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 50000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-05_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 64000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-05_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 45000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "코코헤어",
+        "additionalPrice": 32000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "선셋헤어",
+        "additionalPrice": 34000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 당일 오전 9시까지\n스튜디오아워스튜디오 (사업자등록번호 321-47-27708) / 대표번호 02-354-1809",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n반려동물 동반 촬영 가능(사전 문의 필요).",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "SS-08",
+    "name": "필름포토",
+    "introduction": "발랄한 우정사진·깔끔한 프로필사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 자연광과 조명을 함께 활용해 다양한 톤의 결과물을 뽑아냅니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.0,
+    "reservationCount": 24,
+    "location": {
+      "mainAddress": "서울 성동구",
+      "subAddress": "성수이로 178",
+      "locationCategory": "SEONGSU",
+      "latitude": "37.545527",
+      "longitude": "127.054231",
+      "nearestStation": "성수역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 20000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-08_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "여권",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "취업",
+        "price": 50000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-08_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 73000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-08_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "우정",
+        "price": 79000,
+        "shootingCategory": "FRIENDSHIP",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SS-08_friendship_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "21:00"
+        ],
+        "weekend": [
+          "11:00",
+          "21:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 11:00-21:00\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n필름포토 (사업자등록번호 317-67-31387) / 대표번호 02-916-5243",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "YN-01",
+    "name": "스튜디오라이트",
+    "introduction": "경쾌한 톤의 우정사진·깔끔한 취업 준비용 사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.9,
+    "reservationCount": 50,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "성미산로 53",
+      "locationCategory": "YEONNAM",
+      "latitude": "37.565124",
+      "longitude": "126.923379",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 6,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 22000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-01_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "여권",
+        "price": 27000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "취업",
+        "price": 54000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-01_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 87000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-01_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-01_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "우정",
+        "price": 67000,
+        "shootingCategory": "FRIENDSHIP",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-01_friendship_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 연중무휴\n예약 마감: 촬영 당일 오전 9시까지\n스튜디오라이트 (사업자등록번호 341-51-43659) / 대표번호 02-835-9081",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "YN-02",
+    "name": "웜픽처스",
+    "introduction": "따뜻한 분위기의 가족사진·신뢰감 있는 취업사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 소품과 세트를 주기적으로 교체해 매번 다른 느낌의 사진을 남길 수 있습니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.9,
+    "reservationCount": 3,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "동교로 23",
+      "locationCategory": "YEONNAM",
+      "latitude": "37.56685",
+      "longitude": "126.92568",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 4,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-02_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 30000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 35000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-02_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 74000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-02_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-02_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-02_profile_photo_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 48000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "린메이크업",
+        "additionalPrice": 46000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 58000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n웜픽처스 (사업자등록번호 693-45-73688) / 대표번호 02-698-3897",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "YN-08",
+    "name": "플랫레인스튜디오",
+    "introduction": "자연광을 살린 개인화보·따뜻한 분위기의 가족사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 소품과 세트를 주기적으로 교체해 매번 다른 느낌의 사진을 남길 수 있습니다.",
+    "notice": "성수기(3~5월, 9~11월) 예약이 빠르게 마감되니 서둘러 예약해 주세요.",
+    "ratingScore": 4.9,
+    "reservationCount": 37,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "동교로 91",
+      "locationCategory": "YEONNAM",
+      "latitude": "37.564805",
+      "longitude": "126.92393",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(굿나잇버니·필름톤)",
+        "price": 87000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-08_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-08_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-08_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 65000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-08_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 25000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n플랫레인스튜디오 (사업자등록번호 948-14-65882) / 대표번호 02-872-7613",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "YN-07",
+    "name": "블랑포토",
+    "introduction": "따뜻한 분위기의 가족사진·단정한 증명사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.9,
+    "reservationCount": 28,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "연남로 85",
+      "locationCategory": "YEONNAM",
+      "latitude": "37.566218",
+      "longitude": "126.924521",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 8,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(모노톤·자연광)",
+        "price": 150000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-07_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-07_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 24000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-07_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-07_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "린메이크업",
+        "additionalPrice": 31000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 90,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 자정까지\n블랑포토 (사업자등록번호 791-36-97000) / 대표번호 02-976-7227",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "YN-10",
+    "name": "브런치포토연남",
+    "introduction": "정확한 색감의 증명사진·깔끔한 취업 준비용 사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.8,
+    "reservationCount": 47,
+    "location": {
+      "mainAddress": "서울 마포구",
+      "subAddress": "연남로 30",
+      "locationCategory": "YEONNAM",
+      "latitude": "37.567686",
+      "longitude": "126.92473",
+      "nearestStation": "홍대입구역",
+      "walkingMinutes": 7,
+      "stationDetail": [
+        2,
+        12,
+        11
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 33000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-10_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 38000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 52000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-10_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-10_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "무드바이",
+        "additionalPrice": 59000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "리안뷰티",
+        "additionalPrice": 44000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "선셋헤어",
+        "additionalPrice": 34000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "21:00"
+        ],
+        "weekend": [
+          "11:00",
+          "21:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 11:00-21:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n브런치포토연남 (사업자등록번호 426-69-29377) / 대표번호 02-977-5989",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (의상 대여 별도 유료 ₩10,000~)\n와이파이: X\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "KD-09",
+    "name": "결포토건대",
+    "introduction": "깐깐하게 리터칭한 증명사진·신뢰감 있는 취업사진 전문 스튜디오입니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.4,
+    "reservationCount": 21,
+    "location": {
+      "mainAddress": "서울 광진구",
+      "subAddress": "능동로 41",
+      "locationCategory": "KONDAE",
+      "latitude": "37.540185",
+      "longitude": "127.071041",
+      "nearestStation": "건대입구역",
+      "walkingMinutes": 10,
+      "stationDetail": [
+        2,
+        7
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(자연광·시크)",
+        "price": 151000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-09_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-09_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 23000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-09_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-09_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "선셋헤어",
+        "additionalPrice": 57000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 28000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "무드바이",
+        "additionalPrice": 50000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 18시까지\n결포토건대 (사업자등록번호 213-92-26963) / 대표번호 02-549-3218",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "KD-10",
+    "name": "선셋레인스튜디오",
+    "introduction": "세대가 함께하는 가족 스냅·친구들과의 추억을 담은 우정 스냅 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.3,
+    "reservationCount": 35,
+    "location": {
+      "mainAddress": "서울 광진구",
+      "subAddress": "아차산로 169",
+      "locationCategory": "KONDAE",
+      "latitude": "37.539014",
+      "longitude": "127.071199",
+      "nearestStation": "건대입구역",
+      "walkingMinutes": 3,
+      "stationDetail": [
+        2,
+        7
+      ]
+    },
+    "products": [
+      {
+        "name": "가족(반려동물동반·장수사진·소가족·환갑칠순)",
+        "price": 169000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_4.jpg",
+            "order": 4,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 연중무휴\n예약 마감: 촬영 당일 오전 9시까지\n선셋레인스튜디오 (사업자등록번호 358-74-53161) / 대표번호 02-351-4162",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "예약일 기준 1일 전까지 100% 환불, 촬영 당일 취소·노쇼 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "KD-03",
+    "name": "라이트포토",
+    "introduction": "트렌디한 SNS 프로필용 개인화보·깐깐하게 리터칭한 증명사진 전문 스튜디오입니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.2,
+    "reservationCount": 44,
+    "location": {
+      "mainAddress": "서울 광진구",
+      "subAddress": "동일로 44",
+      "locationCategory": "KONDAE",
+      "latitude": "37.53882",
+      "longitude": "127.069261",
+      "nearestStation": "건대입구역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        2,
+        7
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(모노톤·쿨톤)",
+        "price": 146000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-03_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-03_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 33000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-03_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-03_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "모이헤어메이크업",
+        "additionalPrice": 42000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 55000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "선셋헤어",
+        "additionalPrice": 53000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 18시까지\n라이트포토 (사업자등록번호 416-79-86694) / 대표번호 02-479-3025",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "KD-05",
+    "name": "스튜디오니트",
+    "introduction": "깔끔한 취업 준비용 사진·세대가 함께하는 가족 스냅 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 촬영 전 스타일링 상담을 진행해 원하는 분위기를 함께 조율합니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.2,
+    "reservationCount": 54,
+    "location": {
+      "mainAddress": "서울 광진구",
+      "subAddress": "동일로 89",
+      "locationCategory": "KONDAE",
+      "latitude": "37.538831",
+      "longitude": "127.068333",
+      "nearestStation": "건대입구역",
+      "walkingMinutes": 4,
+      "stationDetail": [
+        2,
+        7
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 27000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-05_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 32000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 46000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-05_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 72000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-05_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "코코헤어",
+        "additionalPrice": 59000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 자정까지\n스튜디오니트 (사업자등록번호 118-51-22631) / 대표번호 02-517-4170",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "KD-06",
+    "name": "소풍선셋스튜디오",
+    "introduction": "전문적인 인상의 프로필사진·경쾌한 톤의 우정사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.0,
+    "reservationCount": 0,
+    "location": {
+      "mainAddress": "서울 광진구",
+      "subAddress": "동일로 33",
+      "locationCategory": "KONDAE",
+      "latitude": "37.539348",
+      "longitude": "127.069545",
+      "nearestStation": "건대입구역",
+      "walkingMinutes": 8,
+      "stationDetail": [
+        2,
+        7
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(필름톤)",
+        "price": 144000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-06_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-06_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 93000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-06_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 50000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n소풍선셋스튜디오 (사업자등록번호 301-91-19252) / 대표번호 02-428-9687",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "예약일 기준 1일 전까지 100% 환불, 촬영 당일 취소·노쇼 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "SC-03",
+    "name": "그레이스튜디오",
+    "introduction": "단정한 비즈니스 프로필·따뜻한 분위기의 가족사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 자연광과 조명을 함께 활용해 다양한 톤의 결과물을 뽑아냅니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.8,
+    "reservationCount": 32,
+    "location": {
+      "mainAddress": "서울 서대문구",
+      "subAddress": "연세로 171",
+      "locationCategory": "SINCHON",
+      "latitude": "37.558169",
+      "longitude": "126.936242",
+      "nearestStation": "신촌역",
+      "walkingMinutes": 8,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(파스텔·웜톤)",
+        "price": 80000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-03_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-03_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-03_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 87000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-03_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 2일 전까지\n그레이스튜디오 (사업자등록번호 177-70-98838) / 대표번호 02-980-3033",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n반려동물 동반 촬영 가능(사전 문의 필요).",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "SC-02",
+    "name": "소풍필름",
+    "introduction": "따뜻한 분위기의 가족사진·깐깐하게 리터칭한 증명사진 전문 스튜디오입니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.8,
+    "reservationCount": 4,
+    "location": {
+      "mainAddress": "서울 서대문구",
+      "subAddress": "연세로 105",
+      "locationCategory": "SINCHON",
+      "latitude": "37.561083",
+      "longitude": "126.937061",
+      "nearestStation": "신촌역",
+      "walkingMinutes": 5,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 29000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-02_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 34000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 50000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-02_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 67000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-02_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-02_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-02_profile_photo_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 29000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 48000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n소풍필름 (사업자등록번호 795-32-14184) / 대표번호 02-648-7645",
+      "주차 정보": "O (인근 유료 공영주차장 연계)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "SC-06",
+    "name": "포토그래피그레이스튜디오",
+    "introduction": "감성적인 톤의 개인화보·발랄한 우정사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.5,
+    "reservationCount": 33,
+    "location": {
+      "mainAddress": "서울 서대문구",
+      "subAddress": "신촌로 48",
+      "locationCategory": "SINCHON",
+      "latitude": "37.558306",
+      "longitude": "126.935258",
+      "nearestStation": "신촌역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(빈티지)",
+        "price": 96000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-06_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 29000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-06_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 61000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-06_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 34000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "선셋헤어",
+        "additionalPrice": 43000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 자정까지\n포토그래피그레이스튜디오 (사업자등록번호 312-98-64965) / 대표번호 02-385-4151",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (의상 대여 별도 유료 ₩10,000~)\n와이파이: O\n반려동물 동반 촬영 가능(사전 문의 필요).",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "SC-01",
+    "name": "온도블랑스튜디오",
+    "introduction": "단정한 인상의 취업사진·트렌디한 SNS 프로필용 개인화보 전문 스튜디오입니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.3,
+    "reservationCount": 44,
+    "location": {
+      "mainAddress": "서울 서대문구",
+      "subAddress": "명물길 46",
+      "locationCategory": "SINCHON",
+      "latitude": "37.56099",
+      "longitude": "126.935348",
+      "nearestStation": "신촌역",
+      "walkingMinutes": 6,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(굿나잇버니·로맨틱돌·파스텔)",
+        "price": 71000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_personal_portrait_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 65000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "리안뷰티",
+        "additionalPrice": 26000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 59000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 46000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n온도블랑스튜디오 (사업자등록번호 942-15-14990) / 대표번호 02-549-7110",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "SC-04",
+    "name": "그레이픽처스",
+    "introduction": "감성적인 톤의 개인화보·전문적인 인상의 프로필사진 전문 스튜디오입니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.3,
+    "reservationCount": 31,
+    "location": {
+      "mainAddress": "서울 서대문구",
+      "subAddress": "명물길 140",
+      "locationCategory": "SINCHON",
+      "latitude": "37.56123",
+      "longitude": "126.938484",
+      "nearestStation": "신촌역",
+      "walkingMinutes": 10,
+      "stationDetail": [
+        2
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(생화·필름톤·모노톤)",
+        "price": 72000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_personal_portrait_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 69000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "코코헤어",
+        "additionalPrice": 58000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 31000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 45000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 90,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n그레이픽처스 (사업자등록번호 974-32-26938) / 대표번호 02-716-5690",
+      "주차 정보": "O (인근 유료 공영주차장 연계)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "JS-02",
+    "name": "아워아워스튜디오",
+    "introduction": "감성적인 톤의 개인화보·신뢰감 있는 취업사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 촬영 전 스타일링 상담을 진행해 원하는 분위기를 함께 조율합니다.",
+    "notice": "성수기(3~5월, 9~11월) 예약이 빠르게 마감되니 서둘러 예약해 주세요.",
+    "ratingScore": 4.8,
+    "reservationCount": 23,
+    "location": {
+      "mainAddress": "서울 송파구",
+      "subAddress": "잠실로 92",
+      "locationCategory": "JAMSIL",
+      "latitude": "37.513989",
+      "longitude": "127.098419",
+      "nearestStation": "잠실역",
+      "walkingMinutes": 6,
+      "stationDetail": [
+        2,
+        8
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(파스텔)",
+        "price": 150000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-02_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-02_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 69000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-02_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 54000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "린메이크업",
+        "additionalPrice": 39000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 90,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 연중무휴\n예약 마감: 촬영 1일 전 자정까지\n아워아워스튜디오 (사업자등록번호 392-39-81458) / 대표번호 02-407-6919",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n인화·액자 추가 옵션은 현장에서 별도 안내.",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "JS-10",
+    "name": "달빛플랫스튜디오",
+    "introduction": "단정한 인상의 취업사진·트렌디한 SNS 프로필용 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.7,
+    "reservationCount": 15,
+    "location": {
+      "mainAddress": "서울 송파구",
+      "subAddress": "잠실로 85",
+      "locationCategory": "JAMSIL",
+      "latitude": "37.514051",
+      "longitude": "127.100134",
+      "nearestStation": "잠실역",
+      "walkingMinutes": 12,
+      "stationDetail": [
+        2,
+        8
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(모노톤)",
+        "price": 95000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-10_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-10_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-10_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 2일 전까지\n달빛플랫스튜디오 (사업자등록번호 867-18-56234) / 대표번호 02-872-8051",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "JS-05",
+    "name": "메이무드",
+    "introduction": "깔끔한 취업 준비용 사진·전문적인 인상의 프로필사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 예약 후 안내 메시지로 준비물과 유의사항을 미리 전달합니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.4,
+    "reservationCount": 34,
+    "location": {
+      "mainAddress": "서울 송파구",
+      "subAddress": "잠실로 105",
+      "locationCategory": "JAMSIL",
+      "latitude": "37.513038",
+      "longitude": "127.101086",
+      "nearestStation": "잠실역",
+      "walkingMinutes": 11,
+      "stationDetail": [
+        2,
+        8
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 22000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-05_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "여권",
+        "price": 27000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "취업",
+        "price": 59000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-05_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 79000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-05_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-05_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-05_profile_photo_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 자정까지\n메이무드 (사업자등록번호 270-10-29667) / 대표번호 02-476-3327",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "JS-07",
+    "name": "리브픽처스",
+    "introduction": "감성적인 톤의 개인화보·세대가 함께하는 가족 스냅 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.4,
+    "reservationCount": 14,
+    "location": {
+      "mainAddress": "서울 송파구",
+      "subAddress": "올림픽로 148",
+      "locationCategory": "JAMSIL",
+      "latitude": "37.514048",
+      "longitude": "127.098464",
+      "nearestStation": "잠실역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        2,
+        8
+      ]
+    },
+    "products": [
+      {
+        "name": "가족(반려동물동반·장수사진·리마인드웨딩·대가족)",
+        "price": 124000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_4.jpg",
+            "order": 4,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 58000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 90,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 연중무휴\n예약 마감: 촬영 당일 오전 9시까지\n리브픽처스 (사업자등록번호 214-78-33016) / 대표번호 02-703-8386",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: X\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "JS-03",
+    "name": "스튜디오브런치룸",
+    "introduction": "자연광을 살린 개인화보·정확한 색감의 증명사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 재방문 고객 비중이 높은 편으로, 편안한 촬영 분위기를 강점으로 내세웁니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.3,
+    "reservationCount": 11,
+    "location": {
+      "mainAddress": "서울 송파구",
+      "subAddress": "석촌호수로 157",
+      "locationCategory": "JAMSIL",
+      "latitude": "37.511965",
+      "longitude": "127.099545",
+      "nearestStation": "잠실역",
+      "walkingMinutes": 12,
+      "stationDetail": [
+        2,
+        8
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(필름톤·웜톤·생화)",
+        "price": 70000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_personal_portrait_3.jpg",
+            "order": 3,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 22000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "린메이크업",
+        "additionalPrice": 51000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "코코헤어",
+        "additionalPrice": 35000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "21:00"
+        ],
+        "weekend": [
+          "11:00",
+          "21:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 11:00-21:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n스튜디오브런치룸 (사업자등록번호 244-40-24818) / 대표번호 02-926-5748",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "AG-05",
+    "name": "나무온도스튜디오",
+    "introduction": "따뜻한 분위기의 가족사진·신뢰감 있는 취업사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 촬영 전 스타일링 상담을 진행해 원하는 분위기를 함께 조율합니다.",
+    "notice": "성수기(3~5월, 9~11월) 예약이 빠르게 마감되니 서둘러 예약해 주세요.",
+    "ratingScore": 4.9,
+    "reservationCount": 46,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "도산대로 152",
+      "locationCategory": "APGUJEONG",
+      "latitude": "37.5265",
+      "longitude": "127.028066",
+      "nearestStation": "압구정역",
+      "walkingMinutes": 4,
+      "stationDetail": [
+        3
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 21000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-05_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 26000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 62000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-05_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-05_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-05_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 50000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 2일 전까지\n나무온도스튜디오 (사업자등록번호 140-18-98275) / 대표번호 02-609-5426",
+      "주차 정보": "O (인근 유료 공영주차장 연계)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n반려동물 동반 촬영 가능(사전 문의 필요).",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "AG-06",
+    "name": "스튜디오하우스",
+    "introduction": "단정한 비즈니스 프로필·트렌디한 SNS 프로필용 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 예약 후 안내 메시지로 준비물과 유의사항을 미리 전달합니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.8,
+    "reservationCount": 2,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "선릉로 162",
+      "locationCategory": "APGUJEONG",
+      "latitude": "37.527382",
+      "longitude": "127.029127",
+      "nearestStation": "압구정역",
+      "walkingMinutes": 8,
+      "stationDetail": [
+        3
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(필름톤·미니멀)",
+        "price": 75000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-06_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-06_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-06_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 89000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-06_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n스튜디오하우스 (사업자등록번호 437-73-33397) / 대표번호 02-612-7370",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "AG-10",
+    "name": "브런치리브스튜디오",
+    "introduction": "트렌디한 SNS 프로필용 개인화보·신뢰감 있는 취업사진 전문 스튜디오입니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.8,
+    "reservationCount": 24,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "도산대로 123",
+      "locationCategory": "APGUJEONG",
+      "latitude": "37.52661",
+      "longitude": "127.028245",
+      "nearestStation": "압구정역",
+      "walkingMinutes": 12,
+      "stationDetail": [
+        3
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(웜톤)",
+        "price": 74000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-10_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 32000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-10_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-10_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "리안뷰티",
+        "additionalPrice": 42000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 41000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 90,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 당일 오전 9시까지\n브런치리브스튜디오 (사업자등록번호 876-96-79067) / 대표번호 02-437-9095",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: X\n미성년자 단독 예약 시 보호자 동의 필요.",
+      "환불 안내": "예약일 기준 1일 전까지 100% 환불, 촬영 당일 취소·노쇼 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "AG-09",
+    "name": "스튜디오소요룸",
+    "introduction": "신뢰감 있는 취업사진·깔끔한 프로필사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.6,
+    "reservationCount": 33,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "압구정로 154",
+      "locationCategory": "APGUJEONG",
+      "latitude": "37.527575",
+      "longitude": "127.029312",
+      "nearestStation": "압구정역",
+      "walkingMinutes": 7,
+      "stationDetail": [
+        3
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(생화)",
+        "price": 72000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-09_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-09_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 85000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-09_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 37000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n스튜디오소요룸 (사업자등록번호 770-55-32213) / 대표번호 02-588-1359",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "AG-04",
+    "name": "니트포토",
+    "introduction": "깔끔한 취업 준비용 사진·감성적인 톤의 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 촬영 전 스타일링 상담을 진행해 원하는 분위기를 함께 조율합니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.6,
+    "reservationCount": 27,
+    "location": {
+      "mainAddress": "서울 강남구",
+      "subAddress": "도산대로 98",
+      "locationCategory": "APGUJEONG",
+      "latitude": "37.527031",
+      "longitude": "127.029111",
+      "nearestStation": "압구정역",
+      "walkingMinutes": 5,
+      "stationDetail": [
+        3
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(파스텔·플라워베일)",
+        "price": 124000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-04_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-04_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "증명",
+        "price": 35000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-04_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-04_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 2일 전까지\n니트포토 (사업자등록번호 847-90-64609) / 대표번호 02-737-1401",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "촬영 2일 전까지 100% 환불, 1일 전 취소 시 50% 환불, 당일 취소·노쇼 환불 불가"
+    }
+  },
+  {
+    "excelId": "HH-06",
+    "name": "브런치",
+    "introduction": "신뢰감 있는 취업사진·트렌디한 SNS 프로필용 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.7,
+    "reservationCount": 41,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "혜화로 21",
+      "locationCategory": "HYEHWA",
+      "latitude": "37.581348",
+      "longitude": "127.002551",
+      "nearestStation": "혜화역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        4
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(쿨톤·미니멀)",
+        "price": 116000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-06_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-06_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 37000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-06_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-06_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "리안뷰티",
+        "additionalPrice": 32000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "21:00"
+        ],
+        "weekend": [
+          "11:00",
+          "21:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 11:00-21:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 1일 전 18시까지\n브런치 (사업자등록번호 286-73-59054) / 대표번호 02-915-8113",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "HH-04",
+    "name": "스튜디오메이스튜디오",
+    "introduction": "단정한 인상의 취업사진·따뜻한 분위기의 가족사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.7,
+    "reservationCount": 49,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "대학로 180",
+      "locationCategory": "HYEHWA",
+      "latitude": "37.583546",
+      "longitude": "127.000352",
+      "nearestStation": "혜화역",
+      "walkingMinutes": 7,
+      "stationDetail": [
+        4
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 33000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-04_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 38000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 45000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-04_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-04_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-04_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 54000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n스튜디오메이스튜디오 (사업자등록번호 530-26-72124) / 대표번호 02-466-2158",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "예약일 기준 1일 전까지 100% 환불, 촬영 당일 취소·노쇼 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "HH-07",
+    "name": "웜포토혜화",
+    "introduction": "친구들과의 추억을 담은 우정 스냅·자연광을 살린 개인화보 전문 스튜디오입니다.",
+    "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
+    "ratingScore": 4.7,
+    "reservationCount": 32,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "혜화로 178",
+      "locationCategory": "HYEHWA",
+      "latitude": "37.580295",
+      "longitude": "127.002818",
+      "nearestStation": "혜화역",
+      "walkingMinutes": 8,
+      "stationDetail": [
+        4
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(쿨톤)",
+        "price": 108000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-07_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 31000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-07_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-07_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "리안뷰티",
+        "additionalPrice": 48000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 32000,
+        "displayOrder": 2
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 당일 오전 9시까지\n웜포토혜화 (사업자등록번호 898-76-30292) / 대표번호 02-626-9455",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "HH-10",
+    "name": "스튜디오포토",
+    "introduction": "경쾌한 톤의 우정사진·정확한 색감의 증명사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 재방문 고객 비중이 높은 편으로, 편안한 촬영 분위기를 강점으로 내세웁니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.6,
+    "reservationCount": 16,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "대학로 10",
+      "locationCategory": "HYEHWA",
+      "latitude": "37.581801",
+      "longitude": "127.00357",
+      "nearestStation": "혜화역",
+      "walkingMinutes": 8,
+      "stationDetail": [
+        4
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(필름톤·자연광)",
+        "price": 72000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-10_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-10_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 24000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-10_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-10_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 49000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "린메이크업",
+        "additionalPrice": 55000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 34000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "21:00"
+        ],
+        "weekend": [
+          "11:00",
+          "21:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 11:00-21:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 1일 전 18시까지\n스튜디오포토 (사업자등록번호 423-85-17726) / 대표번호 02-749-9282",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "HH-03",
+    "name": "블랑픽처스",
+    "introduction": "경쾌한 톤의 우정사진·전문적인 인상의 프로필사진 전문 스튜디오입니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.3,
+    "reservationCount": 7,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "창경궁로 23",
+      "locationCategory": "HYEHWA",
+      "latitude": "37.582915",
+      "longitude": "127.001163",
+      "nearestStation": "혜화역",
+      "walkingMinutes": 4,
+      "stationDetail": [
+        4
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(파스텔)",
+        "price": 97000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-03_personal_portrait.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-03_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 78000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-03_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 41000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "베이지룸",
+        "additionalPrice": 49000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "리안뷰티",
+        "additionalPrice": 47000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 명절 당일 휴무\n예약 마감: 촬영 2일 전까지\n블랑픽처스 (사업자등록번호 179-84-48811) / 대표번호 02-329-8101",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "JR-04",
+    "name": "스튜디오그레이룸",
+    "introduction": "단정한 비즈니스 프로필·발랄한 우정사진 전문 스튜디오입니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.9,
+    "reservationCount": 22,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "인사동길 171",
+      "locationCategory": "JONGNO",
+      "latitude": "37.571184",
+      "longitude": "126.990414",
+      "nearestStation": "종로3가역",
+      "walkingMinutes": 10,
+      "stationDetail": [
+        1,
+        3,
+        5
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(여름한조각·자연광)",
+        "price": 85000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-04_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-04_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-04_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 66000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-04_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "PARKING",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "코코헤어",
+        "additionalPrice": 38000,
+        "displayOrder": 1
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "09:00",
+          "19:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 평일 10:00-20:00 / 주말 09:00-19:00\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 1일 전 자정까지\n스튜디오그레이룸 (사업자등록번호 650-16-96785) / 대표번호 02-382-3676",
+      "주차 정보": "O (건물 내 무료 주차 1시간)",
+      "촬영 안내": "의상: O (기본 의상 무료 대여, 소품 별도)\n와이파이: O\n촬영 소요 시간 약 20~30분, 보정본 전달까지 3~5일 소요.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "JR-01",
+    "name": "스튜디오스튜디오룸",
+    "introduction": "깔끔한 취업 준비용 사진·트렌디한 SNS 프로필용 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 재방문 고객 비중이 높은 편으로, 편안한 촬영 분위기를 강점으로 내세웁니다.",
+    "notice": "성수기(3~5월, 9~11월) 예약이 빠르게 마감되니 서둘러 예약해 주세요.",
+    "ratingScore": 4.8,
+    "reservationCount": 43,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "종로 164",
+      "locationCategory": "JONGNO",
+      "latitude": "37.571581",
+      "longitude": "126.991641",
+      "nearestStation": "종로3가역",
+      "walkingMinutes": 3,
+      "stationDetail": [
+        1,
+        3,
+        5
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(시크·빈티지)",
+        "price": 69000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-01_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-01_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-01_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-01_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "블룸메이크업",
+        "additionalPrice": 56000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "리안뷰티",
+        "additionalPrice": 50000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "루아뷰티",
+        "additionalPrice": 35000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 매주 월요일 휴무\n예약 마감: 촬영 2일 전까지\n스튜디오스튜디오룸 (사업자등록번호 550-46-38609) / 대표번호 02-964-2456",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: X\n반려동물 동반 촬영 가능(사전 문의 필요).",
+      "환불 안내": "촬영 당일 취소 및 일정 변경 불가. 부득이한 경우 사진관 직접 문의"
+    }
+  },
+  {
+    "excelId": "JR-07",
+    "name": "소풍필름스튜디오",
+    "introduction": "자연스러운 가족 사진·신뢰감 있는 취업사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
+    "notice": "촬영 10분 전 도착을 권장합니다. 지각 시 촬영 시간이 단축될 수 있어요.",
+    "ratingScore": 4.6,
+    "reservationCount": 56,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "종로 122",
+      "locationCategory": "JONGNO",
+      "latitude": "37.571516",
+      "longitude": "126.990742",
+      "nearestStation": "종로3가역",
+      "walkingMinutes": 4,
+      "stationDetail": [
+        1,
+        3,
+        5
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 25000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-07_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "여권",
+        "price": 30000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "취업",
+        "price": 37000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-07_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "프로필",
+        "price": 58000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-07_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": true
+      }
+    ],
+    "services": [
+      "HAIR_MAKEUP",
+      "COSTUME",
+      "WIFI"
+    ],
+    "hairMakeupDetails": [
+      {
+        "partnerName": "무드바이",
+        "additionalPrice": 33000,
+        "displayOrder": 1
+      },
+      {
+        "partnerName": "소프트터치",
+        "additionalPrice": 55000,
+        "displayOrder": 2
+      },
+      {
+        "partnerName": "선셋헤어",
+        "additionalPrice": 56000,
+        "displayOrder": 3
+      }
+    ],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "12:00",
+          "20:00"
+        ],
+        "weekend": [
+          "12:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": 2
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 12:00-20:00\n휴무일: 매주 화요일 휴무\n예약 마감: 촬영 당일 오전 9시까지\n소풍필름스튜디오 (사업자등록번호 430-40-63274) / 대표번호 02-429-2721",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: O (의상 대여 별도 유료 ₩10,000~)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "예약일 기준 1일 전까지 100% 환불, 촬영 당일 취소·노쇼 시 환불 불가"
+    }
+  },
+  {
+    "excelId": "JR-09",
+    "name": "스튜디오아워",
+    "introduction": "깐깐하게 리터칭한 증명사진·트렌디한 SNS 프로필용 개인화보 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 보정은 전담 작가가 직접 진행해 일관된 톤을 유지합니다.",
+    "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
+    "ratingScore": 4.6,
+    "reservationCount": 54,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "종로 143",
+      "locationCategory": "JONGNO",
+      "latitude": "37.569017",
+      "longitude": "126.991667",
+      "nearestStation": "종로3가역",
+      "walkingMinutes": 9,
+      "stationDetail": [
+        1,
+        3,
+        5
+      ]
+    },
+    "products": [
+      {
+        "name": "개인화보(쿨톤·웜톤)",
+        "price": 107000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-09_personal_portrait_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-09_personal_portrait_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "증명",
+        "price": 24000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-09_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-09_profile_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "weekend": [
+          "11:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 60,
+      "closedWeekday": 1
+    },
+    "info": {
+      "운영 정보": "영업시간: 화-일 11:00-20:00 (월 휴무)\n휴무일: 연중무휴\n예약 마감: 촬영 1일 전 자정까지\n스튜디오아워 (사업자등록번호 871-58-34883) / 대표번호 02-727-9830",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: X\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "예약 후 24시간 이내 취소 시 전액 환불. 이후 촬영일 1일 전까지 80% 환불, 당일 환불 불가"
+    }
+  },
+  {
+    "excelId": "JR-10",
+    "name": "브런치포토",
+    "introduction": "깔끔한 취업 준비용 사진·친구들과의 추억을 담은 우정 스냅 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 자연광과 조명을 함께 활용해 다양한 톤의 결과물을 뽑아냅니다.",
+    "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
+    "ratingScore": 4.4,
+    "reservationCount": 3,
+    "location": {
+      "mainAddress": "서울 종로구",
+      "subAddress": "종로 148",
+      "locationCategory": "JONGNO",
+      "latitude": "37.568716",
+      "longitude": "126.990261",
+      "nearestStation": "종로3가역",
+      "walkingMinutes": 3,
+      "stationDetail": [
+        1,
+        3,
+        5
+      ]
+    },
+    "products": [
+      {
+        "name": "증명",
+        "price": 24000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-10_id_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": 1
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "여권",
+        "price": 29000,
+        "shootingCategory": "ID_PHOTO",
+        "basePeople": 1,
+        "images": [],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "취업",
+        "price": 41000,
+        "shootingCategory": "JOB_PHOTO",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-10_job_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "프로필",
+        "price": 70000,
+        "shootingCategory": "PROFILE",
+        "basePeople": 1,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-10_profile_photo_1.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          },
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-10_profile_photo_2.jpg",
+            "order": 2,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "우정",
+        "price": 53000,
+        "shootingCategory": "FRIENDSHIP",
+        "basePeople": 2,
+        "images": [
+          {
+            "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-10_friendship_photo.jpg",
+            "order": 1,
+            "studioThumbnailOrder": null
+          }
+        ],
+        "hasAdditionalPrice": false
+      }
+    ],
+    "services": [
+      "WIFI"
+    ],
+    "hairMakeupDetails": [],
+    "schedule": {
+      "hours": {
+        "weekday": [
+          "10:00",
+          "20:00"
+        ],
+        "weekend": [
+          "10:00",
+          "20:00"
+        ]
+      },
+      "slotMinutes": 30,
+      "closedWeekday": null
+    },
+    "info": {
+      "운영 정보": "영업시간: 매일 10:00-20:00\n휴무일: 연중무휴\n예약 마감: 촬영 당일 오전 9시까지\n브런치포토 (사업자등록번호 475-92-12849) / 대표번호 02-414-9183",
+      "주차 정보": "X (주차 공간 없음)",
+      "촬영 안내": "의상: X (개인 의상 지참)\n와이파이: O\n재촬영 정책: 사진관 귀책 시 무료 재촬영, 고객 변심 시 유료.",
+      "환불 안내": "촬영 3일 전까지 전액 환불, 3일~1일 전 50% 환불, 당일 취소 시 환불 불가"
+    }
+  }
+]
