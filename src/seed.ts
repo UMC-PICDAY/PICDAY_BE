@@ -360,6 +360,17 @@ async function upsertReviewImage(reviewId: bigint, url: string) {
 const SEED_USER_PASSWORD = "test1234!";
 
 async function main() {
+  // --terms-only: 약관만 넣는다. 배포 환경에는 테스트 유저·리뷰가 들어가면 안 되므로
+  // 회원가입에 필요한 약관만 주입할 때 사용한다. (예: pnpm exec tsx src/seed.ts --terms-only)
+  if (process.argv.includes("--terms-only")) {
+    const auth = await seedAuthTerms();
+    const reservation = await seedReservationTerms();
+    console.log(
+      `약관 시드 완료 — 가입 약관 ${auth.length}건 / 예약 약관 ${reservation.length}건`,
+    );
+    return;
+  }
+
   const hashedPassword = await bcrypt.hash(SEED_USER_PASSWORD, 10);
 
   const user = await prisma.user.upsert({
