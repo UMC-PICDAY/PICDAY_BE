@@ -240,7 +240,6 @@ export type StudioSearchFilters = {
   minPrice?: number | undefined;
   maxPrice?: number | undefined;
   serviceCodes?: ServiceCode[] | undefined;
-  minRating?: number | undefined;
 };
 
 // 통합 검색/이름 검색이 공유하는 필터 조회 쿼리.
@@ -277,9 +276,6 @@ export async function findStudiosBySearchFilters(filters: StudioSearchFilters) {
       ...(filters.serviceCodes?.length && {
         studioServices: { some: { serviceCode: { in: filters.serviceCodes } } },
       }),
-      ...(filters.minRating !== undefined && {
-        ratingScore: { gte: filters.minRating },
-      }),
       ...(productConditions.length > 0 && {
         AND: productConditions.map((condition) => ({
           products: { some: condition },
@@ -289,8 +285,6 @@ export async function findStudiosBySearchFilters(filters: StudioSearchFilters) {
     select: {
       id: true,
       name: true,
-      ratingScore: true,
-      ratingRank: true,
       reservationCount: true,
       reservationRank: true,
       location: {
@@ -355,17 +349,47 @@ export async function upsertRecentStudioView(userId: bigint, studioId: bigint) {
   });
 }
 
-// 검색 결과 카드용 스튜디오별 리뷰 건수 집계 (검색 기능 전용, 다른 도메인 의존성 없이 자체 보유)
-export async function findReviewCountsByStudioIds(studioIds: bigint[]) {
+export type StudioReviewSummary = {
+  studioId: bigint;
+  averageRating: number | null;
+  reviewCount: number;
+};
+
+// 검색 결과 카드용 스튜디오별 리뷰 평균/건수 집계.
+// 평균과 건수가 항상 동일한 Review 조건을 사용하도록 한 번의 groupBy로 조회한다.
+export async function findReviewSummariesByStudioIds(
+  studioIds: bigint[],
+): Promise<StudioReviewSummary[]> {
   if (studioIds.length === 0) {
     return [];
   }
 
-  return prisma.review.groupBy({
+  const rows = await prisma.review.groupBy({
     by: ["studioId"],
     where: { studioId: { in: studioIds } },
+    _avg: { rating: true },
     _count: { _all: true },
   });
+
+  const summaryByStudioId = new Map(
+    rows.map((row) => [
+      row.studioId,
+      {
+        studioId: row.studioId,
+        averageRating: row._avg.rating,
+        reviewCount: row._count._all,
+      },
+    ]),
+  );
+
+  return studioIds.map(
+    (studioId) =>
+      summaryByStudioId.get(studioId) ?? {
+        studioId,
+        averageRating: null,
+        reviewCount: 0,
+      },
+  );
 }
 
 const RECOMMEND_STUDIO_COUNT = 6;
@@ -375,6 +399,7 @@ const RECOMMEND_STUDIO_COUNT = 6;
 export async function findRecommendedStudios() {
   const topReviewCounts = await prisma.review.groupBy({
     by: ["studioId"],
+    _avg: { rating: true },
     _count: { _all: true },
     orderBy: { _count: { studioId: "desc" } },
     take: RECOMMEND_STUDIO_COUNT,
@@ -391,7 +416,6 @@ export async function findRecommendedStudios() {
     select: {
       id: true,
       name: true,
-      ratingScore: true,
       location: { select: { locationCategory: true } },
       products: {
         select: {
@@ -413,12 +437,22 @@ export async function findRecommendedStudios() {
   // where...in은 studioIds 배열 순서를 보장하지 않으므로, topReviewCounts에서
   // 정해진 "리뷰 많은순" 순서를 기준으로 다시 정렬한다.
   const studioById = new Map(studios.map((studio) => [studio.id, studio]));
+  const averageRatingByStudioId = new Map(
+    topReviewCounts.map((row) => [row.studioId, row._avg.rating]),
+  );
 
   return studioIds
-    .map((id) => studioById.get(id))
-    .filter(
-      (studio): studio is (typeof studios)[number] => studio !== undefined,
-    );
+    .map((id) => {
+      const studio = studioById.get(id);
+
+      return studio === undefined
+        ? undefined
+        : {
+            ...studio,
+            averageRating: averageRatingByStudioId.get(id) ?? null,
+          };
+    })
+    .filter((studio) => studio !== undefined);
 }
 
 export type FindRecommendedStudiosResult = Awaited<

@@ -27,6 +27,7 @@ import type {
 import type {
   FindStudiosBySearchFiltersResult,
   FindRecommendedStudiosResult,
+  StudioReviewSummary,
 } from "./studio.search.repository.js";
 import { toDomainId } from "../../common/apiId.js";
 
@@ -455,10 +456,12 @@ function pickThumbnails(
 
 function toSearchItemInput(
   studio: StudioSearchRow,
-  reviewCountByStudioId: Map<bigint, number>,
+  reviewSummaryByStudioId: Map<bigint, StudioReviewSummary>,
   wishlistedStudioIds: Set<bigint>,
 ): StudioSearchItemInputDto {
   const category = studio.location?.locationCategory ?? null;
+  const reviewSummary = reviewSummaryByStudioId.get(studio.id);
+  const averageRating = reviewSummary?.averageRating ?? null;
 
   return {
     studioId: studio.id,
@@ -472,10 +475,9 @@ function toSearchItemInput(
       ? Number(studio.location.longitude)
       : null,
     minPrice: pickMinPrice(studio.products),
-    // ratingScore는 배치가 평균값 그대로(반올림 없이) 저장해두므로, 내보낼 때 소수 첫째 자리로 반올림
-    // (wishlist.service.ts/review.service.ts와 동일한 규칙)
-    rating: Math.round((studio.ratingScore ?? 0) * 10) / 10,
-    reviewCount: reviewCountByStudioId.get(studio.id) ?? 0,
+    // 정렬/필터는 반올림 전 평균을 쓰고, 응답에서만 소수 첫째 자리로 반올림한다.
+    rating: averageRating === null ? 0 : Math.round(averageRating * 10) / 10,
+    reviewCount: reviewSummary?.reviewCount ?? 0,
     shootingCategories: [
       ...new Set(studio.products.map((product) => product.shootingCategory)),
     ],
@@ -500,7 +502,10 @@ function toRecommendStudioItemInput(
     thumbnailUrl: pickThumbnail(studio.products),
     locationCategory: studio.location?.locationCategory ?? null,
     minPrice: pickMinPrice(studio.products),
-    rating: Math.round((studio.ratingScore ?? 0) * 10) / 10,
+    rating:
+      studio.averageRating === null
+        ? 0
+        : Math.round(studio.averageRating * 10) / 10,
     shootingCategory: [
       ...new Set(studio.products.map((product) => product.shootingCategory)),
     ],
@@ -514,10 +519,11 @@ function compareBigintAsc(a: bigint, b: bigint): number {
 }
 
 // StudioSort별 정렬. 동률이면 항상 id 오름차순으로 고정해, 정렬 기준을 바꿔도 순서가 안정적이도록 함.
-// 추천순/별점순은 배치가 미리 계산해 둔 reservationRank/ratingRank 컬럼을 그대로 쓴다(findPopularStudios/findHighRatedStudios와 동일 기준).
+// 추천순은 배치가 미리 계산한 reservationRank를 유지하고,
+// 별점순/리뷰많은순은 카드와 같은 실시간 Review 집계를 사용한다.
 function sortStudioRows(
   rows: StudioSearchRow[],
-  reviewCountByStudioId: Map<bigint, number>,
+  reviewSummaryByStudioId: Map<bigint, StudioReviewSummary>,
   sort: StudioSort,
 ): StudioSearchRow[] {
   const sorted = [...rows];
@@ -535,16 +541,31 @@ function sortStudioRows(
 
     case StudioSort.RATING_HIGH:
       sorted.sort((a, b) => {
-        const rankA = a.ratingRank ?? SORT_FALLBACK;
-        const rankB = b.ratingRank ?? SORT_FALLBACK;
-        return rankA !== rankB ? rankA - rankB : compareBigintAsc(a.id, b.id);
+        const ratingA =
+          reviewSummaryByStudioId.get(a.id)?.averageRating ?? null;
+        const ratingB =
+          reviewSummaryByStudioId.get(b.id)?.averageRating ?? null;
+
+        if (ratingA === null && ratingB === null) {
+          return compareBigintAsc(a.id, b.id);
+        }
+        if (ratingA === null) {
+          return 1;
+        }
+        if (ratingB === null) {
+          return -1;
+        }
+
+        return ratingB !== ratingA
+          ? ratingB - ratingA
+          : compareBigintAsc(a.id, b.id);
       });
       return sorted;
 
     case StudioSort.REVIEW_COUNT:
       sorted.sort((a, b) => {
-        const countA = reviewCountByStudioId.get(a.id) ?? 0;
-        const countB = reviewCountByStudioId.get(b.id) ?? 0;
+        const countA = reviewSummaryByStudioId.get(a.id)?.reviewCount ?? 0;
+        const countB = reviewSummaryByStudioId.get(b.id)?.reviewCount ?? 0;
         return countB !== countA
           ? countB - countA
           : compareBigintAsc(a.id, b.id);
@@ -570,19 +591,38 @@ async function buildSearchResponse(
   const rows = await studioSearchRepository.findStudiosBySearchFilters(filters);
   const studioIds = rows.map((row) => row.id);
 
-  const [reviewCountRows, wishlistedStudioIds] = await Promise.all([
-    studioSearchRepository.findReviewCountsByStudioIds(studioIds),
-    userId
-      ? studioSearchRepository.findWishlistedStudioIds(userId, studioIds)
-      : Promise.resolve(new Set<bigint>()),
-  ]);
-
-  const reviewCountByStudioId = new Map(
-    reviewCountRows.map((row) => [row.studioId, row._count._all]),
+  const reviewSummaries =
+    await studioSearchRepository.findReviewSummariesByStudioIds(studioIds);
+  const reviewSummaryByStudioId = new Map(
+    reviewSummaries.map((summary) => [summary.studioId, summary]),
   );
 
-  const studios = sortStudioRows(rows, reviewCountByStudioId, sort).map((row) =>
-    toSearchItemInput(row, reviewCountByStudioId, wishlistedStudioIds),
+  // findStudiosBySearchFilters는 pagination 없이 후보 전체를 반환한다.
+  // 따라서 실시간 평균 필터를 전체 후보에 적용한 뒤 정렬/응답 조립을 수행한다.
+  const minRating = appliedFilters.minRating;
+  const filteredRows = rows.filter((row) => {
+    if (minRating === null || minRating === 0) {
+      return true;
+    }
+
+    const averageRating =
+      reviewSummaryByStudioId.get(row.id)?.averageRating ?? null;
+    return averageRating !== null && averageRating >= minRating;
+  });
+  const filteredStudioIds = filteredRows.map((row) => row.id);
+  const wishlistedStudioIds = userId
+    ? await studioSearchRepository.findWishlistedStudioIds(
+        userId,
+        filteredStudioIds,
+      )
+    : new Set<bigint>();
+
+  const studios = sortStudioRows(
+    filteredRows,
+    reviewSummaryByStudioId,
+    sort,
+  ).map((row) =>
+    toSearchItemInput(row, reviewSummaryByStudioId, wishlistedStudioIds),
   );
 
   if (studios.length === 0) {
@@ -622,7 +662,6 @@ export async function searchStudios(
         minPrice: query.minPrice,
         maxPrice: query.maxPrice,
         serviceCodes: query.serviceCode,
-        minRating: query.minRating,
       },
       query.sort,
       {
@@ -668,7 +707,6 @@ export async function searchStudiosByName(
         minPrice: query.minPrice,
         maxPrice: query.maxPrice,
         serviceCodes: query.serviceCode,
-        minRating: query.minRating,
       },
       query.sort,
       {
