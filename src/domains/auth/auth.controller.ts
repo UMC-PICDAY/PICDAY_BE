@@ -23,15 +23,6 @@ import {
   parseSignup,
   parseSocialLogin,
   parseUpdateNickname,
-  type AvailabilityResponseDto,
-  type CompleteSocialSignupResponseDto,
-  type GetMeResponseDto,
-  type LoginResponseDto,
-  type RefreshResponseDto,
-  type SignupResponseDto,
-  type SocialAuthUrlResponseDto,
-  type SocialLoginResponseData,
-  type UpdateNicknameResponseDto,
 } from "./auth.dto.js";
 import * as authService from "./auth.service.js";
 import { assertSocialProvider } from "./auth.social.js";
@@ -60,9 +51,7 @@ export class AuthController extends Controller {
   @Get("{provider}/url")
   @SuccessResponse(200, "OK")
   @Response<AuthErrorResponse>(500, "AUTH_5021: 소셜 로그인 서버 오류")
-  public async getSocialAuthUrl(
-    @Path() provider: string,
-  ): Promise<SocialAuthUrlResponseDto> {
+  public async getSocialAuthUrl(@Path() provider: string) {
     const socialProvider = assertSocialProvider(provider);
     const result = authService.getSocialAuthUrl(socialProvider);
     return result;
@@ -79,10 +68,7 @@ export class AuthController extends Controller {
   @Response<AuthErrorResponse>(400, "AUTH_4001: Redirect URI 불일치")
   @Response<AuthErrorResponse>(401, "AUTH_4011: 유효하지 않은 인증 코드")
   @Response<AuthErrorResponse>(500, "AUTH_5021: 소셜 로그인 서버 오류")
-  public async socialLogin(
-    @Path() provider: string,
-    @Body() body: unknown,
-  ): Promise<SocialLoginResponseData> {
+  public async socialLogin(@Path() provider: string, @Body() body: unknown) {
     const socialProvider = assertSocialProvider(provider);
     const dto = parseSocialLogin(body);
     const { data, message } = await authService.socialLogin(
@@ -107,7 +93,7 @@ export class AuthController extends Controller {
   public async completeSocialSignup(
     @Request() request: any,
     @Body() body: unknown,
-  ): Promise<CompleteSocialSignupResponseDto> {
+  ) {
     const { signupInfo } = request as AuthenticatedSignupRequest;
 
     const dto = parseCompleteSocialSignup(body);
@@ -120,7 +106,7 @@ export class AuthController extends Controller {
   /** 자체 회원가입 */
   @Post("signup")
   @SuccessResponse(201, "Created")
-  public async signup(@Body() body: unknown): Promise<SignupResponseDto> {
+  public async signup(@Body() body: unknown) {
     const dto = parseSignup(body);
     const user = await authService.register(dto);
     this.setStatus(201);
@@ -130,7 +116,7 @@ export class AuthController extends Controller {
   /** 자체 로그인 */
   @Post("login")
   @SuccessResponse(200, "OK")
-  public async login(@Body() body: unknown): Promise<LoginResponseDto> {
+  public async login(@Body() body: unknown) {
     const dto = parseLogin(body);
     const result = await authService.login(dto);
     return result;
@@ -145,10 +131,7 @@ export class AuthController extends Controller {
   @Post("refresh")
   @Security("refresh")
   @SuccessResponse(200, "OK")
-  public async refresh(
-    @Request() request: any,
-    @Body() body?: unknown,
-  ): Promise<RefreshResponseDto> {
+  public async refresh(@Request() request: any, @Body() body?: unknown) {
     const { userId } = request as AuthenticatedRequest;
 
     // @Security("refresh")를 통과했으므로 헤더 토큰은 반드시 존재한다
@@ -178,7 +161,7 @@ export class AuthController extends Controller {
   @Post("logout")
   @SuccessResponse(200, "OK")
   @Response<AuthErrorResponse>(401, "AUTH_4013: 유효하지 않은 토큰")
-  public async logout(@Request() request: any): Promise<null> {
+  public async logout(@Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
 
     await authService.logout(userId);
@@ -189,9 +172,7 @@ export class AuthController extends Controller {
   /** 아이디 중복 확인 */
   @Get("loginid/check")
   @SuccessResponse(200, "OK")
-  public async checkLoginId(
-    @Query() loginId?: string,
-  ): Promise<AvailabilityResponseDto> {
+  public async checkLoginId(@Query() loginId?: string) {
     const result = await authService.checkLoginIdAvailability(loginId ?? "");
     return result;
   }
@@ -199,9 +180,7 @@ export class AuthController extends Controller {
   /** 닉네임 중복 확인 */
   @Get("nickname/check")
   @SuccessResponse(200, "OK")
-  public async checkNickname(
-    @Query() nickname?: string,
-  ): Promise<AvailabilityResponseDto> {
+  public async checkNickname(@Query() nickname?: string) {
     const result = await authService.checkNicknameAvailability(nickname ?? "");
     return result;
   }
@@ -209,7 +188,7 @@ export class AuthController extends Controller {
   @Security("jwt")
   @Get("me")
   @SuccessResponse(200, "OK")
-  public async getMe(@Request() request: any): Promise<GetMeResponseDto> {
+  public async getMe(@Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
 
     const result = await authService.getMe(userId);
@@ -219,10 +198,7 @@ export class AuthController extends Controller {
   @Security("jwt")
   @Patch("me")
   @SuccessResponse(200, "OK")
-  public async updateMe(
-    @Request() request: any,
-    @Body() body: unknown,
-  ): Promise<UpdateNicknameResponseDto> {
+  public async updateMe(@Request() request: any, @Body() body: unknown) {
     const { userId } = request as AuthenticatedRequest;
 
     const dto = parseUpdateNickname(body);
@@ -233,7 +209,7 @@ export class AuthController extends Controller {
   @Security("jwt")
   @Delete("me")
   @SuccessResponse(200, "OK")
-  public async withdraw(@Request() request: any): Promise<null> {
+  public async withdraw(@Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
 
     await authService.withdraw(userId);

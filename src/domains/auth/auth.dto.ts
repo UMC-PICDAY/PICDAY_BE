@@ -1,18 +1,7 @@
 import { z, ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import type { ErrorCodeType } from "../../common/errorCode.js";
-import type { Provider, UserStatus } from "../../generated/prisma/client.js";
-
-export type AuthTokenDto = {
-  accessToken: string;
-  refreshToken: string;
-  accessTokenExpiresIn: number;
-  refreshTokenExpiresIn: number;
-};
-
-export type SocialAuthUrlResponseDto = {
-  authUrl: string;
-};
+import type { Provider } from "../../generated/prisma/client.js";
 
 export const signupRequestSchema = z.object({
   loginId: z
@@ -60,7 +49,12 @@ export type SocialLoginResponseData =
         profileImageUrl: string | null;
         provider: Provider;
       };
-      token: AuthTokenDto;
+      token: {
+        accessToken: string;
+        refreshToken: string;
+        accessTokenExpiresIn: number;
+        refreshTokenExpiresIn: number;
+      };
     }
   | {
       isNewUser: true;
@@ -102,21 +96,6 @@ export type CompleteSocialSignupResponseDto = z.output<
   typeof completeSocialSignupResponseSchema
 >;
 
-export type SignupResponseDto = {
-  id: number;
-  loginId: string | null;
-  name: string | null;
-  nickname: string | null;
-  email: string | null;
-  phoneNumber: string | null;
-  provider: Provider | null;
-  status: UserStatus | null;
-  refreshToken: string | null;
-  createdAt: Date | null;
-  updatedAt: Date | null;
-  deletedAt: Date | null;
-};
-
 // 로그인은 필수 여부만 검증 (형식 오류도 인증 실패와 동일하게 AUTH_4015로 수렴)
 export const loginRequestSchema = z.object({
   loginId: z.string().min(1, "아이디를 입력해 주세요."),
@@ -124,16 +103,6 @@ export const loginRequestSchema = z.object({
 });
 
 export type LoginRequestDto = z.infer<typeof loginRequestSchema>;
-
-export type LoginResponseDto = {
-  user: {
-    id: number;
-    loginId: string | null;
-    nickname: string | null;
-    provider: Provider | null;
-  };
-  token: AuthTokenDto;
-};
 
 /**
  * 토큰 갱신 요청 body.
@@ -145,14 +114,6 @@ export const refreshRequestSchema = z.object({
 });
 
 export type RefreshRequestDto = z.infer<typeof refreshRequestSchema>;
-
-export type RefreshResponseDto = {
-  token: AuthTokenDto;
-};
-
-export type AvailabilityResponseDto = {
-  available: boolean;
-};
 
 function parseOrThrow<T>(
   schema: z.ZodType<T>,

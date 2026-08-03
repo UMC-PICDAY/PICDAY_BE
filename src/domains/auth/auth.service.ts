@@ -8,14 +8,8 @@ import {
   type SocialProvider,
 } from "./auth.social.js";
 import type {
-  AuthTokenDto,
-  AvailabilityResponseDto,
   CompleteSocialSignupRequestDto,
   CompleteSocialSignupResponseDto,
-  LoginResponseDto,
-  RefreshResponseDto,
-  SignupResponseDto,
-  SocialAuthUrlResponseDto,
   SocialLoginRequestDto,
   SocialLoginResponseData,
 } from "./auth.dto.js";
@@ -27,7 +21,7 @@ import {
   type UpdateNicknameRequestDto,
   type UpdateNicknameResponseDto,
   getMeResponseSchema,
-  updateNicknameResponseSchema,
+  updateNicknameResponseSchema
 } from "./auth.dto.js";
 import {
   NICKNAME_ADJECTIVES,
@@ -72,7 +66,7 @@ async function generateUniqueNickname(): Promise<string> {
  * Access/Refresh 토큰을 새로 발급하고 refreshToken을 DB에 저장한다.
  * 로그인·토큰 갱신 모두 이 경로를 거치므로, 갱신 시 이전 refreshToken은 덮어써져 무효화된다(Refresh 회전).
  */
-async function issueTokenPair(userId: bigint): Promise<AuthTokenDto> {
+async function issueTokenPair(userId: bigint) {
   const sub = userId.toString();
   const accessToken = signAccessToken(sub);
   const refreshToken = signRefreshToken(sub);
@@ -91,9 +85,7 @@ async function issueTokenPair(userId: bigint): Promise<AuthTokenDto> {
  * 소셜 인증 URL 생성.
  * provider(kakao|google)별 authorize URL을 만들어 반환한다.
  */
-export function getSocialAuthUrl(
-  provider: SocialProvider,
-): SocialAuthUrlResponseDto {
+export function getSocialAuthUrl(provider: SocialProvider) {
   return { authUrl: buildSocialAuthUrl(provider) };
 }
 
@@ -227,9 +219,7 @@ export async function assertTermsAgreed(agreedTermIds: bigint[]): Promise<void> 
   }
 }
 
-export async function register(
-  dto: SignupRequestDto,
-): Promise<SignupResponseDto> {
+export async function register(dto: SignupRequestDto) {
   const existingLoginId = await authRepository.findUserByLoginId(dto.loginId);
   if (existingLoginId) {
     throw new AppError("AUTH_4093");
@@ -267,7 +257,7 @@ export async function register(
   };
 }
 
-export async function login(dto: LoginRequestDto): Promise<LoginResponseDto> {
+export async function login(dto: LoginRequestDto) {
   const loginId = dto.loginId.toLowerCase();
 
   // 유저 없음/비밀번호 불일치를 구분하지 않음 → 계정 존재 여부 노출 방지
@@ -300,10 +290,7 @@ export async function login(dto: LoginRequestDto): Promise<LoginResponseDto> {
  * userId는 @Security("refresh")를 통과한 Authorization 헤더에서 나온 값이고,
  * refreshToken은 실제 대조 대상이 되는 원본 토큰 문자열이다.
  */
-export async function refresh(
-  userId: bigint,
-  refreshToken: string,
-): Promise<RefreshResponseDto> {
+export async function refresh(userId: bigint, refreshToken: string) {
   // 서명·만료·타입 검증 (만료 → AUTH_4016, 그 외 → AUTH_4013)
   const payload = verifyToken(refreshToken, "refresh");
 
@@ -338,9 +325,7 @@ export async function logout(userId: bigint): Promise<void> {
   await authRepository.updateRefreshToken(userId, null);
 }
 
-export async function checkLoginIdAvailability(
-  rawLoginId: string,
-): Promise<AvailabilityResponseDto> {
+export async function checkLoginIdAvailability(rawLoginId: string) {
   const loginId = rawLoginId.toLowerCase();
   if (!LOGIN_ID_REGEX.test(loginId)) {
     throw new AppError("AUTH_4006");
@@ -350,9 +335,7 @@ export async function checkLoginIdAvailability(
   return { available: !existing };
 }
 
-export async function checkNicknameAvailability(
-  nickname: string,
-): Promise<AvailabilityResponseDto> {
+export async function checkNicknameAvailability(nickname: string) {
   if (!NICKNAME_REGEX.test(nickname)) {
     throw new AppError("AUTH_4003");
   }
