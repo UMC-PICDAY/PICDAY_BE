@@ -13,7 +13,9 @@ const contentSchema = z
   .max(500, "content는 10~500자여야 합니다.");
 
 const imageUrlsSchema = z
-  .array(z.string().trim().min(1).max(500, "이미지 URL은 500자 이하여야 합니다."))
+  .array(
+    z.string().trim().min(1).max(500, "이미지 URL은 500자 이하여야 합니다."),
+  )
   .max(5, "이미지는 최대 5개까지 가능합니다.")
   .nullable();
 
@@ -44,7 +46,10 @@ export const createReviewRequestSchema = z
       .number()
       .int("reservationId는 정수여야 합니다.")
       .positive("reservationId는 양수여야 합니다.")
-      .max(Number.MAX_SAFE_INTEGER, "reservationId가 허용 범위를 초과했습니다."),
+      .max(
+        Number.MAX_SAFE_INTEGER,
+        "reservationId가 허용 범위를 초과했습니다.",
+      ),
     rating: ratingSchema,
     content: contentSchema,
     keywords: keywordsSchema.optional(),
@@ -54,12 +59,14 @@ export const createReviewRequestSchema = z
 
 export type CreateReviewRequestDto = z.infer<typeof createReviewRequestSchema>;
 
-export type CreateReviewSuccessResponseDto = {
-  success: true;
-  code: "COMMON_201";
-  message: string;
-  data: { reviewId: number };
-};
+// responseWrapper 적용 후 Controller가 raw data를 반환하므로 더 이상 사용하지 않음.
+// 전체 도메인 마이그레이션이 끝난 뒤 삭제할 수 있도록 임시로 주석 처리한다.
+// export type CreateReviewSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_201";
+//   message: string;
+//   data: { reviewId: number };
+// };
 
 // 리뷰 수정 API (부분 수정, imageUrls는 전체 교체)
 export const updateReviewRequestSchema = z
@@ -77,12 +84,12 @@ export const updateReviewRequestSchema = z
 
 export type UpdateReviewRequestDto = z.infer<typeof updateReviewRequestSchema>;
 
-export type UpdateReviewSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: { reviewId: number };
-};
+// export type UpdateReviewSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: { reviewId: number };
+// };
 
 // 리뷰 목록 조회 API
 export const reviewSortSchema = z
@@ -133,12 +140,12 @@ export type GetReviewsResponseDto = {
   items: ReviewListItemDto[];
 };
 
-export type GetReviewsSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: GetReviewsResponseDto;
-};
+// export type GetReviewsSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: GetReviewsResponseDto;
+// };
 
 // 리뷰 단건 조회 API (마이페이지 "내 리뷰")
 export type ReviewDetailDto = {
@@ -153,12 +160,12 @@ export type ReviewDetailDto = {
   createdAt: string;
 };
 
-export type GetReviewDetailSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: ReviewDetailDto;
-};
+// export type GetReviewDetailSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: ReviewDetailDto;
+// };
 
 // 리뷰 추천 / 추천 취소 API
 export type ReviewLikeResponseDto = {
@@ -166,19 +173,19 @@ export type ReviewLikeResponseDto = {
   likeCount: number;
 };
 
-export type AddReviewLikeSuccessResponseDto = {
-  success: true;
-  code: "COMMON_201";
-  message: string;
-  data: ReviewLikeResponseDto;
-};
+// export type AddReviewLikeSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_201";
+//   message: string;
+//   data: ReviewLikeResponseDto;
+// };
 
-export type RemoveReviewLikeSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: ReviewLikeResponseDto;
-};
+// export type RemoveReviewLikeSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: ReviewLikeResponseDto;
+// };
 
 // 리뷰 삭제 API
 export const reviewIdParamsSchema = z.object({
@@ -189,9 +196,9 @@ export const reviewIdParamsSchema = z.object({
     .max(Number.MAX_SAFE_INTEGER, "reviewId가 허용 범위를 초과했습니다."),
 });
 
-export type DeleteReviewSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: null;
-};
+// export type DeleteReviewSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: null;
+// };
