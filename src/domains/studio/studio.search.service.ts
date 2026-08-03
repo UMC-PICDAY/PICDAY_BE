@@ -326,14 +326,9 @@ export async function getHome(
     // 비로그인 사용자 : 배너 + 인기 사진관 + 위치 기반 사진관
     if (userId === null) {
       return {
-        success: true,
-        code: "COMMON_200",
-        message: "홈 화면 조회에 성공했습니다.",
-        data: {
-          bannerStudios,
-          popularStudios,
-          regionalStudios,
-        },
+        bannerStudios,
+        popularStudios,
+        regionalStudios,
       };
     }
 
@@ -345,15 +340,10 @@ export async function getHome(
     );
 
     return {
-      success: true,
-      code: "COMMON_200",
-      message: "홈 화면 조회에 성공했습니다.",
-      data: {
-        bannerStudios,
-        recentStudios,
-        popularStudios,
-        regionalStudios,
-      },
+      bannerStudios,
+      recentStudios,
+      popularStudios,
+      regionalStudios,
     };
   } catch (error) {
     console.error("getHome error:", error);
