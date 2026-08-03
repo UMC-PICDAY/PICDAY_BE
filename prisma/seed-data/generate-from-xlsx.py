@@ -1,17 +1,29 @@
-# 목업 엑셀(v7) -> prisma/seed-data/studios.json 생성기 (1회성 도구)
+# 목업 엑셀(v7) -> prisma/seed-data/studios.json 생성기
 #
-# 실행: python prisma/seed-data/generate-from-xlsx.py
-# 필요:  pip install openpyxl
+# 시드를 돌릴 때는 필요 없다. 이미 생성된 studios.json이 커밋돼 있으므로
+# `pnpm seed:studios` 만 실행하면 된다.
+# 이 스크립트는 **목업 엑셀이 갱신됐을 때 JSON을 다시 만드는 용도**다.
 #
-# 엑셀은 git에 없으므로(로컬 .claude 보관) 결과 JSON만 커밋한다.
-# 엑셀이 갱신되면 이 스크립트를 다시 돌려 JSON을 교체할 것.
+#   준비:  pip install openpyxl
+#   실행:  python prisma/seed-data/generate-from-xlsx.py <목업엑셀.xlsx>
+#
+# 목업 엑셀은 용량·보안 문제로 레포에 두지 않는다. 노션/드라이브에서 받아
+# 경로를 인자로 넘길 것. 이미지 매핑(image-mapping.csv)은 이 폴더에 함께 있다.
 
-import openpyxl, re, json, csv, os, collections
+import openpyxl, re, json, csv, os, sys, collections
 
-XLSX = r"C:\PicDay_BE\.claude\PICDAY_목업데이터_v7.xlsx"
-IMG_CSV = r"C:\Users\kangm\Downloads\picday-image-mapping.csv"
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "studios.json")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+XLSX = sys.argv[1] if len(sys.argv) > 1 else os.path.join(BASE_DIR, "PICDAY_목업데이터_v7.xlsx")
+IMG_CSV = os.path.join(BASE_DIR, "image-mapping.csv")
+OUT = os.path.join(BASE_DIR, "studios.json")
 SHEET = "사진관 목업 데이터_v12"
+
+if not os.path.exists(XLSX):
+    sys.exit(
+        f"목업 엑셀을 찾을 수 없습니다: {XLSX}\n"
+        f"사용법: python {os.path.basename(__file__)} <목업엑셀.xlsx>"
+    )
 
 LOCATION = {
     "홍대": "HONGDAE", "강남": "GANGNAM", "성수": "SEONGSU", "연남": "YEONNAM",

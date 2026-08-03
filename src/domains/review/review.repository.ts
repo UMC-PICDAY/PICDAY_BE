@@ -17,6 +17,7 @@ export type CreateReviewOutcome =
 
 export type UpdateReviewInput = {
   reviewId: bigint;
+  studioId: bigint;
   rating?: number;
   content?: string;
   // undefined = 태그 변경 없음 / null·[] = 전체 삭제 / 배열 = 전체 교체
@@ -24,6 +25,30 @@ export type UpdateReviewInput = {
   // undefined = 이미지 변경 없음 / null·[] = 전체 삭제 / string[] = 전체 교체
   imageUrls?: string[] | null;
 };
+
+// 사진관 평균 평점(studio.rating_score)을 리뷰 기준으로 다시 계산해 저장한다.
+// 리뷰 CRUD와 같은 트랜잭션 안에서 호출해 리뷰와 평점이 어긋나지 않게 한다.
+//
+// 리뷰가 0건이면 기존 값을 그대로 둔다. 목업 평점이 들어 있는 상태에서
+// 테스트로 작성한 리뷰를 지웠을 때 사진관 평점이 0으로 사라지는 것을 막기 위함.
+export async function syncStudioRatingScore(
+  tx: Prisma.TransactionClient,
+  studioId: bigint,
+) {
+  const { _avg } = await tx.review.aggregate({
+    where: { studioId },
+    _avg: { rating: true },
+  });
+
+  if (_avg.rating === null) {
+    return;
+  }
+
+  await tx.studio.update({
+    where: { id: studioId },
+    data: { ratingScore: Math.round(_avg.rating * 10) / 10 },
+  });
+}
 
 export async function findReservationForReview(reservationId: bigint) {
   return prisma.reservation.findUnique({
@@ -41,21 +66,27 @@ export async function createReview(
   input: CreateReviewInput,
 ): Promise<CreateReviewOutcome> {
   try {
-    const review = await prisma.review.create({
-      data: {
-        userId: input.userId,
-        studioId: input.studioId,
-        reservationId: input.reservationId,
-        rating: input.rating,
-        content: input.content,
-        images: {
-          create: input.imageUrls.map((url) => ({ url })),
+    const review = await prisma.$transaction(async (tx) => {
+      const created = await tx.review.create({
+        data: {
+          userId: input.userId,
+          studioId: input.studioId,
+          reservationId: input.reservationId,
+          rating: input.rating,
+          content: input.content,
+          images: {
+            create: input.imageUrls.map((url) => ({ url })),
+          },
+          keywords: {
+            create: input.keywords.map((keyword) => ({ keyword })),
+          },
         },
-        keywords: {
-          create: input.keywords.map((keyword) => ({ keyword })),
-        },
-      },
-      select: { id: true },
+        select: { id: true },
+      });
+
+      await syncStudioRatingScore(tx, input.studioId);
+
+      return created;
     });
 
     return { kind: "CREATED", review };
@@ -98,12 +129,13 @@ export async function findReviewDetail(reviewId: bigint) {
 export async function findReviewOwner(reviewId: bigint) {
   return prisma.review.findUnique({
     where: { id: reviewId },
-    select: { id: true, userId: true },
+    // studioId는 수정·삭제 후 평점 재계산 대상을 찾는 데 쓰인다.
+    select: { id: true, userId: true, studioId: true },
   });
 }
 
 export async function updateReview(input: UpdateReviewInput) {
-  const { reviewId, rating, content, keywords, imageUrls } = input;
+  const { reviewId, studioId, rating, content, keywords, imageUrls } = input;
 
   return prisma.$transaction(async (tx) => {
     const review = await tx.review.update({
@@ -137,18 +169,23 @@ export async function updateReview(input: UpdateReviewInput) {
       }
     }
 
+    // 별점이 바뀌었을 수 있으므로 사진관 평균 평점을 다시 계산한다.
+    await syncStudioRatingScore(tx, studioId);
+
     return review;
   });
 }
 
-export async function deleteReview(reviewId: bigint) {
-  // 자식 레코드(이미지·추천·태그) 먼저 삭제 후 리뷰 삭제
-  await prisma.$transaction([
-    prisma.reviewImage.deleteMany({ where: { reviewId } }),
-    prisma.reviewLike.deleteMany({ where: { reviewId } }),
-    prisma.reviewKeywordTag.deleteMany({ where: { reviewId } }),
-    prisma.review.delete({ where: { id: reviewId } }),
-  ]);
+export async function deleteReview(reviewId: bigint, studioId: bigint) {
+  await prisma.$transaction(async (tx) => {
+    // 자식 레코드(이미지·추천·태그) 먼저 삭제 후 리뷰 삭제
+    await tx.reviewImage.deleteMany({ where: { reviewId } });
+    await tx.reviewLike.deleteMany({ where: { reviewId } });
+    await tx.reviewKeywordTag.deleteMany({ where: { reviewId } });
+    await tx.review.delete({ where: { id: reviewId } });
+
+    await syncStudioRatingScore(tx, studioId);
+  });
 }
 
 // ====== 리뷰 목록 조회 ======
