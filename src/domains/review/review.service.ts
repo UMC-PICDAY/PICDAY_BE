@@ -301,6 +301,7 @@ export async function updateReview(
 
     const updated = await reviewRepository.updateReview({
       reviewId,
+      studioId: review.studioId,
       ...(request.rating !== undefined && { rating: request.rating }),
       ...(request.content !== undefined && { content: request.content }),
       ...(request.keywords !== undefined && { keywords: request.keywords }),
@@ -333,7 +334,7 @@ export async function removeReview(
       throw new AppError("REVIEW_4032");
     }
 
-    await reviewRepository.deleteReview(reviewId);
+    await reviewRepository.deleteReview(reviewId, review.studioId);
 
     return null;
   } catch (error) {
