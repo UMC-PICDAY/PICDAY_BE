@@ -15,6 +15,7 @@
     "prisma:generate": "prisma generate",
     "rank:recalculate": "tsx src/recalculatePopularityRank.ts",
     "seed:studios": "tsx src/seedStudios.ts",
+    "seed:reviews": "tsx src/seedReviews.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
