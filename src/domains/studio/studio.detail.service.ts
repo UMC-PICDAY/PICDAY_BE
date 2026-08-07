@@ -105,7 +105,7 @@ function groupStudioProducts(
 
 // === 예약 가능 시간 조회 API ===
 export async function getStudioSlots(
-  rawStudioId: string,
+  rawStudioId: number,
   rawDate: string | undefined,
   nowProvider: NowProvider = () => new Date(),
 ): Promise<StudioSlotsResponseDto> {
@@ -164,8 +164,8 @@ export async function getStudioSlots(
 
 // === 컨셉 목록 조회 API ===
 export async function getStudioProducts(
-  rawStudioId: string,
-  rawTimeSlotId?: string,
+  rawStudioId: number,
+  rawTimeSlotId?: number,
   nowProvider: TimestampProvider = Date.now,
 ): Promise<StudioProductsResponseDto> {
   try {
@@ -232,7 +232,7 @@ export async function getStudioProducts(
 
 // === 헤어메이크업 연계 상세 조회 API ===
 export async function getStudioHairMakeup(
-  rawStudioId: string,
+  rawStudioId: number,
 ): Promise<StudioHairMakeupResponseDto> {
   try {
     let query: GetStudioHairMakeupQuery;
@@ -280,8 +280,8 @@ export async function getStudioHairMakeup(
 
 // === 컨셉 사진 상세 조회 API ===
 export async function getStudioProductDetail(
-  rawStudioId: string,
-  rawStudioProductId: string,
+  rawStudioId: number,
+  rawStudioProductId: number,
 ): Promise<StudioProductDetailResponseDto> {
   try {
     let query: GetStudioProductDetailQuery;
@@ -395,7 +395,7 @@ function createStudioInfo(
 
 // === 사진관 상세 정보 조회 API ===
 export async function getStudioDetail(
-  rawStudioId: string,
+  rawStudioId: number,
   userId?: bigint,
 ): Promise<StudioDetailResponseDto> {
   try {

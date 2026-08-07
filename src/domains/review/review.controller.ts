@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Patch,
   Path,
   Post,
@@ -16,6 +17,7 @@ import type {
   CreateReviewRequestDto,
   CreateReviewSuccessResponseDto,
   DeleteReviewSuccessResponseDto,
+  GetReviewDetailSuccessResponseDto,
   RemoveReviewLikeSuccessResponseDto,
   UpdateReviewRequestDto,
   UpdateReviewSuccessResponseDto,
@@ -48,11 +50,29 @@ export class ReviewController extends Controller {
     };
   }
 
+  /** 리뷰 단건 조회 (마이페이지 "내 리뷰", 본인 리뷰만) */
+  @Get("{reviewId}")
+  @SuccessResponse(200, "OK")
+  public async detail(
+    @Path() reviewId: number,
+    @Request() request: any,
+  ): Promise<GetReviewDetailSuccessResponseDto> {
+    const { userId } = request as AuthenticatedRequest;
+    const data = await reviewService.getReviewDetail(userId, reviewId);
+
+    return {
+      success: true,
+      code: "COMMON_200",
+      message: "리뷰 조회에 성공했습니다.",
+      data,
+    };
+  }
+
   /** 리뷰 수정 (부분 수정, imageUrls는 전체 교체) */
   @Patch("{reviewId}")
   @SuccessResponse(200, "OK")
   public async update(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Body() body: UpdateReviewRequestDto,
     @Request() request: any,
   ): Promise<UpdateReviewSuccessResponseDto> {
@@ -71,7 +91,7 @@ export class ReviewController extends Controller {
   @Delete("{reviewId}")
   @SuccessResponse(200, "OK")
   public async remove(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Request() request: any,
   ): Promise<DeleteReviewSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
@@ -89,7 +109,7 @@ export class ReviewController extends Controller {
   @Post("{reviewId}/like")
   @SuccessResponse(201, "Created")
   public async addLike(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Request() request: any,
   ): Promise<AddReviewLikeSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
@@ -108,7 +128,7 @@ export class ReviewController extends Controller {
   @Delete("{reviewId}/like")
   @SuccessResponse(200, "OK")
   public async removeLike(
-    @Path() reviewId: string,
+    @Path() reviewId: number,
     @Request() request: any,
   ): Promise<RemoveReviewLikeSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;

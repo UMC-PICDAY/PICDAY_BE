@@ -7,6 +7,7 @@ import {
   studioIdParamsSchema,
   updateReviewRequestSchema,
   type GetReviewsResponseDto,
+  type ReviewDetailDto,
   type ReviewLikeResponseDto,
 } from "./review.dto.js";
 import * as reviewRepository from "./review.repository.js";
@@ -30,7 +31,7 @@ function toValidationError(error: ZodError): AppError {
   return new AppError("COMMON_400");
 }
 
-function parseReviewId(reviewIdParam: string): bigint {
+function parseReviewId(reviewIdParam: number): bigint {
   try {
     const params = reviewIdParamsSchema.parse({ reviewId: reviewIdParam });
     return BigInt(params.reviewId);
@@ -42,7 +43,7 @@ function parseReviewId(reviewIdParam: string): bigint {
   }
 }
 
-function parseStudioId(studioIdParam: string): bigint {
+function parseStudioId(studioIdParam: number): bigint {
   try {
     const params = studioIdParamsSchema.parse({ studioId: studioIdParam });
     return BigInt(params.studioId);
@@ -57,7 +58,7 @@ function parseStudioId(studioIdParam: string): bigint {
 // ====== 리뷰 목록 조회 ======
 export async function getReviews(
   userId: bigint,
-  studioIdParam: string,
+  studioIdParam: number,
   query: unknown,
 ): Promise<GetReviewsResponseDto> {
   try {
@@ -104,6 +105,7 @@ export async function getReviews(
       items: rows.map((row) => ({
         reviewId: Number(row.id),
         writerNickname: row.user.nickname,
+        conceptName: row.reservation.studioProduct.name,
         rating: row.rating,
         content: row.content,
         keywords: row.keywords.map((tag) => tag.keyword),
@@ -122,10 +124,47 @@ export async function getReviews(
   }
 }
 
+// ====== 리뷰 단건 조회 (마이페이지 "내 리뷰") ======
+export async function getReviewDetail(
+  userId: bigint,
+  reviewIdParam: number,
+): Promise<ReviewDetailDto> {
+  try {
+    const reviewId = parseReviewId(reviewIdParam);
+
+    const review = await reviewRepository.findReviewDetail(reviewId);
+
+    if (!review) {
+      throw new AppError("REVIEW_4042");
+    }
+    if (review.userId !== userId) {
+      throw new AppError("REVIEW_4032");
+    }
+
+    return {
+      reviewId: Number(review.id),
+      studioName: review.studio.name,
+      conceptName: review.reservation.studioProduct.name,
+      // 촬영일: YYYY-MM-DD (DB의 @db.Date 값)
+      shootingDate: review.reservation.timeSlot.date.toISOString().slice(0, 10),
+      rating: review.rating,
+      keywords: review.keywords.map((tag) => tag.keyword),
+      images: review.images.map((image) => image.url),
+      content: review.content,
+      createdAt: review.createdAt.toISOString(),
+    };
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError("REVIEW_5001");
+  }
+}
+
 // ====== 리뷰 추천 ======
 export async function addLike(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
 ): Promise<ReviewLikeResponseDto> {
   try {
     const reviewId = parseReviewId(reviewIdParam);
@@ -153,7 +192,7 @@ export async function addLike(
 // ====== 리뷰 추천 취소 ======
 export async function removeLike(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
 ): Promise<ReviewLikeResponseDto> {
   try {
     const reviewId = parseReviewId(reviewIdParam);
@@ -235,7 +274,7 @@ export async function createReview(
 // ====== 리뷰 수정 ======
 export async function updateReview(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
   body: unknown,
 ): Promise<{ reviewId: number }> {
   try {
@@ -262,6 +301,7 @@ export async function updateReview(
 
     const updated = await reviewRepository.updateReview({
       reviewId,
+      studioId: review.studioId,
       ...(request.rating !== undefined && { rating: request.rating }),
       ...(request.content !== undefined && { content: request.content }),
       ...(request.keywords !== undefined && { keywords: request.keywords }),
@@ -280,7 +320,7 @@ export async function updateReview(
 // ====== 리뷰 삭제 ======
 export async function removeReview(
   userId: bigint,
-  reviewIdParam: string,
+  reviewIdParam: number,
 ): Promise<null> {
   try {
     const reviewId = parseReviewId(reviewIdParam);
@@ -294,7 +334,7 @@ export async function removeReview(
       throw new AppError("REVIEW_4032");
     }
 
-    await reviewRepository.deleteReview(reviewId);
+    await reviewRepository.deleteReview(reviewId, review.studioId);
 
     return null;
   } catch (error) {

@@ -149,6 +149,11 @@ export const ErrorCode = {
     code: "STUDIO_4009",
     message: "올바르지 않은 서비스 태그입니다.",
   },
+  STUDIO_40010: {
+    status: 400,
+    code: "STUDIO_40010",
+    message: "과거 날짜는 검색할 수 없습니다.",
+  },
   STUDIO_40011: {
     status: 400,
     code: "STUDIO_40011",
@@ -158,7 +163,7 @@ export const ErrorCode = {
     status: 400,
     code: "STUDIO_40012",
     message:
-      "검색 조건은 location, date, concept, name 중 최소 1개 이상 필요합니다.",
+      "검색 조건은 location, date, concept 중 최소 1개 이상 필요합니다.",
   },
   STUDIO_40013: {
     status: 400,
@@ -194,6 +199,11 @@ export const ErrorCode = {
     status: 404,
     code: "STUDIO_4045",
     message: "존재하지 않는 시간 슬롯입니다.",
+  },
+  STUDIO_4046: {
+    status: 404,
+    code: "STUDIO_4046",
+    message: "선택한 촬영 목적을 지원하지 않는 사진관이 포함되어 있습니다.",
   },
   STUDIO_5001: {
     status: 500,

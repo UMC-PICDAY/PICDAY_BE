@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Middlewares,
   Patch,
   Path,
   Post,
@@ -12,6 +13,7 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
+import { AppError } from "../../common/error.js";
 import { success } from "../../common/response.js";
 import {
   getMyReservationListQuerySchema,
@@ -19,6 +21,10 @@ import {
   type CreateReservationRequestDto,
   type CreateReservationSuccessResponseDto,
 } from "./reservation.dto.js";
+import {
+  validateCreateReservationRequest,
+  validateReservationId,
+} from "./reservation.middleware.js";
 import * as reservationService from "./reservation.service.js";
 
 // 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다
@@ -26,6 +32,15 @@ type AuthenticatedRequest = {
   userId: bigint;
 };
 
+function parseReservationId(reservationId: number): bigint {
+  const result = reservationIdParamsSchema.safeParse({ reservationId });
+
+  if (!result.success) {
+    throw new AppError("RESERVATION_4005");
+  }
+
+  return result.data.reservationId;
+}
 
 /**
  * 예약(Reservation) 도메인 API
@@ -48,6 +63,7 @@ export class ReservationController extends Controller {
    * @summary 예약 생성
    */
   @Post()
+  @Middlewares(validateCreateReservationRequest)
   @SuccessResponse(201, "Created")
   public async create(
     @Body() body: CreateReservationRequestDto,
@@ -74,16 +90,18 @@ export class ReservationController extends Controller {
    *
    * @summary 예약 취소
    * @param reservationId 취소할 예약 ID
+   * @isLong reservationId 예약 ID는 정수여야 합니다.
+   * @minimum reservationId 1 예약 ID는 양수여야 합니다.
+   * @maximum reservationId 9007199254740991 예약 ID가 허용 범위를 초과했습니다.
    */
   @Patch("{reservationId}/cancel")
+  @Middlewares(validateReservationId)
   @SuccessResponse(200, "OK")
-  public async cancel(@Path() reservationId: string, @Request() request: any) {
-    const { reservationId: id } = reservationIdParamsSchema.parse({
-      reservationId,
-    });
+  public async cancel(@Path() reservationId: number, @Request() request: any) {
+    const id = parseReservationId(reservationId);
 
     const { userId } = request as AuthenticatedRequest;
-    const result = await reservationService.cancel(BigInt(id), userId);
+    const result = await reservationService.cancel(id, userId);
 
     return success(result);
   }
@@ -97,21 +115,23 @@ export class ReservationController extends Controller {
    *
    * @summary 예약 상세 조회
    * @param reservationId 조회할 예약 ID
+   * @isLong reservationId 예약 ID는 정수여야 합니다.
+   * @minimum reservationId 1 예약 ID는 양수여야 합니다.
+   * @maximum reservationId 9007199254740991 예약 ID가 허용 범위를 초과했습니다.
    */
   @Get("{reservationId}")
+  @Middlewares(validateReservationId)
   @SuccessResponse(200, "OK")
-  public async detail(@Path() reservationId: string, @Request() request: any) {
-    const { reservationId: id } = reservationIdParamsSchema.parse({
-      reservationId,
-    });
+  public async detail(@Path() reservationId: number, @Request() request: any) {
+    const id = parseReservationId(reservationId);
 
     const { userId } = request as AuthenticatedRequest;
-    const result = await reservationService.getDetail(BigInt(id), userId);
+    const result = await reservationService.detail(id, userId);
 
     return success(result);
   }
 
-   /**
+  /**
    * 내 예약 목록 조회
    *
    * 요청자 본인의 예약 목록을 조회한다.

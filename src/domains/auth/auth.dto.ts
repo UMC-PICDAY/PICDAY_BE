@@ -43,7 +43,7 @@ export type SocialLoginResponseData =
   | {
       isNewUser: false;
       user: {
-        id: string;
+        id: number;
         nickname: string | null;
         email: string | null;
         profileImageUrl: string | null;
@@ -80,7 +80,7 @@ export type CompleteSocialSignupRequestDto = z.infer<
 
 export const completeSocialSignupResponseSchema = z.object({
   user: z.object({
-    id: z.bigint().transform((id) => id.toString()),
+    id: z.bigint().transform((id) => Number(id)),
     nickname: z.string().nullable(),
     provider: z.enum(["KAKAO", "GOOGLE", "APPLE", "LOCAL"]).nullable(),
   }),
@@ -179,10 +179,10 @@ export const parseRefresh = (body: unknown) =>
 // 해당 Schema로 get / update response 모두 사용
 export const getMeResponseSchema = z.object({
   user: z.object({
-    id: z.bigint().transform((id) => id.toString()),
-    name: z.string(),
-    nickname: z.string(),
-    email: z.email(),
+    id: z.bigint().transform((id) => Number(id)),
+    name: z.string().nullable(),
+    nickname: z.string().nullable(),
+    email: z.email().nullable(),
     //profileImageUrl: z.url().nullable(),
     provider: z.enum(["KAKAO", "GOOGLE", "APPLE", "LOCAL"]),
     // notification: z.object({
@@ -206,7 +206,7 @@ export type UpdateNicknameRequestDto = z.infer<typeof updateNicknameRequestSchem
 
 export const updateNicknameResponseSchema = z.object({
   user: z.object({
-    id: z.bigint().transform((id) => id.toString()),
+    id: z.bigint().transform((id) => Number(id)),
     nickname: z.string(),
   }),
 });

@@ -13,6 +13,12 @@
         "bearerFormat": "JWT",
         "description": "Access Token"
       },
+      "optionalJwt": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Optional Access Token"
+      },
       "refresh": {
         "type": "http",
         "scheme": "bearer",

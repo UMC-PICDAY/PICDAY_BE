@@ -1,5 +1,7 @@
 // src/seed.ts
+// 시드데이터 확인 : pnpm exec tsx src/seed.ts
 import "dotenv/config";
+import bcrypt from "bcrypt";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,6 +16,14 @@ const TERMS_AUTH_DIR = join(
   "auth",
 );
 
+// 예약 약관 원본(.md)은 repo 루트 terms/reservation 에 있음
+const TERMS_RESERVATION_DIR = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "terms",
+  "reservation",
+);
+
 // 메타데이터는 여기서 타입 안전하게 관리, 본문은 .md 파일에서 로드
 const AUTH_TERMS: ReadonlyArray<{
   type: TermsType;
@@ -22,17 +32,116 @@ const AUTH_TERMS: ReadonlyArray<{
   isRequired: boolean;
   file: string;
 }> = [
-  { type: "SERVICE", scope: "SIGNUP", version: "v1", isRequired: true, file: "service.md" },
-  { type: "PRIVACY_COLLECTION", scope: "SIGNUP", version: "v1", isRequired: true, file: "privacy.md" },
-  { type: "AGE_OVER_14", scope: "SIGNUP", version: "v1", isRequired: true, file: "over14.md" },
-  { type: "MARKETING", scope: "SIGNUP", version: "v1", isRequired: false, file: "marketing.md" },
+  {
+    type: "SERVICE",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: true,
+    file: "service.md",
+  },
+  {
+    type: "PRIVACY_COLLECTION",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: true,
+    file: "privacy.md",
+  },
+  {
+    type: "AGE_OVER_14",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: true,
+    file: "over14.md",
+  },
+  {
+    type: "MARKETING",
+    scope: "SIGNUP",
+    version: "v1",
+    isRequired: false,
+    file: "marketing.md",
+  },
+];
+
+// 예약 생성 시 필요한 필수 약관 (scope: RESERVATION)
+// PRIVACY_COLLECTION은 AUTH_TERMS 쪽과 내용이 달라 version을 구분함 (type_version 유니크 제약)
+const RESERVATION_TERMS: ReadonlyArray<{
+  type: TermsType;
+  scope: TermsScope;
+  version: string;
+  isRequired: boolean;
+  file: string;
+}> = [
+  {
+    type: "REFUND_POLICY",
+    scope: "RESERVATION",
+    version: "v1",
+    isRequired: true,
+    file: "refund.md",
+  },
+  {
+    type: "PRIVACY_COLLECTION",
+    scope: "RESERVATION",
+    version: "v1-reserv",
+    isRequired: true,
+    file: "privacy.md",
+  },
+  {
+    type: "THIRD_PARTY",
+    scope: "RESERVATION",
+    version: "v1",
+    isRequired: true,
+    file: "third_party.md",
+  },
+  {
+    type: "PAYMENT_AGENCY",
+    scope: "RESERVATION",
+    version: "v1",
+    isRequired: true,
+    file: "payment_agency.md",
+  },
 ];
 
 async function seedAuthTerms() {
   const seeded: { type: TermsType; id: bigint }[] = [];
 
   for (const term of AUTH_TERMS) {
-    const content = readFileSync(join(TERMS_AUTH_DIR, term.file), "utf-8").trim();
+    const content = readFileSync(
+      join(TERMS_AUTH_DIR, term.file),
+      "utf-8",
+    ).trim();
+
+    // (type, version) 유니크 기준 upsert — 재실행해도 중복 생성되지 않음
+    const row = await prisma.terms.upsert({
+      where: { type_version: { type: term.type, version: term.version } },
+      update: {
+        content,
+        scope: term.scope,
+        isRequired: term.isRequired,
+      },
+      create: {
+        type: term.type,
+        scope: term.scope,
+        version: term.version,
+        isRequired: term.isRequired,
+        content,
+      },
+      select: { id: true, type: true },
+    });
+
+    seeded.push(row);
+  }
+
+  return seeded;
+}
+
+async function seedReservationTerms() {
+  const seeded: { type: TermsType; id: bigint }[] = [];
+
+  for (const term of RESERVATION_TERMS) {
+    const content = readFileSync(
+      join(TERMS_RESERVATION_DIR, term.file),
+      "utf-8",
+    ).trim();
 
     // (type, version) 유니크 기준 upsert — 재실행해도 중복 생성되지 않음
     const row = await prisma.terms.upsert({
@@ -243,13 +352,33 @@ async function upsertReviewImage(reviewId: bigint, url: string) {
   });
 }
 
+// Postman 등에서 로그인 테스트용으로 쓸 평문 비밀번호. 아래 seed 유저들이 모두 이 비밀번호를 쓴다.
+// Postman 테스트 방법:
+//   POST http://localhost:3000/api/v1/auth/login
+//   Body(raw, JSON): { "loginId": "testuser01", "password": "test1234!" }
+//   (loginId 자리에 reviewuser02, reviewuser03도 동일한 비밀번호로 로그인 가능)
+const SEED_USER_PASSWORD = "test1234!";
+
 async function main() {
+  // --terms-only: 약관만 넣는다. 배포 환경에는 테스트 유저·리뷰가 들어가면 안 되므로
+  // 회원가입에 필요한 약관만 주입할 때 사용한다. (예: pnpm exec tsx src/seed.ts --terms-only)
+  if (process.argv.includes("--terms-only")) {
+    const auth = await seedAuthTerms();
+    const reservation = await seedReservationTerms();
+    console.log(
+      `약관 시드 완료 — 가입 약관 ${auth.length}건 / 예약 약관 ${reservation.length}건`,
+    );
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(SEED_USER_PASSWORD, 10);
+
   const user = await prisma.user.upsert({
     where: {
       loginId: "testuser01",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "홍길동",
       nickname: "테스트유저",
       email: "test@example.com",
@@ -257,7 +386,7 @@ async function main() {
     },
     create: {
       loginId: "testuser01",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "홍길동",
       nickname: "테스트유저",
       email: "test@example.com",
@@ -270,7 +399,7 @@ async function main() {
       loginId: "reviewuser02",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "김리뷰",
       nickname: "리뷰어둘",
       email: "reviewer2@example.com",
@@ -278,7 +407,7 @@ async function main() {
     },
     create: {
       loginId: "reviewuser02",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "김리뷰",
       nickname: "리뷰어둘",
       email: "reviewer2@example.com",
@@ -291,7 +420,7 @@ async function main() {
       loginId: "reviewuser03",
     },
     update: {
-      password: "hashed-password",
+      password: hashedPassword,
       name: "이리뷰",
       nickname: "리뷰어셋",
       email: "reviewer3@example.com",
@@ -299,7 +428,7 @@ async function main() {
     },
     create: {
       loginId: "reviewuser03",
-      password: "hashed-password",
+      password: hashedPassword,
       name: "이리뷰",
       nickname: "리뷰어셋",
       email: "reviewer3@example.com",
@@ -842,12 +971,44 @@ async function main() {
     });
   }
 
+  // 최근 본 사진관 (홈 화면 API의 recentStudios 테스트용)
+  // studioA가 더 최근에 봤으므로 recentStudios 조회 시 studioA가 studioB보다 먼저 나와야 함
+  for (const recentView of [
+    {
+      userId: user.id,
+      studioId: studioB.id,
+      viewedAt: new Date("2030-12-20T10:00:00.000Z"),
+    },
+    {
+      userId: user.id,
+      studioId: studioA.id,
+      viewedAt: new Date("2030-12-21T10:00:00.000Z"),
+    },
+  ]) {
+    await prisma.recentStudioView.upsert({
+      where: {
+        userId_studioId: {
+          userId: recentView.userId,
+          studioId: recentView.studioId,
+        },
+      },
+      update: { viewedAt: recentView.viewedAt },
+      create: recentView,
+    });
+  }
+
   const seededTerms = await seedAuthTerms();
+  const seededReservationTerms = await seedReservationTerms();
 
   console.log("✅ 시드 완료");
 
   console.log("\n--- 회원가입 약관(SIGNUP) 테스트용 ---");
   for (const term of seededTerms) {
+    console.log(`${term.type.padEnd(20)} ID:`, term.id.toString());
+  }
+
+  console.log("\n--- 예약 약관(RESERVATION) 테스트용 ---");
+  for (const term of seededReservationTerms) {
     console.log(`${term.type.padEnd(20)} ID:`, term.id.toString());
   }
 
@@ -872,6 +1033,15 @@ async function main() {
   console.log("미래 가용 슬롯 ID           :", availableSlot.id.toString());
   console.log("미래 마감 슬롯 ID           :", unavailableSlot.id.toString());
   console.log("다른 사진관 슬롯 ID         :", otherStudioSlot.id.toString());
+
+  console.log("\n--- 홈 화면(getHome) API 테스트용 ---");
+  console.log(
+    "testuser01의 최근 본 사진관(최신순): studioA(",
+    studioA.id.toString(),
+    "), studioB(",
+    studioB.id.toString(),
+    ")",
+  );
 
   console.log("\n--- 예약 API 테스트용 ---");
   console.log("정상 취소용 예약 ID         :", normalReservation.id.toString());

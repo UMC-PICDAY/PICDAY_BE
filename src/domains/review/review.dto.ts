@@ -93,23 +93,25 @@ export type ReviewSort = z.infer<typeof reviewSortSchema>;
 
 export const getReviewsQuerySchema = z.object({
   sort: reviewSortSchema,
-  photoOnly: z
-    .union([z.boolean(), z.enum(["true", "false"])])
-    .transform((v) => v === true || v === "true")
-    .default(false),
-  page: z.coerce.number().int().min(1).default(1),
-  size: z.coerce.number().int().min(1).max(50).default(10),
+  photoOnly: z.boolean().default(false),
+  page: z.number().int().min(1).default(1),
+  size: z.number().int().min(1).max(50).default(10),
 });
 
 export type GetReviewsQuery = z.infer<typeof getReviewsQuerySchema>;
 
 export const studioIdParamsSchema = z.object({
-  studioId: z.string().regex(/^\d+$/, "유효하지 않은 사진관 ID입니다."),
+  studioId: z
+    .number()
+    .int("studioId는 정수여야 합니다.")
+    .positive("studioId는 양수여야 합니다.")
+    .max(Number.MAX_SAFE_INTEGER, "studioId가 허용 범위를 초과했습니다."),
 });
 
 export type ReviewListItemDto = {
   reviewId: number;
   writerNickname: string | null;
+  conceptName: string;
   rating: number;
   content: string;
   keywords: ReviewKeywordValue[];
@@ -138,6 +140,26 @@ export type GetReviewsSuccessResponseDto = {
   data: GetReviewsResponseDto;
 };
 
+// 리뷰 단건 조회 API (마이페이지 "내 리뷰")
+export type ReviewDetailDto = {
+  reviewId: number;
+  studioName: string;
+  conceptName: string;
+  shootingDate: string;
+  rating: number;
+  keywords: ReviewKeywordValue[];
+  images: string[];
+  content: string;
+  createdAt: string;
+};
+
+export type GetReviewDetailSuccessResponseDto = {
+  success: true;
+  code: "COMMON_200";
+  message: string;
+  data: ReviewDetailDto;
+};
+
 // 리뷰 추천 / 추천 취소 API
 export type ReviewLikeResponseDto = {
   reviewId: number;
@@ -160,7 +182,11 @@ export type RemoveReviewLikeSuccessResponseDto = {
 
 // 리뷰 삭제 API
 export const reviewIdParamsSchema = z.object({
-  reviewId: z.string().regex(/^\d+$/, "유효하지 않은 리뷰 ID입니다."),
+  reviewId: z
+    .number()
+    .int("reviewId는 정수여야 합니다.")
+    .positive("reviewId는 양수여야 합니다.")
+    .max(Number.MAX_SAFE_INTEGER, "reviewId가 허용 범위를 초과했습니다."),
 });
 
 export type DeleteReviewSuccessResponseDto = {

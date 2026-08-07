@@ -25,10 +25,7 @@ const LOCATION_CATEGORY_LABELS: Record<string, string> = {
   JONGNO: "종로",
 };
 
-function toWishlistItem(
-  row: WishlistPageRow,
-  ratingByStudioId: Map<bigint, number>,
-): WishlistItemDto {
+function toWishlistItem(row: WishlistPageRow): WishlistItemDto {
   const { studio } = row;
 
   // 대표 썸네일 = studio_thumbnail_order가 가장 낮은 상품 이미지
@@ -55,7 +52,6 @@ function toWishlistItem(
   }
 
   const category = studio.location?.locationCategory;
-  const avgRating = ratingByStudioId.get(row.studioId);
 
   return {
     wishlistId: Number(row.id),
@@ -64,7 +60,11 @@ function toWishlistItem(
     thumbnail,
     region: category ? (LOCATION_CATEGORY_LABELS[category] ?? category) : null,
     minPrice,
-    rating: avgRating === undefined ? 0 : Math.round(avgRating * 10) / 10,
+    // 평점은 studio.ratingScore(배치 산출값)를 그대로 사용. 아직 없으면 0
+    rating:
+      studio.ratingScore === null
+        ? 0
+        : Math.round(studio.ratingScore * 10) / 10,
   };
 }
 
@@ -92,20 +92,11 @@ export async function getWishlists(
       size,
     );
 
-    const ratings = await wishlistRepository.findStudioRatings(
-      wishlists.map((row) => row.studioId),
-    );
-    const ratingByStudioId = new Map(
-      ratings
-        .filter((entry) => entry._avg.rating !== null)
-        .map((entry) => [entry.studioId, entry._avg.rating!]),
-    );
-
     return {
       totalCount,
       page,
       size,
-      items: wishlists.map((row) => toWishlistItem(row, ratingByStudioId)),
+      items: wishlists.map((row) => toWishlistItem(row)),
     };
   } catch (error) {
     if (error instanceof AppError) {
@@ -159,7 +150,7 @@ export async function addWishlist(
 // ====== 위시리스트 삭제 ======
 export async function removeWishlist(
   userId: bigint,
-  studioIdParam: string,
+  studioIdParam: number,
 ): Promise<null> {
   try {
     let studioId: bigint;

@@ -4,6 +4,7 @@ import {
   ServiceCode,
   ShootingCategory,
 } from "../../generated/prisma/enums.js";
+import { isValidApiIdNumber, toApiId, toDomainId } from "../../common/apiId.js";
 
 export const createStudioSchema = z.object({
   name: z.string().min(1),
@@ -15,10 +16,9 @@ export type CreateStudioDto = z.infer<typeof createStudioSchema>;
 
 // 공통 사진관 ID 검증
 const studioIdSchema = z
-  .string()
-  .regex(/^\d+$/, "사진관 ID는 양의 정수여야 합니다.")
-  .transform((id) => BigInt(id))
-  .refine((id) => id > 0n, "사진관 ID는 양의 정수여야 합니다.");
+  .number()
+  .refine(isValidApiIdNumber, "사진관 ID는 안전한 양의 정수여야 합니다.")
+  .transform(toDomainId);
 
 // 예약 가능 시간 조회 API
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
@@ -64,7 +64,7 @@ export const getStudioSlotsRequestSchema = z
   }));
 
 export type GetStudioSlotsRequestDto = {
-  studioId: string;
+  studioId: number;
   date: string | undefined;
 };
 
@@ -78,10 +78,9 @@ export function parseGetStudioSlotsRequest(
 
 // 컨셉 사진 상세 조회 API
 const studioProductIdSchema = z
-  .string()
-  .regex(/^\d+$/, "상품 ID는 양의 정수여야 합니다.")
-  .transform((id) => BigInt(id))
-  .refine((id) => id > 0n, "상품 ID는 양의 정수여야 합니다.");
+  .number()
+  .refine(isValidApiIdNumber, "상품 ID는 안전한 양의 정수여야 합니다.")
+  .transform(toDomainId);
 
 export const getStudioProductDetailRequestSchema = z.object({
   studioId: studioIdSchema,
@@ -104,10 +103,9 @@ export function parseGetStudioProductDetailRequest(
 
 // 컨셉 목록 조회 API
 const timeSlotIdSchema = z
-  .string()
-  .regex(/^\d+$/, "시간 슬롯 ID는 양의 정수여야 합니다.")
-  .transform((id) => BigInt(id))
-  .refine((id) => id > 0n, "시간 슬롯 ID는 양의 정수여야 합니다.");
+  .number()
+  .refine(isValidApiIdNumber, "시간 슬롯 ID는 안전한 양의 정수여야 합니다.")
+  .transform(toDomainId);
 
 export const getStudioProductsRequestSchema = z.object({
   studioId: studioIdSchema,
@@ -164,7 +162,7 @@ function formatDate(date: Date) {
 
 // 예약 가능 시간 조회 응답
 export const studioSlotResponseSchema = z.object({
-  slotId: z.bigint().transform((id) => id.toString()),
+  slotId: z.bigint().transform(toApiId),
   startTime: z.date().transform(formatTime),
   endTime: z.date().transform(formatTime),
   isAvailable: z.boolean(),
@@ -194,9 +192,9 @@ export type GetStudioSlotsSuccessResponseDto = z.output<
 // 컨셉 사진 상세 조회 응답
 export const studioProductDetailResponseSchema = z
   .object({
-    studioId: z.bigint().transform((id) => id.toString()),
+    studioId: z.bigint().transform(toApiId),
     studioName: z.string(),
-    studioProductId: z.bigint().transform((id) => id.toString()),
+    studioProductId: z.bigint().transform(toApiId),
     productName: z.string(),
     imageUrls: z.array(z.url()),
   })
@@ -215,7 +213,7 @@ export type StudioProductDetailResponseDto = z.output<
 
 // 컨셉 목록 조회 응답
 export const studioProductsSelectedSlotSchema = z.object({
-  timeSlotId: z.bigint().transform((id) => id.toString()),
+  timeSlotId: z.bigint().transform(toApiId),
   date: z.date().transform(formatDate),
   startTime: z.date().transform(formatTime),
   endTime: z.date().transform(formatTime),
@@ -224,7 +222,7 @@ export const studioProductsSelectedSlotSchema = z.object({
 
 export const studioProductListItemSchema = z
   .object({
-    studioProductId: z.bigint().transform((id) => id.toString()),
+    studioProductId: z.bigint().transform(toApiId),
     productName: z.string(),
     imageUrls: z.array(z.url()),
     price: z.number().int().nonnegative(),
@@ -242,7 +240,7 @@ export const studioProductGroupSchema = z.object({
 });
 
 export const studioProductsResponseSchema = z.object({
-  studioId: z.bigint().transform((id) => id.toString()),
+  studioId: z.bigint().transform(toApiId),
   studioName: z.string(),
   selectedSlot: studioProductsSelectedSlotSchema.nullable(),
   productGroups: z.array(studioProductGroupSchema),
@@ -264,13 +262,13 @@ export function createStudioProductsResponse(
 
 // 헤어메이크업 연계 상세 조회 응답
 export const studioHairMakeupListItemSchema = z.object({
-  hairMakeupDetailId: z.bigint().transform((id) => id.toString()),
+  hairMakeupDetailId: z.bigint().transform(toApiId),
   partnerName: z.string(),
   additionalPrice: z.number().int(),
 });
 
 export const studioHairMakeupResponseSchema = z.object({
-  studioId: z.bigint().transform((id) => id.toString()),
+  studioId: z.bigint().transform(toApiId),
   hairMakeupList: z.array(studioHairMakeupListItemSchema),
 });
 
@@ -319,7 +317,7 @@ export const studioDetailLocationSchema = z.object({
 });
 
 export const studioDetailRepresentativeProductSchema = z.object({
-  studioProductId: z.bigint().transform((id) => id.toString()),
+  studioProductId: z.bigint().transform(toApiId),
   productName: z.string(),
   thumbnailUrl: z.url().nullable(),
   price: z.number().int().nonnegative(),
@@ -338,7 +336,7 @@ export const studioDetailInfoSchema = z.object({
 });
 
 export const studioDetailPreviewReviewSchema = z.object({
-  reviewId: z.bigint().transform((id) => id.toString()),
+  reviewId: z.bigint().transform(toApiId),
   writerNickname: z.string(),
   isBest: z.boolean(),
   rating: z.number().int().min(1).max(5),
@@ -354,7 +352,7 @@ export const studioDetailReviewSummarySchema = z.object({
 });
 
 export const studioDetailResponseSchema = z.object({
-  studioId: z.bigint().transform((id) => id.toString()),
+  studioId: z.bigint().transform(toApiId),
   studioName: z.string(),
   imageUrls: z.array(z.url()),
   isWishlisted: z.boolean(),

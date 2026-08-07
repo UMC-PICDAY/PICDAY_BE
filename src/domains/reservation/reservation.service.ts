@@ -6,7 +6,6 @@ import {
   getMyReservationListResponseSchema,
   getReservationDetailResponseSchema,
   parseCreateReservationRequest,
-  reservationStatusEnum,
   type CancelReservationResponseDto,
   type CreateReservationResponseDto,
   type GetReservationDetailResponseDto,
@@ -14,6 +13,66 @@ import {
   type ReservationStatus,
 } from "./reservation.dto.js";
 import * as reservationRepository from "./reservation.repository.js";
+
+export const RESERVATION_CHECKLIST_ITEMS = [
+  "의상 준비",
+  "헤어·메이크업 준비",
+  "위치 확인",
+  "소품 챙기기",
+] as const;
+
+const KST_OFFSET_MILLISECONDS = 9 * 60 * 60 * 1000;
+
+export type CompleteExpiredReservationsResult = {
+  scannedCount: number;
+  expiredCount: number;
+  completedCount: number;
+  skippedInvalidSlotCount: number;
+};
+
+function getUtcTimeSeconds(time: Date) {
+  return (
+    time.getUTCHours() * 60 * 60 +
+    time.getUTCMinutes() * 60 +
+    time.getUTCSeconds()
+  );
+}
+
+function getKstCutoffDate(now: Date) {
+  const kstNow = new Date(now.getTime() + KST_OFFSET_MILLISECONDS);
+
+  return new Date(
+    Date.UTC(
+      kstNow.getUTCFullYear(),
+      kstNow.getUTCMonth(),
+      kstNow.getUTCDate(),
+    ),
+  );
+}
+
+function getKstShootingEndAt(date: Date, endTime: Date) {
+  return new Date(
+    Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      endTime.getUTCHours(),
+      endTime.getUTCMinutes(),
+      endTime.getUTCSeconds(),
+    ) - KST_OFFSET_MILLISECONDS,
+  );
+}
+
+function hasInvalidOrOvernightTimeSlot(startTime: Date, endTime: Date) {
+  const startSeconds = getUtcTimeSeconds(startTime);
+  const endSeconds = getUtcTimeSeconds(endTime);
+
+  return (
+    !Number.isFinite(startSeconds) ||
+    !Number.isFinite(endSeconds) ||
+    endSeconds <= startSeconds
+  );
+}
 
 // ====== 예약 생성 ======
 const REQUIRED_RESERVEE_FIELDS = new Set(["reserveeName", "reserveePhone"]);
@@ -143,6 +202,80 @@ export async function create(
   }
 }
 
+// ====== 촬영 종료 예약 완료 처리 ======
+export async function completeExpiredReservations(
+  now: Date = new Date(),
+): Promise<CompleteExpiredReservationsResult> {
+  const cutoffDate = getKstCutoffDate(now);
+  const result: CompleteExpiredReservationsResult = {
+    scannedCount: 0,
+    expiredCount: 0,
+    completedCount: 0,
+    skippedInvalidSlotCount: 0,
+  };
+  let afterId: bigint | undefined;
+
+  while (true) {
+    const candidates =
+      await reservationRepository.findReservedCompletionCandidates(
+        cutoffDate,
+        afterId,
+      );
+
+    if (candidates.length === 0) {
+      return result;
+    }
+
+    result.scannedCount += candidates.length;
+    const expiredReservationIds: bigint[] = [];
+
+    for (const candidate of candidates) {
+      if (
+        hasInvalidOrOvernightTimeSlot(
+          candidate.timeSlot.startTime,
+          candidate.timeSlot.endTime,
+        )
+      ) {
+        result.skippedInvalidSlotCount += 1;
+        continue;
+      }
+
+      const shootingEndAt = getKstShootingEndAt(
+        candidate.timeSlot.date,
+        candidate.timeSlot.endTime,
+      );
+
+      if (!Number.isFinite(shootingEndAt.getTime())) {
+        result.skippedInvalidSlotCount += 1;
+        continue;
+      }
+
+      if (shootingEndAt.getTime() <= now.getTime()) {
+        result.expiredCount += 1;
+        expiredReservationIds.push(candidate.id);
+      }
+    }
+
+    if (expiredReservationIds.length > 0) {
+      result.completedCount +=
+        await reservationRepository.completeReservationsIfReserved(
+          expiredReservationIds,
+        );
+    }
+
+    const nextAfterId = candidates[candidates.length - 1]?.id;
+
+    if (
+      nextAfterId === undefined ||
+      (afterId !== undefined && nextAfterId <= afterId)
+    ) {
+      throw new Error("예약 완료 후보 cursor가 전진하지 않았습니다.");
+    }
+
+    afterId = nextAfterId;
+  }
+}
+
 // ====== 예약 취소 ======
 export async function cancel(
   reservationId: bigint,
@@ -185,7 +318,43 @@ export async function cancel(
     throw new AppError("RESERVATION_4002");
   }
 
-  const updated = await reservationRepository.cancelReservation(reservationId);
+  let updated: Awaited<
+    ReturnType<typeof reservationRepository.cancelReservation>
+  >;
+
+  try {
+    updated = await reservationRepository.cancelReservation(reservationId);
+  } catch (error) {
+    if (
+      !(
+        error instanceof
+        reservationRepository.ReservationCancellationConflictError
+      )
+    ) {
+      throw error;
+    }
+
+    const latestReservation =
+      await reservationRepository.getReservationById(reservationId);
+
+    if (!latestReservation) {
+      throw new AppError("RESERVATION_4041");
+    }
+
+    if (latestReservation.userId !== userId) {
+      throw new AppError("RESERVATION_4042");
+    }
+
+    if (latestReservation.status === "CANCELLED") {
+      throw new AppError("RESERVATION_4092");
+    }
+
+    if (latestReservation.status === "COMPLETED") {
+      throw new AppError("RESERVATION_4093");
+    }
+
+    throw new AppError("COMMON_409");
+  }
 
   return cancelReservationResponseSchema.parse({
     reservationId: updated.id,
@@ -195,7 +364,7 @@ export async function cancel(
 }
 
 // ===== 예약 상세조회 =====
-export async function getDetail(
+export async function detail(
   reservationId: bigint,
   userId: bigint,
 ): Promise<GetReservationDetailResponseDto> {
@@ -230,30 +399,60 @@ export async function getDetail(
       startTime: reservation.timeSlot.startTime,
       endTime: reservation.timeSlot.endTime,
     },
+    reviewId: reservation.review?.id ?? null,
+    checklist: RESERVATION_CHECKLIST_ITEMS,
     createdAt: reservation.createdAt,
     canceledAt: reservation.canceledAt,
   });
 }
 
+// 대표 썸네일 = studio_thumbnail_order가 가장 낮은 상품 이미지
+type ProductImageRow = { url: string; studioThumbnailOrder: number | null };
+
+function pickThumbnails(
+  products: Array<{ productImages: ProductImageRow[] }>,
+  count: number,
+): (string | null)[] {
+  const orderedImages = products
+    .flatMap((product) => product.productImages)
+    .filter((image) => image.studioThumbnailOrder !== null)
+    .sort((a, b) => a.studioThumbnailOrder! - b.studioThumbnailOrder!);
+
+  return Array.from(
+    { length: count },
+    (_, index) => orderedImages[index]?.url ?? null,
+  );
+}
+
 // ====== 내 예약 조회 ======
 export async function list(
   userId: bigint,
-  status?: ReservationStatus
+  status?: ReservationStatus,
 ): Promise<GetMyReservationListResponseDto> {
   const reservations = await reservationRepository.getReservationsByUserId(
     userId,
     status,
   );
 
-  const data = reservations.map((reservation) => ({
+  const data = reservations.map((reservation) => {
+  const [thumbnailUrl, secondThumbnailUrl] = pickThumbnails(
+    reservation.studioProduct.studio.products,
+    2,
+  );
+
+  return {
     reservationId: reservation.id,
     studioName: reservation.studioProduct.studio.name,
+    thumbnailUrl,
+    secondThumbnailUrl,
     conceptName: reservation.studioProduct.name,
     reservationDate: reservation.timeSlot.date,
     reservationTime: reservation.timeSlot.startTime.toISOString().slice(11, 16),
     totalPrice: reservation.totalPrice,
     status: reservation.status,
-  }));
+    reviewId: reservation.review?.id ?? null,
+    };
+  });
 
   return getMyReservationListResponseSchema.parse(data);
 }

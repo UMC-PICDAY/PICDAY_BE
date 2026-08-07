@@ -24,12 +24,12 @@ export class StudioReviewController extends Controller {
   @Get("{studioId}/reviews")
   @SuccessResponse(200, "OK")
   public async listByStudio(
-    @Path() studioId: string,
+    @Path() studioId: number,
     @Request() request: any,
     @Query() sort?: string,
-    @Query() photoOnly?: string,
-    @Query() page?: string,
-    @Query() size?: string,
+    @Query() photoOnly?: boolean,
+    @Query() page?: number,
+    @Query() size?: number,
   ): Promise<GetReviewsSuccessResponseDto> {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.getReviews(userId, studioId, {
