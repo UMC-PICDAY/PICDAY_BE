@@ -289,7 +289,7 @@
     },
     "products": [
       {
-        "name": "개인화보(시크·자연광)",
+        "name": "개인화보(시크)",
         "price": 148000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -298,10 +298,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-06_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(자연광)",
+        "price": 148000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-06_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -397,7 +406,7 @@
     },
     "products": [
       {
-        "name": "개인화보(여름한조각·모노톤·시크)",
+        "name": "개인화보(여름한조각)",
         "price": 73000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -406,15 +415,33 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(모노톤)",
+        "price": 73000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(시크)",
+        "price": 73000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HD-10_personal_portrait_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -626,7 +653,7 @@
     },
     "products": [
       {
-        "name": "가족(장수사진·소가족·리마인드웨딩)",
+        "name": "가족(장수사진)",
         "price": 118000,
         "shootingCategory": "FAMILY",
         "basePeople": 2,
@@ -635,15 +662,33 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-01_family_photo_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "가족(소가족)",
+        "price": 118000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-01_family_photo_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "가족(리마인드웨딩)",
+        "price": 118000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-01_family_photo_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -699,7 +744,7 @@
     "name": "스튜디오포레스트룸",
     "introduction": "단정한 인상의 취업사진·깐깐하게 리터칭한 증명사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 자연광과 조명을 함께 활용해 다양한 톤의 결과물을 뽑아냅니다.",
     "notice": "당일 컨셉 추가 시 추가 요금은 현장에서 결제됩니다.",
-    "ratingScore": 4.5,
+    "ratingScore": 4.6,
     "reservationCount": 31,
     "location": {
       "mainAddress": "서울 강남구",
@@ -932,7 +977,7 @@
     },
     "products": [
       {
-        "name": "개인화보(여름한조각·필름톤·시크)",
+        "name": "개인화보(여름한조각)",
         "price": 128000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -941,15 +986,33 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(필름톤)",
+        "price": 128000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(시크)",
+        "price": 128000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/GN-09_personal_portrait_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -1217,7 +1280,7 @@
     "name": "스튜디오결룸",
     "introduction": "정확한 색감의 증명사진·발랄한 우정사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다. 컨셉별 샘플 의상을 무료로 대여할 수 있습니다. 건물 내 주차가 가능해 대중교통이 어려운 분도 편하게 방문할 수 있습니다. 소품과 세트를 주기적으로 교체해 매번 다른 느낌의 사진을 남길 수 있습니다.",
     "notice": "최근 리모델링으로 세트가 새롭게 단장되었습니다.",
-    "ratingScore": 4.8,
+    "ratingScore": 4.7,
     "reservationCount": 14,
     "location": {
       "mainAddress": "서울 성동구",
@@ -1809,7 +1872,7 @@
     },
     "products": [
       {
-        "name": "개인화보(굿나잇버니·필름톤)",
+        "name": "개인화보(굿나잇버니)",
         "price": 87000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -1818,10 +1881,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-08_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(필름톤)",
+        "price": 87000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-08_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -1913,7 +1985,7 @@
     },
     "products": [
       {
-        "name": "개인화보(모노톤·자연광)",
+        "name": "개인화보(모노톤)",
         "price": 150000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -1922,10 +1994,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-07_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(자연광)",
+        "price": 150000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/YN-07_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -2132,7 +2213,7 @@
     },
     "products": [
       {
-        "name": "개인화보(자연광·시크)",
+        "name": "개인화보(자연광)",
         "price": 151000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -2141,10 +2222,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-09_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(시크)",
+        "price": 151000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-09_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -2243,7 +2333,7 @@
     },
     "products": [
       {
-        "name": "가족(반려동물동반·장수사진·소가족·환갑칠순)",
+        "name": "가족(반려동물동반)",
         "price": 169000,
         "shootingCategory": "FAMILY",
         "basePeople": 2,
@@ -2252,20 +2342,47 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "가족(장수사진)",
+        "price": 169000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "가족(소가족)",
+        "price": 169000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "가족(환갑칠순)",
+        "price": 169000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-10_family_photo_4.jpg",
-            "order": 4,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -2320,7 +2437,7 @@
     },
     "products": [
       {
-        "name": "개인화보(모노톤·쿨톤)",
+        "name": "개인화보(모노톤)",
         "price": 146000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -2329,10 +2446,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-03_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(쿨톤)",
+        "price": 146000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/KD-03_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -2634,7 +2760,7 @@
     },
     "products": [
       {
-        "name": "개인화보(파스텔·웜톤)",
+        "name": "개인화보(파스텔)",
         "price": 80000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -2643,10 +2769,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-03_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "개인화보(웜톤)",
+        "price": 80000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-03_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -2832,7 +2967,7 @@
     "name": "포토그래피그레이스튜디오",
     "introduction": "감성적인 톤의 개인화보·발랄한 우정사진 전문 스튜디오입니다. 헤어·메이크업 제휴샵과 연계해 촬영 전 준비까지 한 번에 해결할 수 있습니다.",
     "notice": "우천 시에도 실내 촬영은 정상 진행됩니다.",
-    "ratingScore": 4.5,
+    "ratingScore": 4.6,
     "reservationCount": 33,
     "location": {
       "mainAddress": "서울 서대문구",
@@ -2949,7 +3084,7 @@
     },
     "products": [
       {
-        "name": "개인화보(굿나잇버니·로맨틱돌·파스텔)",
+        "name": "개인화보(굿나잇버니)",
         "price": 71000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -2958,15 +3093,33 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(로맨틱돌)",
+        "price": 71000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(파스텔)",
+        "price": 71000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-01_personal_portrait_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -3065,7 +3218,7 @@
     },
     "products": [
       {
-        "name": "개인화보(생화·필름톤·모노톤)",
+        "name": "개인화보(생화)",
         "price": 72000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -3074,15 +3227,33 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(필름톤)",
+        "price": 72000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(모노톤)",
+        "price": 72000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/SC-04_personal_portrait_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -3482,7 +3653,7 @@
     },
     "products": [
       {
-        "name": "가족(반려동물동반·장수사진·리마인드웨딩·대가족)",
+        "name": "가족(반려동물동반)",
         "price": 124000,
         "shootingCategory": "FAMILY",
         "basePeople": 2,
@@ -3491,20 +3662,47 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "가족(장수사진)",
+        "price": 124000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "가족(리마인드웨딩)",
+        "price": 124000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "가족(대가족)",
+        "price": 124000,
+        "shootingCategory": "FAMILY",
+        "basePeople": 2,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-07_family_photo_4.jpg",
-            "order": 4,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -3564,7 +3762,7 @@
     },
     "products": [
       {
-        "name": "개인화보(필름톤·웜톤·생화)",
+        "name": "개인화보(필름톤)",
         "price": 70000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -3573,15 +3771,33 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(웜톤)",
+        "price": 70000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(생화)",
+        "price": 70000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JS-03_personal_portrait_3.jpg",
-            "order": 3,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -3784,7 +4000,7 @@
     },
     "products": [
       {
-        "name": "개인화보(필름톤·미니멀)",
+        "name": "개인화보(필름톤)",
         "price": 75000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -3793,10 +4009,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-06_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "개인화보(미니멀)",
+        "price": 75000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-06_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -4073,7 +4298,7 @@
     },
     "products": [
       {
-        "name": "개인화보(파스텔·플라워베일)",
+        "name": "개인화보(파스텔)",
         "price": 124000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -4082,10 +4307,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-04_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "개인화보(플라워베일)",
+        "price": 124000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/AG-04_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -4167,7 +4401,7 @@
     },
     "products": [
       {
-        "name": "개인화보(쿨톤·미니멀)",
+        "name": "개인화보(쿨톤)",
         "price": 116000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -4176,10 +4410,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-06_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(미니멀)",
+        "price": 116000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-06_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -4481,7 +4724,7 @@
     },
     "products": [
       {
-        "name": "개인화보(필름톤·자연광)",
+        "name": "개인화보(필름톤)",
         "price": 72000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -4490,10 +4733,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-10_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(자연광)",
+        "price": 72000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/HH-10_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -4699,7 +4951,7 @@
     },
     "products": [
       {
-        "name": "개인화보(여름한조각·자연광)",
+        "name": "개인화보(여름한조각)",
         "price": 85000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -4708,10 +4960,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-04_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(자연광)",
+        "price": 85000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-04_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -4803,7 +5064,7 @@
     },
     "products": [
       {
-        "name": "개인화보(시크·빈티지)",
+        "name": "개인화보(시크)",
         "price": 69000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -4812,10 +5073,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-01_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": true
+      },
+      {
+        "name": "개인화보(빈티지)",
+        "price": 69000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-01_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
@@ -5030,7 +5300,7 @@
     },
     "products": [
       {
-        "name": "개인화보(쿨톤·웜톤)",
+        "name": "개인화보(쿨톤)",
         "price": 107000,
         "shootingCategory": "PERSONAL_PORTRAIT",
         "basePeople": 1,
@@ -5039,10 +5309,19 @@
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-09_personal_portrait_1.jpg",
             "order": 1,
             "studioThumbnailOrder": 1
-          },
+          }
+        ],
+        "hasAdditionalPrice": false
+      },
+      {
+        "name": "개인화보(웜톤)",
+        "price": 107000,
+        "shootingCategory": "PERSONAL_PORTRAIT",
+        "basePeople": 1,
+        "images": [
           {
             "url": "https://picday-images-681447159066-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/studio/JR-09_personal_portrait_2.jpg",
-            "order": 2,
+            "order": 1,
             "studioThumbnailOrder": null
           }
         ],
