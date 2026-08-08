@@ -17,7 +17,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 XLSX = sys.argv[1] if len(sys.argv) > 1 else os.path.join(BASE_DIR, "PICDAY_목업데이터_v7.xlsx")
 IMG_CSV = os.path.join(BASE_DIR, "image-mapping.csv")
 OUT = os.path.join(BASE_DIR, "studios.json")
-SHEET = "사진관 목업 데이터_v12"
+# 엑셀 버전에 따라 시트명 접미사가 붙기도 한다 (v7: "..._v12", v8: 접미사 없음)
+SHEET_CANDIDATES = ["사진관 목업 데이터", "사진관 목업 데이터_v12"]
 
 if not os.path.exists(XLSX):
     sys.exit(
@@ -62,19 +63,50 @@ def category_of(name):
 
 
 def parse_products(text):
+    """컨셉별가격 문자열을 상품 목록으로 분해한다.
+
+    '개인화보(시크·자연광) ₩148,000' 처럼 괄호 안에 세부 컨셉이 여러 개면
+    각각을 별도 상품으로 나눈다. 촬영목적(개인화보)이 중분류, 세부 컨셉이 상품 카드다.
+    가격은 원본에 하나뿐이라 동일하게 적용한다.
+    """
     products = []
     for part in text.split(" / "):
         m = re.match(r"^(.*?)\s*₩([\d,]+)$", part.strip())
         name = m.group(1)
-        prefix, enum, people = category_of(name)
-        products.append({
-            "namePrefix": prefix,
-            "name": name,
-            "price": int(m.group(2).replace(",", "")),
-            "shootingCategory": enum,
-            "basePeople": people,
-            "images": [],
-        })
+        price = int(m.group(2).replace(",", ""))
+
+        paren = re.search(r"\((.+)\)$", name)
+        subs = (
+            [s.strip() for s in paren.group(1).split("·")]
+            if paren and "·" in paren.group(1)
+            else None
+        )
+
+        if subs:
+            base = name[: paren.start()]
+            prefix, enum, people = category_of(base)
+            # subIndex는 이미지 파일명의 번호(개인화보1, 개인화보2...)와 대응한다
+            for index, sub in enumerate(subs, start=1):
+                products.append({
+                    "namePrefix": prefix,
+                    "subIndex": index,
+                    "name": f"{base}({sub})",
+                    "price": price,
+                    "shootingCategory": enum,
+                    "basePeople": people,
+                    "images": [],
+                })
+        else:
+            prefix, enum, people = category_of(name)
+            products.append({
+                "namePrefix": prefix,
+                "subIndex": None,
+                "name": name,
+                "price": price,
+                "shootingCategory": enum,
+                "basePeople": people,
+                "images": [],
+            })
     return products
 
 
@@ -135,7 +167,11 @@ with open(IMG_CSV, encoding="utf-8-sig") as fp:
         images_by_studio[row["studioExcelId"]].append(row)
 
 # ---------- 엑셀 파싱 ----------
-ws = openpyxl.load_workbook(XLSX, data_only=True)[SHEET]
+wb = openpyxl.load_workbook(XLSX, data_only=True)
+sheet_name = next((s for s in SHEET_CANDIDATES if s in wb.sheetnames), None)
+if sheet_name is None:
+    sys.exit(f"사진관 시트를 찾을 수 없습니다. 시트 목록: {wb.sheetnames}")
+ws = wb[sheet_name]
 rows = list(ws.iter_rows(min_row=1, values_only=True))
 hdr, data = rows[0], [r for r in rows[1:] if r[0]]
 I = {h: i for i, h in enumerate(hdr)}
@@ -147,11 +183,21 @@ for r in data:
     excel_id = g(r, "ID")
     products = parse_products(g(r, "컨셉별가격"))
 
-    # --- 이미지를 상품에 연결 (상품명 접두어 기준) ---
+    # --- 이미지를 상품에 연결 ---
+    # 파일명 접두어로 중분류를 찾고, 세부 컨셉으로 나뉜 상품은 파일명 끝 번호로 짝을 맞춘다.
+    # (개인화보1(시크) -> 개인화보(시크), 개인화보2(자연광) -> 개인화보(자연광))
     for img in images_by_studio.get(excel_id, []):
-        base = re.match(r"^[A-Z]{2}-\d+_(.+?)(?:_\d+)?\.jpg$", img["fileName"])
-        prefix = IMG_BASE_TO_PRODUCT.get(base.group(1)) if base else None
-        target = next((p for p in products if p["namePrefix"] == prefix), None)
+        parsed = re.match(r"^[A-Z]{2}-\d+_(.+?)(?:_(\d+))?\.jpg$", img["fileName"])
+        prefix = IMG_BASE_TO_PRODUCT.get(parsed.group(1)) if parsed else None
+        number = int(parsed.group(2)) if parsed and parsed.group(2) else None
+
+        candidates = [p for p in products if p["namePrefix"] == prefix]
+        target = None
+        if number is not None:
+            target = next((p for p in candidates if p["subIndex"] == number), None)
+        if target is None:
+            # 나뉘지 않은 상품은 이미지를 여러 장 가질 수 있다
+            target = next((p for p in candidates if p["subIndex"] is None), None)
         if target is None:
             orphan_images.append((excel_id, img["fileName"]))
             continue
@@ -180,6 +226,7 @@ for r in data:
 
     for p in products:
         p.pop("namePrefix")
+        p.pop("subIndex")
         p["hasAdditionalPrice"] = bool(hair)
 
     studios.append({
