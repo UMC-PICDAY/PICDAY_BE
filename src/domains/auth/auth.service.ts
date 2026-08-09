@@ -70,8 +70,15 @@ async function issueTokenPair(userId: bigint) {
   const sub = userId.toString();
   const accessToken = signAccessToken(sub);
   const refreshToken = signRefreshToken(sub);
+  const refreshTokenExpiresAt = new Date(
+    Date.now() + REFRESH_TOKEN_EXPIRES_IN * 1000,
+  );
 
-  await authRepository.updateRefreshToken(userId, refreshToken);
+  await authRepository.updateRefreshToken(
+    userId,
+    refreshToken,
+    refreshTokenExpiresAt,
+  );
 
   return {
     accessToken,
@@ -249,7 +256,11 @@ export async function register(dto: SignupRequestDto) {
     agreedTermIds,
   );
 
-  const { password: _password, ...userWithoutPassword } = user;
+  const {
+    password: _password,
+    refreshTokenExpiresAt: _refreshTokenExpiresAt,
+    ...userWithoutPassword
+  } = user;
 
   return {
     ...userWithoutPassword,
@@ -309,6 +320,14 @@ export async function refresh(userId: bigint, refreshToken: string) {
     throw new AppError("AUTH_4013");
   }
 
+  // DB 만료 시각이 지났으면 JWT 만료와 동일하게 AUTH_4016 처리
+  if (
+    !user.refreshTokenExpiresAt ||
+    user.refreshTokenExpiresAt.getTime() < Date.now()
+  ) {
+    throw new AppError("AUTH_4016");
+  }
+
   const token = await issueTokenPair(user.id);
 
   return { token };
@@ -322,7 +341,7 @@ export async function refresh(userId: bigint, refreshToken: string) {
  * (Cookie 미사용 — Authorization Header 기반이므로 서버는 refreshToken만 무효화한다)
  */
 export async function logout(userId: bigint): Promise<void> {
-  await authRepository.updateRefreshToken(userId, null);
+  await authRepository.updateRefreshToken(userId, null, null);
 }
 
 export async function checkLoginIdAvailability(rawLoginId: string) {
