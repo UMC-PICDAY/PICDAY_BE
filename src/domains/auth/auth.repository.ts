@@ -36,10 +36,13 @@ export async function findUserById(id: bigint) {
   });
 }
 
-/** 로컬 로그인용: ACTIVE 상태의 LOCAL 유저를 loginId로 조회 */
+/**
+ * 로컬 로그인용: ACTIVE 상태의 유저를 loginId로 조회.
+ * loginId는 자체 회원가입에서만 채워지므로(소셜 가입 유저는 null) loginId 조회 자체가 LOCAL 한정이다.
+ */
 export async function findActiveLocalUserByLoginId(loginId: string) {
   return prisma.user.findFirst({
-    where: { loginId, provider: "LOCAL", status: "ACTIVE" },
+    where: { loginId, status: "ACTIVE" },
   });
 }
 
@@ -52,6 +55,22 @@ export async function findSocialAccountWithUser(
     where: { provider_providerId: { provider, providerId } },
     include: { user: true },
   });
+}
+
+/**
+ * 유저에 연결된 소셜 계정의 provider를 조회한다. (가장 먼저 연결된 계정 기준)
+ * 연결된 소셜 계정이 없으면 null — 자체(LOCAL) 가입 유저를 의미한다.
+ * provider는 SocialAccount가 단일 출처이므로, 표시용 provider는 여기서 유도한다.
+ */
+export async function findPrimarySocialProvider(
+  userId: bigint,
+): Promise<Provider | null> {
+  const account = await prisma.socialAccount.findFirst({
+    where: { userId },
+    orderBy: { id: "asc" },
+    select: { provider: true },
+  });
+  return account?.provider ?? null;
 }
 
 /** 로그인/로그아웃 시 refreshToken·만료 시각 저장 또는 삭제(null) */
@@ -107,7 +126,6 @@ export async function createUserWithTerms(
         nickname: data.nickname,
         email: data.email,
         phoneNumber: data.phoneNumber,
-        provider: "LOCAL",
         status: "ACTIVE",
       },
     });
@@ -158,7 +176,6 @@ export async function createSocialUserWithTerms(
           nickname: data.nickname,
           email: data.email,
           phoneNumber: data.phoneNumber,
-          provider: data.provider,
           status: "ACTIVE",
         },
       });

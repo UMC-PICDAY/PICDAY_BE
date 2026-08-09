@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { AppError } from "../../common/error.js";
 import * as authRepository from "./auth.repository.js";
 import { getActiveReservationByUserId } from "../reservation/reservation.repository.js";
+import type { Provider } from "../../generated/prisma/client.js";
 import {
   buildSocialAuthUrl,
   getSocialProfile,
@@ -129,7 +130,8 @@ export async function socialLogin(
           email: account.user.email,
           // 스키마에 profileImageUrl 컬럼이 없어 현재는 null (getMe와 동일)
           profileImageUrl: null,
-          provider: account.user.provider ?? social.provider,
+          // provider는 SocialAccount가 단일 출처 — 조회에 사용한 소셜 계정의 값을 그대로 사용
+          provider: account.provider,
         },
         token,
       },
@@ -197,7 +199,8 @@ export async function completeSocialSignup(
     user: {
       id: outcome.user.id,
       nickname: outcome.user.nickname,
-      provider: outcome.user.provider,
+      // 방금 생성한 SocialAccount와 동일한 값 (signupToken에 담겨 온 provider)
+      provider: signupInfo.provider,
     },
     token,
   });
@@ -289,7 +292,9 @@ export async function login(dto: LoginRequestDto) {
       id: Number(user.id),
       loginId: user.loginId,
       nickname: user.nickname,
-      provider: user.provider,
+      // loginId·password 기반 로그인 경로이므로 항상 자체 가입(LOCAL)
+      // 응답 스펙을 Provider enum으로 유지하기 위해 리터럴이 아닌 Provider 타입으로 노출한다
+      provider: "LOCAL" as Provider,
     },
     token,
   };
@@ -372,6 +377,9 @@ export async function getMe(
     throw new AppError("COMMON_404");
   }
 
+  // provider는 SocialAccount에서 유도한다 — 연결된 소셜 계정이 없으면 자체 가입(LOCAL)
+  const socialProvider = await authRepository.findPrimarySocialProvider(userId);
+
   return getMeResponseSchema.parse({
     user: {
       id: user.id,
@@ -379,7 +387,7 @@ export async function getMe(
       nickname: user.nickname,
       email: user.email,
       // profileImageUrl: user.profileImageUrl,
-      provider: user.provider,
+      provider: socialProvider ?? "LOCAL",
       // notification: {
       //   reservation: user.notificationReservation,
       //   marketing: user.notificationMarketing,

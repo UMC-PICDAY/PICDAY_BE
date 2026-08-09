@@ -141,7 +141,6 @@ async function main() {
       nickname: review.nickname,
       email: `${SEED_LOGIN_PREFIX}${String(index + 1).padStart(4, "0")}@picday.seed`,
       phoneNumber: `010${String(10000000 + index).slice(0, 8)}`,
-      provider: "LOCAL" as const,
       status: "ACTIVE" as const,
     })),
     skipDuplicates: true,
