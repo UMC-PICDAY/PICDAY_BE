@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import cors from "cors";
 import "dotenv/config";
+import { AppError } from "../common/error.js";
 import { errorHandler } from "../common/errorHandler.js";
 import { success } from "../common/response.js";
 import { responseWrapper } from "../common/responseWrapper.js";
@@ -35,6 +36,10 @@ const apiRouter = Router();
 apiRouter.use(responseWrapper);
 RegisterRoutes(apiRouter);
 app.use(apiRouter);
+
+app.use((_req, _res, next) => {
+  next(new AppError("COMMON_404"));
+});
 
 app.use(errorHandler);
 

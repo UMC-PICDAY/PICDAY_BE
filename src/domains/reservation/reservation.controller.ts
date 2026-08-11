@@ -150,12 +150,16 @@ export class ReservationController extends Controller {
     @Request() request: any,
     @Query() status?: string,
   ): Promise<GetMyReservationListResponseDto> {
-    const { status: parsedStatus } = getMyReservationListQuerySchema.parse({
+    const query = getMyReservationListQuerySchema.safeParse({
       status,
     });
 
+    if (!query.success) {
+      throw new AppError("RESERVATION_4003");
+    }
+
     const { userId } = request as AuthenticatedRequest;
-    const result = await reservationService.list(userId, parsedStatus);
+    const result = await reservationService.list(userId, query.data.status);
 
     return result;
   }

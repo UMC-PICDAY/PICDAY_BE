@@ -11,6 +11,17 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     return;
   }
 
+  if (
+    err instanceof SyntaxError &&
+    "type" in err &&
+    err.type === "entity.parse.failed"
+  ) {
+    res
+      .status(HTTP_STATUS.BAD_REQUEST)
+      .json(fail("COMMON_400", "요청 형식이 올바르지 않습니다."));
+    return;
+  }
+
   // 요청 파싱 실패는 parseOrThrow에서 이미 AppError로 변환되어 여기 도달하지 않음
 
   if (err instanceof ValidateError) {
