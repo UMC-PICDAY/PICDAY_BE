@@ -12,11 +12,11 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
+import { setSuccessMessage } from "../../common/response.js";
 import type {
   AddWishlistRequestDto,
-  AddWishlistSuccessResponseDto,
-  DeleteWishlistSuccessResponseDto,
-  GetWishlistsSuccessResponseDto,
+  AddWishlistResponseDto,
+  GetWishlistsResponseDto,
 } from "./wishlist.dto.js";
 import * as wishlistService from "./wishlist.service.js";
 
@@ -34,19 +34,15 @@ export class WishlistController extends Controller {
     @Request() request: any,
     @Query() page?: number,
     @Query() size?: number,
-  ): Promise<GetWishlistsSuccessResponseDto> {
+  ): Promise<GetWishlistsResponseDto> {
     const { userId } = request as AuthenticatedRequest;
     const data = await wishlistService.getWishlists(userId, {
       ...(page !== undefined && { page }),
       ...(size !== undefined && { size }),
     });
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "위시리스트 조회에 성공했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "위시리스트 조회에 성공했습니다.");
+    return data;
   }
 
   /** 위시리스트 추가 */
@@ -55,17 +51,13 @@ export class WishlistController extends Controller {
   public async add(
     @Body() body: AddWishlistRequestDto,
     @Request() request: any,
-  ): Promise<AddWishlistSuccessResponseDto> {
+  ): Promise<AddWishlistResponseDto> {
     const { userId } = request as AuthenticatedRequest;
     const data = await wishlistService.addWishlist(userId, body);
 
     this.setStatus(201);
-    return {
-      success: true,
-      code: "COMMON_201",
-      message: "위시리스트에 추가되었습니다.",
-      data,
-    };
+    setSuccessMessage(this, "위시리스트에 추가되었습니다.");
+    return data;
   }
 
   /** 위시리스트 삭제 */
@@ -74,15 +66,11 @@ export class WishlistController extends Controller {
   public async remove(
     @Path() studioId: number,
     @Request() request: any,
-  ): Promise<DeleteWishlistSuccessResponseDto> {
+  ): Promise<null> {
     const { userId } = request as AuthenticatedRequest;
     const data = await wishlistService.removeWishlist(userId, studioId);
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "위시리스트에서 삭제되었습니다.",
-      data,
-    };
+    setSuccessMessage(this, "위시리스트에서 삭제되었습니다.");
+    return data;
   }
 }

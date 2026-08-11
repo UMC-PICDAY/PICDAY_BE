@@ -7,7 +7,8 @@ import {
   Tags,
   UploadedFile,
 } from "tsoa";
-import type { UploadImageSuccessResponseDto } from "./image.dto.js";
+import { setSuccessMessage } from "../../common/response.js";
+import type { UploadImageResponseDto } from "./image.dto.js";
 import * as imageService from "./image.service.js";
 
 @Route("images")
@@ -19,15 +20,11 @@ export class ImageController extends Controller {
   @SuccessResponse(201, "Created")
   public async upload(
     @UploadedFile("file") file?: Express.Multer.File,
-  ): Promise<UploadImageSuccessResponseDto> {
+  ): Promise<UploadImageResponseDto> {
     const data = await imageService.uploadImage(file);
 
     this.setStatus(201);
-    return {
-      success: true,
-      code: "COMMON_201",
-      message: "이미지가 업로드되었습니다.",
-      data,
-    };
+    setSuccessMessage(this, "이미지가 업로드되었습니다.");
+    return data;
   }
 }

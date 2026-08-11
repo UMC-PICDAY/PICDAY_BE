@@ -178,16 +178,17 @@ export const studioSlotsResponseSchema = z.array(studioSlotResponseSchema);
 
 export type StudioSlotsResponseDto = z.output<typeof studioSlotsResponseSchema>;
 
-export const getStudioSlotsSuccessResponseSchema = z.object({
-  success: z.literal(true),
-  code: z.literal("COMMON_200"),
-  message: z.literal("예약 가능 시간 조회에 성공했습니다."),
-  data: studioSlotsResponseSchema,
-});
-
-export type GetStudioSlotsSuccessResponseDto = z.output<
-  typeof getStudioSlotsSuccessResponseSchema
->;
+// responseWrapper 적용 후 더 이상 사용하지 않는 성공 envelope 스키마/DTO.
+// export const getStudioSlotsSuccessResponseSchema = z.object({
+//   success: z.literal(true),
+//   code: z.literal("COMMON_200"),
+//   message: z.literal("예약 가능 시간 조회에 성공했습니다."),
+//   data: studioSlotsResponseSchema,
+// });
+//
+// export type GetStudioSlotsSuccessResponseDto = z.output<
+//   typeof getStudioSlotsSuccessResponseSchema
+// >;
 
 // 컨셉 사진 상세 조회 응답
 export const studioProductDetailResponseSchema = z

@@ -12,15 +12,10 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
+import { setSuccessMessage } from "../../common/response.js";
 import type {
-  AddReviewLikeSuccessResponseDto,
   CreateReviewRequestDto,
-  CreateReviewSuccessResponseDto,
-  DeleteReviewSuccessResponseDto,
-  GetReviewDetailSuccessResponseDto,
-  RemoveReviewLikeSuccessResponseDto,
   UpdateReviewRequestDto,
-  UpdateReviewSuccessResponseDto,
 } from "./review.dto.js";
 import * as reviewService from "./review.service.js";
 
@@ -37,35 +32,24 @@ export class ReviewController extends Controller {
   public async create(
     @Body() body: CreateReviewRequestDto,
     @Request() request: any,
-  ): Promise<CreateReviewSuccessResponseDto> {
+  ) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.createReview(userId, body);
 
     this.setStatus(201);
-    return {
-      success: true,
-      code: "COMMON_201",
-      message: "리뷰가 등록되었습니다.",
-      data,
-    };
+    setSuccessMessage(this, "리뷰가 등록되었습니다.");
+    return data;
   }
 
   /** 리뷰 단건 조회 (마이페이지 "내 리뷰", 본인 리뷰만) */
   @Get("{reviewId}")
   @SuccessResponse(200, "OK")
-  public async detail(
-    @Path() reviewId: number,
-    @Request() request: any,
-  ): Promise<GetReviewDetailSuccessResponseDto> {
+  public async detail(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.getReviewDetail(userId, reviewId);
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "리뷰 조회에 성공했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "리뷰 조회에 성공했습니다.");
+    return data;
   }
 
   /** 리뷰 수정 (부분 수정, imageUrls는 전체 교체) */
@@ -75,70 +59,45 @@ export class ReviewController extends Controller {
     @Path() reviewId: number,
     @Body() body: UpdateReviewRequestDto,
     @Request() request: any,
-  ): Promise<UpdateReviewSuccessResponseDto> {
+  ) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.updateReview(userId, reviewId, body);
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "리뷰가 수정되었습니다.",
-      data,
-    };
+    setSuccessMessage(this, "리뷰가 수정되었습니다.");
+    return data;
   }
 
   /** 리뷰 삭제 */
   @Delete("{reviewId}")
   @SuccessResponse(200, "OK")
-  public async remove(
-    @Path() reviewId: number,
-    @Request() request: any,
-  ): Promise<DeleteReviewSuccessResponseDto> {
+  public async remove(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.removeReview(userId, reviewId);
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "리뷰가 삭제되었습니다.",
-      data,
-    };
+    setSuccessMessage(this, "리뷰가 삭제되었습니다.");
+    return data;
   }
 
   /** 리뷰 추천 (도움돼요) */
   @Post("{reviewId}/like")
   @SuccessResponse(201, "Created")
-  public async addLike(
-    @Path() reviewId: number,
-    @Request() request: any,
-  ): Promise<AddReviewLikeSuccessResponseDto> {
+  public async addLike(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.addLike(userId, reviewId);
 
     this.setStatus(201);
-    return {
-      success: true,
-      code: "COMMON_201",
-      message: "리뷰를 추천했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "리뷰를 추천했습니다.");
+    return data;
   }
 
   /** 리뷰 추천 취소 */
   @Delete("{reviewId}/like")
   @SuccessResponse(200, "OK")
-  public async removeLike(
-    @Path() reviewId: number,
-    @Request() request: any,
-  ): Promise<RemoveReviewLikeSuccessResponseDto> {
+  public async removeLike(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.removeLike(userId, reviewId);
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "리뷰 추천을 취소했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "리뷰 추천을 취소했습니다.");
+    return data;
   }
 }

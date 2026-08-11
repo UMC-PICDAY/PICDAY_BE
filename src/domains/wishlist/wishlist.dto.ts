@@ -25,12 +25,13 @@ export type GetWishlistsResponseDto = {
   items: WishlistItemDto[];
 };
 
-export type GetWishlistsSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: GetWishlistsResponseDto;
-};
+// responseWrapper 적용 후 더 이상 사용하지 않는 성공 envelope DTO.
+// export type GetWishlistsSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: GetWishlistsResponseDto;
+// };
 
 // 위시리스트 추가 API
 export const addWishlistRequestSchema = z
@@ -50,12 +51,13 @@ export type AddWishlistResponseDto = {
   studioId: number;
 };
 
-export type AddWishlistSuccessResponseDto = {
-  success: true;
-  code: "COMMON_201";
-  message: string;
-  data: AddWishlistResponseDto;
-};
+// responseWrapper 적용 후 더 이상 사용하지 않는 성공 envelope DTO.
+// export type AddWishlistSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_201";
+//   message: string;
+//   data: AddWishlistResponseDto;
+// };
 
 // 위시리스트 삭제 API
 export const wishlistStudioIdParamsSchema = z.object({
@@ -66,9 +68,10 @@ export const wishlistStudioIdParamsSchema = z.object({
     .max(Number.MAX_SAFE_INTEGER, "studioId가 허용 범위를 초과했습니다."),
 });
 
-export type DeleteWishlistSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: null;
-};
+// responseWrapper 적용 후 더 이상 사용하지 않는 성공 envelope DTO.
+// export type DeleteWishlistSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: null;
+// };

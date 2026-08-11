@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import { errorHandler } from "../common/errorHandler.js";
 import { success } from "../common/response.js";
+import { responseWrapper } from "../common/responseWrapper.js";
 import { RegisterRoutes } from "../generated/routes.js"; // tsoa가 자동 생성
 import { setupSwagger } from "../config/swagger.js";
 import { startAnonymizeWithdrawnUsersBatch } from "../batch/anonymizeWithdrawnUsers.batch.js";
@@ -31,6 +32,7 @@ app.get("/health", (_req, res) => res.json(success("ok")));
 setupSwagger(app);
 
 const apiRouter = Router();
+apiRouter.use(responseWrapper);
 RegisterRoutes(apiRouter);
 app.use(apiRouter);
 

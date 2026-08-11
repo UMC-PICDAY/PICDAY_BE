@@ -9,7 +9,7 @@ import {
   SuccessResponse,
   Tags,
 } from "tsoa";
-import type { GetReviewsSuccessResponseDto } from "./review.dto.js";
+import { setSuccessMessage } from "../../common/response.js";
 import * as reviewService from "./review.service.js";
 
 // 인증 미들웨어(expressAuthentication)가 request.userId를 채워준다
@@ -30,7 +30,7 @@ export class StudioReviewController extends Controller {
     @Query() photoOnly?: boolean,
     @Query() page?: number,
     @Query() size?: number,
-  ): Promise<GetReviewsSuccessResponseDto> {
+  ) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.getReviews(userId, studioId, {
       ...(sort !== undefined && { sort }),
@@ -39,11 +39,7 @@ export class StudioReviewController extends Controller {
       ...(size !== undefined && { size }),
     });
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "리뷰 목록 조회에 성공했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "리뷰 목록 조회에 성공했습니다.");
+    return data;
   }
 }
