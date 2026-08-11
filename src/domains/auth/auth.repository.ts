@@ -158,7 +158,23 @@ export type CreateSocialUserData = {
 export type CreateSocialUserOutcome =
   | { kind: "CREATED"; user: Awaited<ReturnType<typeof prisma.user.create>> }
   // signupToken 재사용(이미 가입 완료된 소셜 계정으로 재요청) — SocialAccount unique 제약 위반
-  | { kind: "ALREADY_REGISTERED" };
+  | { kind: "ALREADY_REGISTERED" }
+  | { kind: "EMAIL_ALREADY_EXISTS" }
+  | { kind: "NICKNAME_ALREADY_EXISTS" };
+
+function getUniqueConstraintTarget(error: Prisma.PrismaClientKnownRequestError) {
+  const target = error.meta?.target;
+  const values = Array.isArray(target) ? target : [target];
+  return values
+    .filter((value): value is string => typeof value === "string")
+    .map((value) => value.toLowerCase());
+}
+
+function targetContains(target: string[], ...candidates: string[]) {
+  return target.some((value) =>
+    candidates.some((candidate) => value.includes(candidate)),
+  );
+}
 
 /**
  * 소셜 회원가입 완료: 유저 생성·SocialAccount 연결·약관 동의 저장을 한 트랜잭션으로 처리한다.
@@ -205,12 +221,29 @@ export async function createSocialUserWithTerms(
 
     return { kind: "CREATED", user };
   } catch (error) {
-    // UNIQUE(provider, provider_id) 제약 위반 = signupToken 재사용(이미 가입 완료됨)
+    // P2002의 실제 constraint를 확인해 기존 커스텀 중복 에러로 구분한다.
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      return { kind: "ALREADY_REGISTERED" };
+      const target = getUniqueConstraintTarget(error);
+
+      if (
+        targetContains(
+          target,
+          "social_account_provider_provider_id_key",
+          "providerid",
+          "provider_id",
+        )
+      ) {
+        return { kind: "ALREADY_REGISTERED" };
+      }
+      if (targetContains(target, "user_email_key", "email")) {
+        return { kind: "EMAIL_ALREADY_EXISTS" };
+      }
+      if (targetContains(target, "user_nickname_key", "nickname")) {
+        return { kind: "NICKNAME_ALREADY_EXISTS" };
+      }
     }
     throw error;
   }

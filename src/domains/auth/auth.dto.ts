@@ -8,6 +8,13 @@ const agreedTermsIdSchema = z
   .number()
   .refine(isValidApiIdNumber, "약관 ID는 안전한 양의 정수여야 합니다.");
 
+const agreedTermsIdsSchema = z
+  .array(agreedTermsIdSchema)
+  .refine(
+    (ids) => new Set(ids).size === ids.length,
+    "동일한 약관 ID를 중복해서 전달할 수 없습니다.",
+  );
+
 export const signupRequestSchema = z.object({
   loginId: z
     .string()
@@ -23,12 +30,18 @@ export const signupRequestSchema = z.object({
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,20}$/,
       "비밀번호는 영문, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.",
     ),
-  name: z.string().min(1, "이름을 입력해 주세요."),
-  email: z.email("유효한 이메일 형식이 아닙니다."),
+  name: z
+    .string()
+    .min(1, "이름을 입력해 주세요.")
+    .max(50, "이름은 50자 이하여야 합니다."),
+  email: z
+    .email("유효한 이메일 형식이 아닙니다.")
+    .max(50, "이메일은 50자 이하여야 합니다."),
   phoneNumber: z
     .string()
+    .max(15, "휴대폰 번호는 15자 이하여야 합니다.")
     .regex(/^\d+$/, "휴대폰 번호는 하이픈 없이 숫자만 입력해 주세요."),
-  agreedTermsIds: z.array(agreedTermsIdSchema),
+  agreedTermsIds: agreedTermsIdsSchema,
 });
 
 export type SignupRequestDto = z.infer<typeof signupRequestSchema>;
@@ -75,7 +88,7 @@ export type SocialLoginResponseData =
 // 소셜 회원가입 완료 요청
 export const completeSocialSignupRequestSchema = z
   .object({
-    agreedTermsIds: z.array(agreedTermsIdSchema),
+    agreedTermsIds: agreedTermsIdsSchema,
   })
   .strict();
 
@@ -140,8 +153,10 @@ function parseOrThrow<T>(
 const SIGNUP_FIELD_ERROR: Record<string, ErrorCodeType> = {
   loginId: "AUTH_4006",
   password: "AUTH_4005",
+  name: "COMMON_400",
   email: "AUTH_4004",
   phoneNumber: "AUTH_4007",
+  agreedTermsIds: "AUTH_4008",
 };
 
 // 로그인은 필드 누락도 계정 정보 노출 방지를 위해 AUTH_4015로 수렴
