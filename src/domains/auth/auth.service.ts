@@ -192,6 +192,12 @@ export async function completeSocialSignup(
   if (outcome.kind === "ALREADY_REGISTERED") {
     throw new AppError("AUTH_4013");
   }
+  if (outcome.kind === "EMAIL_ALREADY_EXISTS") {
+    throw new AppError("AUTH_4092");
+  }
+  if (outcome.kind === "NICKNAME_ALREADY_EXISTS") {
+    throw new AppError("AUTH_4091");
+  }
 
   const token = await issueTokenPair(outcome.user.id);
 
