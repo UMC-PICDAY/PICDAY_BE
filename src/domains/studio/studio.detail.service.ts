@@ -1,6 +1,10 @@
 import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import {
+  getKstSlotStartMilliseconds,
+  KST_OFFSET_MILLISECONDS,
+} from "../../common/kstDateTime.js";
+import {
   createStudioDetailResponse,
   createStudioHairMakeupResponse,
   createStudioProductsResponse,
@@ -25,8 +29,6 @@ import {
   type StudioSlotsResponseDto,
 } from "./studio.detail.dto.js";
 import * as studioRepository from "./studio.detail.repository.js";
-
-const KST_OFFSET_MILLISECONDS = 9 * 60 * 60 * 1000;
 
 type NowProvider = () => Date;
 type TimestampProvider = () => number;
@@ -54,20 +56,6 @@ function getTimeSeconds(date: Date) {
     date.getUTCHours() * 60 * 60 +
     date.getUTCMinutes() * 60 +
     date.getUTCSeconds()
-  );
-}
-
-function getKstSlotStartMilliseconds(date: Date, startTime: Date) {
-  return (
-    Date.UTC(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      startTime.getUTCHours(),
-      startTime.getUTCMinutes(),
-      startTime.getUTCSeconds(),
-      startTime.getUTCMilliseconds(),
-    ) - KST_OFFSET_MILLISECONDS
   );
 }
 

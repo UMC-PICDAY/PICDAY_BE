@@ -1,5 +1,6 @@
 import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
+import { getKstDbDate, isPastKstTimeSlot } from "../../common/kstDateTime.js";
 import * as studioCompareRepository from "./studio.compare.repository.js";
 import {
   SHOOTING_PURPOSE_DISPLAY_ORDER,
@@ -91,31 +92,11 @@ export async function getStudioComparePurposes(
 // ================= 사진관 비교 결과 조회 =================
 // ========================================================
 
-function toStartOfUtcDate(date: Date) {
-  const startOfDay = new Date(date);
-  startOfDay.setUTCHours(0, 0, 0, 0);
-  return startOfDay;
-}
-
-// reservation.service.ts의 isPastTimeSlot과 동일한 로직.
-// (로컬 서버 타임존 기준으로 date/startTime을 합침 — UTC 서버 배포 시
-// 오작동할 수 있는 알려진 이슈. reservation 도메인과 함께 추후 수정 필요)
-function isPastTimeSlot(date: Date, startTime: Date, now = new Date()) {
-  const slotStart = new Date(date);
-  slotStart.setHours(
-    startTime.getHours(),
-    startTime.getMinutes(),
-    startTime.getSeconds(),
-    0,
-  );
-
-  return slotStart.getTime() < now.getTime();
-}
-
 // 사진관 비교 결과 조회 API
 export async function getStudioCompareResult(
   rawStudioIds: string[],
   rawShootingCategory: string | undefined,
+  now: Date = new Date(),
 ): Promise<StudioCompareResultResponseDto> {
   let query: GetStudioCompareResultQuery;
 
@@ -171,7 +152,7 @@ export async function getStudioCompareResult(
     studioCompareRepository.findReviewSummariesByStudioIds(studioIds),
     studioCompareRepository.findAvailableTimeSlotCandidates(
       studioIds,
-      toStartOfUtcDate(new Date()),
+      getKstDbDate(now),
     ),
   ]);
 
@@ -179,7 +160,6 @@ export async function getStudioCompareResult(
     reviewSummaries.map((summary) => [summary.studioId, summary]),
   );
 
-  const now = new Date();
   const earliestDateByStudioId = new Map<bigint, Date>();
 
   for (const slot of slotCandidates) {
@@ -187,7 +167,7 @@ export async function getStudioCompareResult(
       continue;
     }
 
-    if (isPastTimeSlot(slot.date, slot.startTime, now)) {
+    if (isPastKstTimeSlot(slot.date, slot.startTime, now)) {
       continue;
     }
 
