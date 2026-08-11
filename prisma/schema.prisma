@@ -525,3 +525,20 @@ model StudioInfoItem {
   @@unique([studioId, infoSectionId])
   @@map("studio_info_item")
 }
+
+// ==========================================
+// 스튜디오 집계 통계 모델
+// ==========================================
+model StudioDailyStats {
+  id                Int      @id @default(autoincrement())
+  studioId          BigInt
+  statDate          DateTime @db.Date
+  ratingRank        Int
+  reservationCount  Int
+  reservationRank   Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([studioId, statDate])
+  @@map("studio_daily_stats")
+}

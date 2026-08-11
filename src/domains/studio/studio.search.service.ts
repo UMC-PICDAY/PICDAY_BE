@@ -504,10 +504,12 @@ function compareBigintAsc(a: bigint, b: bigint): number {
 }
 
 // StudioSort별 정렬. 동률이면 항상 id 오름차순으로 고정해, 정렬 기준을 바꿔도 순서가 안정적이도록 함.
-// 추천순/별점순은 배치가 미리 계산해 둔 reservationRank/ratingRank 컬럼을 그대로 쓴다(findPopularStudios/findHighRatedStudios와 동일 기준).
+// 추천순/별점순은 배치가 studio_daily_stats에 미리 계산해 둔 reservationRank/ratingRank를 그대로 쓴다(findPopularStudios/findHighRatedStudios와 동일 기준).
 function sortStudioRows(
   rows: StudioSearchRow[],
   reviewCountByStudioId: Map<bigint, number>,
+  ratingRankByStudioId: Map<bigint, number>,
+  reservationRankByStudioId: Map<bigint, number>,
   sort: StudioSort,
 ): StudioSearchRow[] {
   const sorted = [...rows];
@@ -525,8 +527,8 @@ function sortStudioRows(
 
     case StudioSort.RATING_HIGH:
       sorted.sort((a, b) => {
-        const rankA = a.ratingRank ?? SORT_FALLBACK;
-        const rankB = b.ratingRank ?? SORT_FALLBACK;
+        const rankA = ratingRankByStudioId.get(a.id) ?? SORT_FALLBACK;
+        const rankB = ratingRankByStudioId.get(b.id) ?? SORT_FALLBACK;
         return rankA !== rankB ? rankA - rankB : compareBigintAsc(a.id, b.id);
       });
       return sorted;
@@ -543,8 +545,8 @@ function sortStudioRows(
 
     case StudioSort.RECOMMENDED:
       sorted.sort((a, b) => {
-        const rankA = a.reservationRank ?? SORT_FALLBACK;
-        const rankB = b.reservationRank ?? SORT_FALLBACK;
+        const rankA = reservationRankByStudioId.get(a.id) ?? SORT_FALLBACK;
+        const rankB = reservationRankByStudioId.get(b.id) ?? SORT_FALLBACK;
         return rankA !== rankB ? rankA - rankB : compareBigintAsc(a.id, b.id);
       });
       return sorted;
@@ -560,20 +562,32 @@ async function buildSearchResponse(
   const rows = await studioSearchRepository.findStudiosBySearchFilters(filters);
   const studioIds = rows.map((row) => row.id);
 
-  const [reviewCountRows, wishlistedStudioIds] = await Promise.all([
-    studioSearchRepository.findReviewCountsByStudioIds(studioIds),
-    userId
-      ? studioSearchRepository.findWishlistedStudioIds(userId, studioIds)
-      : Promise.resolve(new Set<bigint>()),
-  ]);
+  const [reviewCountRows, wishlistedStudioIds, dailyStatsRows] =
+    await Promise.all([
+      studioSearchRepository.findReviewCountsByStudioIds(studioIds),
+      userId
+        ? studioSearchRepository.findWishlistedStudioIds(userId, studioIds)
+        : Promise.resolve(new Set<bigint>()),
+      studioSearchRepository.findStudioDailyStatsByStudioIds(studioIds),
+    ]);
 
   const reviewCountByStudioId = new Map(
     reviewCountRows.map((row) => [row.studioId, row._count._all]),
   );
-
-  const studios = sortStudioRows(rows, reviewCountByStudioId, sort).map((row) =>
-    toSearchItemInput(row, reviewCountByStudioId, wishlistedStudioIds),
+  const ratingRankByStudioId = new Map(
+    dailyStatsRows.map((row) => [row.studioId, row.ratingRank]),
   );
+  const reservationRankByStudioId = new Map(
+    dailyStatsRows.map((row) => [row.studioId, row.reservationRank]),
+  );
+
+  const studios = sortStudioRows(
+    rows,
+    reviewCountByStudioId,
+    ratingRankByStudioId,
+    reservationRankByStudioId,
+    sort,
+  ).map((row) => toSearchItemInput(row, reviewCountByStudioId, wishlistedStudioIds));
 
   if (studios.length === 0) {
     const recommendRows = await studioSearchRepository.findRecommendedStudios();

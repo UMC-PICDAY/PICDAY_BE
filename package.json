@@ -14,6 +14,7 @@
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
     "rank:recalculate": "tsx src/recalculatePopularityRank.ts",
+    "stats:aggregate": "tsx scripts/aggregateStats.ts",
     "seed:studios": "tsx src/seedStudios.ts",
     "seed:reviews": "tsx src/seedReviews.ts",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -40,7 +41,6 @@
     "zod": "^4.4.3",
     "tsoa": "7.0.0-alpha.0",
     "prisma": "^7.8.0"
-
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
