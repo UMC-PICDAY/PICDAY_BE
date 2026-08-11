@@ -177,7 +177,6 @@ model User {
   nickname     String?     @unique @db.VarChar(30)
   email        String?     @unique @db.VarChar(50)
   phoneNumber  String?     @map("phone_number") @db.VarChar(15)
-  provider     Provider?   @default(LOCAL)
   status       UserStatus? @default(ACTIVE)
   refreshToken          String?     @map("refresh_token") @db.VarChar(512)
   refreshTokenExpiresAt DateTime?   @map("refresh_token_expires_at")
