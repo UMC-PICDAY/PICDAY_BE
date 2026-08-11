@@ -257,6 +257,7 @@ model Studio {
   wishlists       Wishlist[]
   studioServices  StudioService[]
   studioInfoItems StudioInfoItem[]
+  dailyStats      StudioDailyStats[]
 
   @@index([ratingRank])
   @@index([reservationRank])
@@ -538,6 +539,8 @@ model StudioDailyStats {
   reservationRank   Int
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  studio Studio @relation(fields: [studioId], references: [id])
 
   @@unique([studioId, statDate])
   @@map("studio_daily_stats")

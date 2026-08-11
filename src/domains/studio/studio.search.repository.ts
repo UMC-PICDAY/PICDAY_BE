@@ -35,8 +35,7 @@ function compareBigintAsc(a: bigint, b: bigint): number {
 // 1. 각 studio 에 해당하는 product 목록은 따로 조회하는 API를 만들어서, studio 조회 시 product 목록은 제외하고, product 조회 API에서 studioId로 조회하도록 변경 필요
 // 왜냐하면 스튜디오 단위의 데이터 값은 다 같은데, product의 가격과 이미지 때문에 엄청 많이 중복됨.
 
-// studio_daily_stats는 Studio와 Prisma relation이 없어(studioId만 존재) include로 바로 조인할 수 없다.
-// 그래서 (1) 배치가 채운 가장 최근 statDate를 구하고 → (2) 그 날짜의 순위를 studioId 기준으로 조회하는 방식을 쓴다.
+// 배치가 studio_daily_stats를 채운 가장 최근 statDate 조회 (배치 미실행/데이터 없음 → null)
 async function getLatestStatDate(): Promise<Date | null> {
   const latest = await prisma.studioDailyStats.findFirst({
     orderBy: { statDate: "desc" },
@@ -52,39 +51,33 @@ export async function findHighRatedStudios() {
     return [];
   }
 
-  // 1단계: 그 날짜의 평점 순위(ratingRank) 상위 10개 studioId만 뽑기
+  // 그 날짜의 평점 순위(ratingRank) 상위 10개를, relation을 통해 studio 데이터까지 한 번에 조회
+  // (studioDailyStats.findMany의 orderBy 순서가 그대로 유지되므로 재정렬이 필요 없음)
   const rankedStats = await prisma.studioDailyStats.findMany({
     where: { statDate: latestStatDate },
     orderBy: [{ ratingRank: "asc" }, { studioId: "asc" }],
     take: BANNER_STUDIO_COUNT,
-    select: { studioId: true },
-  });
-
-  const studioIds = rankedStats.map((stat) => stat.studioId);
-  if (studioIds.length === 0) {
-    return [];
-  }
-
-  // 2단계: 뽑힌 studioId로 실제 스튜디오 데이터 조회
-  const studios = await prisma.studio.findMany({
-    where: { id: { in: studioIds } },
     select: {
-      id: true,
-      name: true,
-      ratingScore: true,
-      location: { select: { locationCategory: true } },
-      products: {
+      studio: {
         select: {
-          productImages: {
-            // studioThumbnailImage
-            orderBy: [
-              { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
-              { id: "asc" },
-            ],
-            take: 1,
+          id: true,
+          name: true,
+          ratingScore: true,
+          location: { select: { locationCategory: true } },
+          products: {
             select: {
-              url: true,
-              studioThumbnailOrder: true,
+              productImages: {
+                // studioThumbnailImage
+                orderBy: [
+                  { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
+                  { id: "asc" },
+                ],
+                take: 1,
+                select: {
+                  url: true,
+                  studioThumbnailOrder: true,
+                },
+              },
             },
           },
         },
@@ -92,13 +85,7 @@ export async function findHighRatedStudios() {
     },
   });
 
-  // where...in은 studioIds 배열 순서를 보장하지 않으므로, 1단계에서 정한 순위 순서대로 재정렬
-  const studioById = new Map(studios.map((studio) => [studio.id, studio]));
-  return studioIds
-    .map((id) => studioById.get(id))
-    .filter(
-      (studio): studio is (typeof studios)[number] => studio !== undefined,
-    );
+  return rankedStats.map((stat) => stat.studio);
 }
 
 export type FindHighRatedStudiosResult = Awaited<
@@ -155,33 +142,27 @@ export async function findPopularStudios() {
     where: { statDate: latestStatDate },
     orderBy: [{ reservationRank: "asc" }, { studioId: "asc" }],
     take: BANNER_STUDIO_COUNT,
-    select: { studioId: true },
-  });
-
-  const studioIds = rankedStats.map((stat) => stat.studioId);
-  if (studioIds.length === 0) {
-    return [];
-  }
-
-  const studios = await prisma.studio.findMany({
-    where: { id: { in: studioIds } },
     select: {
-      id: true,
-      name: true,
-      ratingScore: true,
-      location: { select: { locationCategory: true } },
-      products: {
+      studio: {
         select: {
-          price: true,
-          productImages: {
-            orderBy: [
-              { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
-              { id: "asc" },
-            ],
-            take: 1,
+          id: true,
+          name: true,
+          ratingScore: true,
+          location: { select: { locationCategory: true } },
+          products: {
             select: {
-              url: true,
-              studioThumbnailOrder: true,
+              price: true,
+              productImages: {
+                orderBy: [
+                  { studioThumbnailOrder: { sort: "asc", nulls: "last" } },
+                  { id: "asc" },
+                ],
+                take: 1,
+                select: {
+                  url: true,
+                  studioThumbnailOrder: true,
+                },
+              },
             },
           },
         },
@@ -189,12 +170,7 @@ export async function findPopularStudios() {
     },
   });
 
-  const studioById = new Map(studios.map((studio) => [studio.id, studio]));
-  return studioIds
-    .map((id) => studioById.get(id))
-    .filter(
-      (studio): studio is (typeof studios)[number] => studio !== undefined,
-    );
+  return rankedStats.map((stat) => stat.studio);
 }
 export type FindPopularStudiosResult = Awaited<
   ReturnType<typeof findPopularStudios>
@@ -205,6 +181,9 @@ export type FindPopularStudiosResult = Awaited<
 export async function findStudiosByLocationCategory(
   location: LocationCategory,
 ) {
+  // latestStatDate가 없으면(배치 미실행) 존재할 수 없는 날짜를 넣어 dailyStats가 항상 빈 배열로 조회되게 함
+  const latestStatDate = (await getLatestStatDate()) ?? new Date(0);
+
   const rows = await prisma.studioLocation.findMany({
     where: { locationCategory: location },
     select: {
@@ -230,35 +209,20 @@ export async function findStudiosByLocationCategory(
               },
             },
           },
+          // relation을 통해 이 스튜디오의 최신 평점 순위만 함께 조회 (없으면 빈 배열)
+          dailyStats: {
+            where: { statDate: latestStatDate },
+            select: { ratingRank: true },
+          },
         },
       },
     },
   });
 
-  if (rows.length === 0) {
-    return rows;
-  }
-
-  // 이 지역 스튜디오들의 평점 순위(ratingRank)를 최신 statDate 기준으로 조회
-  const latestStatDate = await getLatestStatDate();
-  const ratingRankByStudioId = latestStatDate
-    ? new Map(
-        (
-          await prisma.studioDailyStats.findMany({
-            where: {
-              statDate: latestStatDate,
-              studioId: { in: rows.map((row) => row.studioId) },
-            },
-            select: { studioId: true, ratingRank: true },
-          })
-        ).map((stat) => [stat.studioId, stat.ratingRank]),
-      )
-    : new Map<bigint, number>();
-
   // 순위 데이터가 없는 스튜디오(배치 미반영된 신규 스튜디오 등)는 RANK_FALLBACK으로 맨 뒤로 정렬
   return [...rows].sort((a, b) => {
-    const rankA = ratingRankByStudioId.get(a.studioId) ?? RANK_FALLBACK;
-    const rankB = ratingRankByStudioId.get(b.studioId) ?? RANK_FALLBACK;
+    const rankA = a.studio.dailyStats[0]?.ratingRank ?? RANK_FALLBACK;
+    const rankB = b.studio.dailyStats[0]?.ratingRank ?? RANK_FALLBACK;
     return rankA !== rankB
       ? rankA - rankB
       : compareBigintAsc(a.studioId, b.studioId);
