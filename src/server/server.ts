@@ -1,6 +1,8 @@
 import express, { Router } from "express";
 import cors from "cors";
+import multer from "multer";
 import "dotenv/config";
+import { IMAGE_UPLOAD } from "../common/constants.js";
 import { AppError } from "../common/error.js";
 import { errorHandler } from "../common/errorHandler.js";
 import { success } from "../common/response.js";
@@ -34,7 +36,13 @@ setupSwagger(app);
 
 const apiRouter = Router();
 apiRouter.use(responseWrapper);
-RegisterRoutes(apiRouter);
+RegisterRoutes(apiRouter, {
+  // Multer는 fileSize 임계값에 도달해도 LIMIT_FILE_SIZE를 발생시키므로,
+  // 정책상 최대값(10MiB)을 포함해 허용하도록 1 byte 큰 임계값을 사용한다.
+  multer: multer({
+    limits: { fileSize: IMAGE_UPLOAD.MAX_FILE_SIZE_BYTES + 1 },
+  }),
+});
 app.use(apiRouter);
 
 app.use((_req, _res, next) => {

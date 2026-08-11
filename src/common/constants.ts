@@ -15,3 +15,7 @@ export const JWT = {
   ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN ?? "1h",
   REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN ?? "14d",
 };
+
+export const IMAGE_UPLOAD = {
+  MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024,
+} as const;
