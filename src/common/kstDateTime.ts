@@ -31,7 +31,7 @@ export function isPastKstTimeSlot(
   startTime: Date,
   now: Date = new Date(),
 ) {
-  return getKstSlotStartMilliseconds(date, startTime) < now.getTime();
+  return getKstSlotStartMilliseconds(date, startTime) <= now.getTime();
 }
 
 export function isSameKstDate(date: Date, now: Date = new Date()) {
