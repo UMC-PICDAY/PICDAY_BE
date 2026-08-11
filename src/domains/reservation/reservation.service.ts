@@ -1,5 +1,6 @@
 import { ZodError } from "zod";
 import { AppError } from "../../common/error.js";
+import { isPastKstTimeSlot, isSameKstDate } from "../../common/kstDateTime.js";
 import {
   cancelReservationResponseSchema,
   createReservationResponseSchema,
@@ -99,21 +100,10 @@ function hasMissingReserveeField(error: ZodError, body: unknown) {
   });
 }
 
-function isPastTimeSlot(date: Date, startTime: Date, now = new Date()) {
-  const slotStart = new Date(date);
-  slotStart.setHours(
-    startTime.getHours(),
-    startTime.getMinutes(),
-    startTime.getSeconds(),
-    0,
-  );
-
-  return slotStart.getTime() < now.getTime();
-}
-
 export async function create(
   body: unknown,
   userId: bigint,
+  now: Date = new Date(),
 ): Promise<CreateReservationResponseDto> {
   try {
     let command;
@@ -158,7 +148,11 @@ export async function create(
     }
 
     if (
-      isPastTimeSlot(references.timeSlot.date, references.timeSlot.startTime)
+      isPastKstTimeSlot(
+        references.timeSlot.date,
+        references.timeSlot.startTime,
+        now,
+      )
     ) {
       throw new AppError("RESERVATION_4004");
     }
@@ -280,6 +274,7 @@ export async function completeExpiredReservations(
 export async function cancel(
   reservationId: bigint,
   userId: bigint,
+  now: Date = new Date(),
 ): Promise<CancelReservationResponseDto> {
   // 예약이 존재하는지 확인
   const reservation =
@@ -306,13 +301,9 @@ export async function cancel(
   }
 
   // 촬영 당일 취소 시 로직
-  const today = new Date();
   const shootingDate = reservation.timeSlot.date;
 
-  const isSameDay =
-    today.getFullYear() === shootingDate.getFullYear() &&
-    today.getMonth() === shootingDate.getMonth() &&
-    today.getDate() === shootingDate.getDate();
+  const isSameDay = isSameKstDate(shootingDate, now);
 
   if (isSameDay) {
     throw new AppError("RESERVATION_4002");
