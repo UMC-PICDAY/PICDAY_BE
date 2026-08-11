@@ -119,6 +119,10 @@ export async function socialLogin(
 
   // 기존 유저 → 즉시 로그인
   if (account) {
+    if (account.user.status === "WITHDRAWN") {
+      throw new AppError("AUTH_4095");
+    }
+
     const token = await issueTokenPair(account.user.id);
     return {
       message: "로그인에 성공했습니다.",
