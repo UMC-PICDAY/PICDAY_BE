@@ -2,12 +2,21 @@ import type { ErrorRequestHandler } from "express";
 import { AppError } from "./error.js";
 import { ZodError } from "zod";
 import { ValidateError } from "tsoa"; // tsoa가 생성한 라우터(src/generated/routes.ts)가 경로/쿼리/바디 타입 검증에 실패하면 던지는 에러 클래스
+import multer from "multer";
 import { fail } from "./response.js";
 import { HTTP_STATUS } from "./constants.js";
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
     res.status(err.statusCode).json(fail(err.code, err.message));
+    return;
+  }
+
+  if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+    const fileSizeError = new AppError("IMAGE_4002");
+    res
+      .status(fileSizeError.statusCode)
+      .json(fail(fileSizeError.code, fileSizeError.message));
     return;
   }
 

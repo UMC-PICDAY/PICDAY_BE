@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { AppError } from "../../common/error.js";
+import { IMAGE_UPLOAD } from "../../common/constants.js";
 import { getS3Client, getS3Config } from "../../config/s3.js";
 import type { UploadImageResponseDto } from "./image.dto.js";
 
@@ -10,8 +11,6 @@ const ALLOWED_MIME_TO_EXT: Record<string, string> = {
   "image/png": "png",
   "image/webp": "webp",
 };
-
-const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
 function buildObjectKey(ext: string): string {
   const now = new Date();
@@ -35,7 +34,7 @@ export async function uploadImage(
       throw new AppError("IMAGE_4001");
     }
 
-    if (file.size > MAX_FILE_SIZE_BYTES) {
+    if (file.size > IMAGE_UPLOAD.MAX_FILE_SIZE_BYTES) {
       throw new AppError("IMAGE_4002");
     }
 
