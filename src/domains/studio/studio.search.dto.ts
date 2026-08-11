@@ -35,23 +35,23 @@ export type GetHomeResponseDtoForNotLogged = {
   };
 };
 
-// 2. 홈 화면 조회 API 응답 타입
-export type GetHomeSuccessResponseDtoForLogged = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: GetHomeResponseDtoForLogged;
-};
-
-export type GetHomeSuccessResponseDtoForNotLogged = {
-  success: true;
-  code: "COMMON_200";
-  message: string;
-  data: GetHomeResponseDtoForNotLogged;
-};
+// responseWrapper 적용 후 더 이상 사용하지 않는 성공 envelope DTO.
+// export type GetHomeSuccessResponseDtoForLogged = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: GetHomeResponseDtoForLogged;
+// };
+//
+// export type GetHomeSuccessResponseDtoForNotLogged = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: string;
+//   data: GetHomeResponseDtoForNotLogged;
+// };
 
 export type GetHomeResponseDto =
-  GetHomeSuccessResponseDtoForLogged | GetHomeSuccessResponseDtoForNotLogged;
+  GetHomeResponseDtoForLogged | GetHomeResponseDtoForNotLogged;
 
 // ========================================================
 // =================== 사진관 검색 자동 완성 ===================
@@ -466,12 +466,13 @@ export function createStudioSearchResponse(
   return studioSearchResponseSchema.parse(input);
 }
 
-export type SearchStudiosSuccessResponseDto = {
-  success: true;
-  code: "STUDIO_200";
-  message: string;
-  data: StudioSearchResponseDto;
-};
+// responseWrapper 적용 후 더 이상 사용하지 않는 성공 envelope DTO.
+// export type SearchStudiosSuccessResponseDto = {
+//   success: true;
+//   code: "STUDIO_200";
+//   message: string;
+//   data: StudioSearchResponseDto;
+// };
 
 // ================================================================
 // ==================== 최근 본 사진관 저장 - 응답 ====================
@@ -497,9 +498,10 @@ export function createRecentStudioViewResponse(
   return recentStudioViewResponseSchema.parse(input);
 }
 
-export type SaveRecentStudioViewSuccessResponseDto = {
-  success: true;
-  code: "STUDIO_200";
-  message: string;
-  data: RecentStudioViewResponseDto;
-};
+// responseWrapper 적용 후 더 이상 사용하지 않는 성공 envelope DTO.
+// export type SaveRecentStudioViewSuccessResponseDto = {
+//   success: true;
+//   code: "STUDIO_200";
+//   message: string;
+//   data: RecentStudioViewResponseDto;
+// };

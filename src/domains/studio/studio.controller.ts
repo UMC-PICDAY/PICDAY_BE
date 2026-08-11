@@ -13,20 +13,20 @@ import {
   Tags,
 } from "tsoa";
 import type { Request as ExpressRequest } from "express";
-import { success, type ApiResponse } from "../../common/response.js";
+import { setSuccessMessage } from "../../common/response.js";
 import type { OptionalAuthenticatedUser } from "../../server/authentication.js";
 import type {
-  GetStudioSlotsSuccessResponseDto,
   StudioDetailResponseDto,
   StudioHairMakeupResponseDto,
+  StudioSlotsResponseDto,
   StudioProductDetailResponseDto,
   StudioProductsResponseDto,
 } from "./studio.detail.dto.js";
 import type {
   GetHomeResponseDto,
+  RecentStudioViewResponseDto,
+  StudioSearchResponseDto,
   StudioAutocompleteResponseDto,
-  SearchStudiosSuccessResponseDto,
-  SaveRecentStudioViewSuccessResponseDto,
 } from "./studio.search.dto.js";
 import type {
   StudioComparePurposesResponseDto,
@@ -55,20 +55,20 @@ type AppErrorResponse = {
 type AuthenticatedRequest = { userId: bigint };
 type OptionalAuthenticatedRequest = ExpressRequest & OptionalAuthenticatedUser;
 
-type GetStudioProductsSuccessResponseDto = {
-  success: true;
-  code: "COMMON_200";
-  message: "사진관 컨셉 목록 조회에 성공했습니다.";
-  data: StudioProductsResponseDto;
-};
+// responseWrapper 적용 후 raw data DTO를 반환하므로 더 이상 사용하지 않음.
+// type GetStudioProductsSuccessResponseDto = {
+//   success: true;
+//   code: "COMMON_200";
+//   message: "사진관 컨셉 목록 조회에 성공했습니다.";
+//   data: StudioProductsResponseDto;
+// };
 
-// 사진관 자동완성 검색 API 응답
-type GetStudioAutocompleteSuccessResponseDto = {
-  success: true;
-  code: "STUDIO_200";
-  message: "사진관 자동완성 조회에 성공했습니다.";
-  data: StudioAutocompleteResponseDto;
-};
+// type GetStudioAutocompleteSuccessResponseDto = {
+//   success: true;
+//   code: "STUDIO_200";
+//   message: "사진관 자동완성 조회에 성공했습니다.";
+//   data: StudioAutocompleteResponseDto;
+// };
 
 // === api/v1/home ===
 @Route("home")
@@ -81,11 +81,14 @@ export class HomeController extends Controller {
     @Query() latitude?: number,
     @Query() longitude?: number,
   ): Promise<GetHomeResponseDto> {
-    return studioSearchService.getHome(
+    const data = await studioSearchService.getHome(
       request.headers.authorization,
       latitude,
       longitude,
     );
+
+    setSuccessMessage(this, "홈 화면 조회에 성공했습니다.");
+    return data;
   }
 }
 
@@ -115,7 +118,7 @@ export class StudioController extends Controller {
     @Query() maxPrice?: number,
     @Query() serviceCode?: string[],
     @Query() minRating?: number,
-  ): Promise<SearchStudiosSuccessResponseDto> {
+  ): Promise<StudioSearchResponseDto> {
     const data = await studioSearchService.searchStudios(
       request.headers.authorization,
       {
@@ -130,14 +133,13 @@ export class StudioController extends Controller {
       },
     );
 
-    return {
-      success: true,
-      code: "STUDIO_200",
-      message: data.hasResult
+    setSuccessMessage(
+      this,
+      data.hasResult
         ? "사진관 검색 결과 조회에 성공했습니다."
         : "조건에 맞는 사진관이 없습니다.",
-      data,
-    };
+    );
+    return data;
   }
 
   /**
@@ -162,20 +164,19 @@ export class StudioController extends Controller {
     @Query() maxPrice?: number,
     @Query() serviceCode?: string[],
     @Query() minRating?: number,
-  ): Promise<SearchStudiosSuccessResponseDto> {
+  ): Promise<StudioSearchResponseDto> {
     const data = await studioSearchService.searchStudiosByName(
       request.headers.authorization,
       { studioId, sort, minPrice, maxPrice, serviceCode, minRating },
     );
 
-    return {
-      success: true,
-      code: "STUDIO_200",
-      message: data.hasResult
+    setSuccessMessage(
+      this,
+      data.hasResult
         ? "사진관 검색 결과 조회에 성공했습니다."
         : "조건에 맞는 사진관이 없습니다.",
-      data,
-    };
+    );
+    return data;
   }
 
   // === 사진관 자동완성 검색 API ===
@@ -185,15 +186,11 @@ export class StudioController extends Controller {
   @SuccessResponse(200, "OK")
   public async getStudioAutocomplete(
     @Query() keyword: string,
-  ): Promise<GetStudioAutocompleteSuccessResponseDto> {
+  ): Promise<StudioAutocompleteResponseDto> {
     const data = await studioSearchService.getStudioAutocomplete(keyword);
 
-    return {
-      success: true,
-      code: "STUDIO_200",
-      message: "사진관 자동완성 조회에 성공했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "사진관 자동완성 조회에 성공했습니다.");
+    return data;
   }
 
   /**
@@ -213,13 +210,14 @@ export class StudioController extends Controller {
   public async getStudioDetail(
     @Path() studioId: number,
     @Request() request: OptionalAuthenticatedRequest,
-  ): Promise<ApiResponse<StudioDetailResponseDto>> {
+  ): Promise<StudioDetailResponseDto> {
     const data = await studioDetailService.getStudioDetail(
       studioId,
       request.userId,
     );
 
-    return success(data, "사진관 상세 정보 조회에 성공했습니다.");
+    setSuccessMessage(this, "사진관 상세 정보 조회에 성공했습니다.");
+    return data;
   }
 
   /**
@@ -249,19 +247,15 @@ export class StudioController extends Controller {
   public async saveRecentStudioView(
     @Path() studioId: number,
     @Request() request: any,
-  ): Promise<SaveRecentStudioViewSuccessResponseDto> {
+  ): Promise<RecentStudioViewResponseDto> {
     const { userId } = request as AuthenticatedRequest;
     const data = await studioSearchService.saveRecentStudioView(
       userId,
       studioId,
     );
 
-    return {
-      success: true,
-      code: "STUDIO_200",
-      message: "최근 본 사진관 저장에 성공했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "최근 본 사진관 저장에 성공했습니다.");
+    return data;
   }
 
   /**
@@ -282,10 +276,14 @@ export class StudioController extends Controller {
   @Response<AppErrorResponse>("500", "COMMON_500: 서버 오류가 발생했습니다.")
   public async getStudioHairMakeup(
     @Path() studioId: number,
-  ): Promise<ApiResponse<StudioHairMakeupResponseDto>> {
+  ): Promise<StudioHairMakeupResponseDto> {
     const data = await studioDetailService.getStudioHairMakeup(studioId);
 
-    return success(data, "사진관 헤어메이크업 연계 정보 조회에 성공했습니다.");
+    setSuccessMessage(
+      this,
+      "사진관 헤어메이크업 연계 정보 조회에 성공했습니다.",
+    );
+    return data;
   }
 
   /**
@@ -301,15 +299,11 @@ export class StudioController extends Controller {
   public async getStudioSlots(
     @Path() studioId: number,
     @Query() date?: string,
-  ): Promise<GetStudioSlotsSuccessResponseDto> {
+  ): Promise<StudioSlotsResponseDto> {
     const data = await studioDetailService.getStudioSlots(studioId, date);
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "예약 가능 시간 조회에 성공했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "예약 가능 시간 조회에 성공했습니다.");
+    return data;
   }
 
   /**
@@ -331,18 +325,14 @@ export class StudioController extends Controller {
   public async getStudioProducts(
     @Path() studioId: number,
     @Query() timeSlotId?: number,
-  ): Promise<GetStudioProductsSuccessResponseDto> {
+  ): Promise<StudioProductsResponseDto> {
     const data = await studioDetailService.getStudioProducts(
       studioId,
       timeSlotId,
     );
 
-    return {
-      success: true,
-      code: "COMMON_200",
-      message: "사진관 컨셉 목록 조회에 성공했습니다.",
-      data,
-    };
+    setSuccessMessage(this, "사진관 컨셉 목록 조회에 성공했습니다.");
+    return data;
   }
 
   /**
@@ -364,13 +354,14 @@ export class StudioController extends Controller {
   public async getStudioProductDetail(
     @Path() studioId: number,
     @Path() studioProductId: number,
-  ): Promise<ApiResponse<StudioProductDetailResponseDto>> {
+  ): Promise<StudioProductDetailResponseDto> {
     const data = await studioDetailService.getStudioProductDetail(
       studioId,
       studioProductId,
     );
 
-    return success(data, "사진관 컨셉 사진 조회에 성공했습니다.");
+    setSuccessMessage(this, "사진관 컨셉 사진 조회에 성공했습니다.");
+    return data;
   }
 
   // === 비교 목적 조회 API ===
@@ -385,10 +376,11 @@ export class StudioController extends Controller {
   @Response<AppErrorResponse>(500, "COMMON_500: 서버 오류")
   public async getStudioComparePurposes(
     @Query() studioIds: string[],
-  ): Promise<ApiResponse<StudioComparePurposesResponseDto>> {
+  ): Promise<StudioComparePurposesResponseDto> {
     const data = await studioCompareService.getStudioComparePurposes(studioIds);
 
-    return success(data, "비교 목적 조회에 성공했습니다.");
+    setSuccessMessage(this, "비교 목적 조회에 성공했습니다.");
+    return data;
   }
   // === 사진관 비교 결과 조회 API ===
   @Middlewares(validateStudioCompareRequestIds)
@@ -406,12 +398,13 @@ export class StudioController extends Controller {
   public async getStudioCompareResult(
     @Query() studioIds: string[],
     @Query() shootingCategory?: string,
-  ): Promise<ApiResponse<StudioCompareResultResponseDto>> {
+  ): Promise<StudioCompareResultResponseDto> {
     const data = await studioCompareService.getStudioCompareResult(
       studioIds,
       shootingCategory,
     );
 
-    return success(data, "비교 결과 조회에 성공했습니다.");
+    setSuccessMessage(this, "비교 결과 조회에 성공했습니다.");
+    return data;
   }
 }

@@ -14,12 +14,15 @@ import {
   Tags,
 } from "tsoa";
 import { AppError } from "../../common/error.js";
-import { success } from "../../common/response.js";
+import { setSuccessMessage } from "../../common/response.js";
 import {
   getMyReservationListQuerySchema,
   reservationIdParamsSchema,
+  type CancelReservationResponseDto,
   type CreateReservationRequestDto,
-  type CreateReservationSuccessResponseDto,
+  type CreateReservationResponseDto,
+  type GetMyReservationListResponseDto,
+  type GetReservationDetailResponseDto,
 } from "./reservation.dto.js";
 import {
   validateCreateReservationRequest,
@@ -68,18 +71,13 @@ export class ReservationController extends Controller {
   public async create(
     @Body() body: CreateReservationRequestDto,
     @Request() request: any,
-  ): Promise<CreateReservationSuccessResponseDto> {
+  ): Promise<CreateReservationResponseDto> {
     const { userId } = request as AuthenticatedRequest;
     const data = await reservationService.create(body, userId);
 
     this.setStatus(201);
-
-    return {
-      success: true,
-      code: "COMMON_201",
-      message: "예약이 성공적으로 완료되었습니다.",
-      data,
-    };
+    setSuccessMessage(this, "예약이 성공적으로 완료되었습니다.");
+    return data;
   }
 
   /**
@@ -97,13 +95,16 @@ export class ReservationController extends Controller {
   @Patch("{reservationId}/cancel")
   @Middlewares(validateReservationId)
   @SuccessResponse(200, "OK")
-  public async cancel(@Path() reservationId: number, @Request() request: any) {
+  public async cancel(
+    @Path() reservationId: number,
+    @Request() request: any,
+  ): Promise<CancelReservationResponseDto> {
     const id = parseReservationId(reservationId);
 
     const { userId } = request as AuthenticatedRequest;
     const result = await reservationService.cancel(id, userId);
 
-    return success(result);
+    return result;
   }
 
   /**
@@ -122,13 +123,16 @@ export class ReservationController extends Controller {
   @Get("{reservationId}")
   @Middlewares(validateReservationId)
   @SuccessResponse(200, "OK")
-  public async detail(@Path() reservationId: number, @Request() request: any) {
+  public async detail(
+    @Path() reservationId: number,
+    @Request() request: any,
+  ): Promise<GetReservationDetailResponseDto> {
     const id = parseReservationId(reservationId);
 
     const { userId } = request as AuthenticatedRequest;
     const result = await reservationService.detail(id, userId);
 
-    return success(result);
+    return result;
   }
 
   /**
@@ -142,7 +146,10 @@ export class ReservationController extends Controller {
    */
   @Get()
   @SuccessResponse(200, "OK")
-  public async list(@Request() request: any, @Query() status?: string) {
+  public async list(
+    @Request() request: any,
+    @Query() status?: string,
+  ): Promise<GetMyReservationListResponseDto> {
     const { status: parsedStatus } = getMyReservationListQuerySchema.parse({
       status,
     });
@@ -150,6 +157,6 @@ export class ReservationController extends Controller {
     const { userId } = request as AuthenticatedRequest;
     const result = await reservationService.list(userId, parsedStatus);
 
-    return success(result);
+    return result;
   }
 }

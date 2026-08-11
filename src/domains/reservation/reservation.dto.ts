@@ -85,16 +85,18 @@ export type CreateReservationResponseDto = z.output<
   typeof createReservationResponseSchema
 >;
 
-export const createReservationSuccessResponseSchema = z.object({
-  success: z.literal(true),
-  code: z.literal("COMMON_201"),
-  message: z.literal("예약이 성공적으로 완료되었습니다."),
-  data: createReservationResponseSchema,
-});
-
-export type CreateReservationSuccessResponseDto = z.output<
-  typeof createReservationSuccessResponseSchema
->;
+// responseWrapper 적용 후 Controller가 raw data DTO를 반환하므로 더 이상 사용하지 않음.
+// 전체 도메인 마이그레이션이 끝난 뒤 삭제할 수 있도록 임시로 주석 처리한다.
+// export const createReservationSuccessResponseSchema = z.object({
+//   success: z.literal(true),
+//   code: z.literal("COMMON_201"),
+//   message: z.literal("예약이 성공적으로 완료되었습니다."),
+//   data: createReservationResponseSchema,
+// });
+//
+// export type CreateReservationSuccessResponseDto = z.output<
+//   typeof createReservationSuccessResponseSchema
+// >;
 
 // 파라미터 검증
 export const reservationIdParamsSchema = z.object({

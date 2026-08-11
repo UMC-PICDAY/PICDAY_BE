@@ -1,11 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Patch,
   Path,
   Post,
-  Patch,
-  Delete,
   Query,
   Request,
   Response,
@@ -15,7 +15,7 @@ import {
   Tags,
 } from "tsoa";
 import { AppError } from "../../common/error.js";
-import { success } from "../../common/response.js";
+import { setSuccessMessage } from "../../common/response.js";
 import {
   parseCompleteSocialSignup,
   parseLogin,
@@ -54,7 +54,7 @@ export class AuthController extends Controller {
   public async getSocialAuthUrl(@Path() provider: string) {
     const socialProvider = assertSocialProvider(provider);
     const result = authService.getSocialAuthUrl(socialProvider);
-    return success(result);
+    return result;
   }
 
   /**
@@ -71,8 +71,12 @@ export class AuthController extends Controller {
   public async socialLogin(@Path() provider: string, @Body() body: unknown) {
     const socialProvider = assertSocialProvider(provider);
     const dto = parseSocialLogin(body);
-    const { data, message } = await authService.socialLogin(socialProvider, dto);
-    return success(data, message);
+    const { data, message } = await authService.socialLogin(
+      socialProvider,
+      dto,
+    );
+    setSuccessMessage(this, message);
+    return data;
   }
 
   /**
@@ -95,7 +99,8 @@ export class AuthController extends Controller {
     const dto = parseCompleteSocialSignup(body);
     const result = await authService.completeSocialSignup(signupInfo, dto);
     this.setStatus(201);
-    return success(result, "회원가입이 완료되었습니다.");
+    setSuccessMessage(this, "회원가입이 완료되었습니다.");
+    return result;
   }
 
   /** 자체 회원가입 */
@@ -105,7 +110,7 @@ export class AuthController extends Controller {
     const dto = parseSignup(body);
     const user = await authService.register(dto);
     this.setStatus(201);
-    return success(user);
+    return user;
   }
 
   /** 자체 로그인 */
@@ -114,7 +119,7 @@ export class AuthController extends Controller {
   public async login(@Body() body: unknown) {
     const dto = parseLogin(body);
     const result = await authService.login(dto);
-    return success(result);
+    return result;
   }
 
   /**
@@ -142,7 +147,8 @@ export class AuthController extends Controller {
     }
 
     const result = await authService.refresh(userId, headerToken);
-    return success(result, "토큰이 갱신되었습니다.");
+    setSuccessMessage(this, "토큰이 갱신되었습니다.");
+    return result;
   }
 
   /**
@@ -159,7 +165,8 @@ export class AuthController extends Controller {
     const { userId } = request as AuthenticatedRequest;
 
     await authService.logout(userId);
-    return success(null, "로그아웃되었습니다.");
+    setSuccessMessage(this, "로그아웃되었습니다.");
+    return null;
   }
 
   /** 아이디 중복 확인 */
@@ -167,7 +174,7 @@ export class AuthController extends Controller {
   @SuccessResponse(200, "OK")
   public async checkLoginId(@Query() loginId?: string) {
     const result = await authService.checkLoginIdAvailability(loginId ?? "");
-    return success(result);
+    return result;
   }
 
   /** 닉네임 중복 확인 */
@@ -175,33 +182,28 @@ export class AuthController extends Controller {
   @SuccessResponse(200, "OK")
   public async checkNickname(@Query() nickname?: string) {
     const result = await authService.checkNicknameAvailability(nickname ?? "");
-    return success(result);
+    return result;
   }
 
   @Security("jwt")
   @Get("me")
   @SuccessResponse(200, "OK")
-  public async getMe(
-    @Request() request: any
-  ){
-      const { userId } = request as AuthenticatedRequest;
+  public async getMe(@Request() request: any) {
+    const { userId } = request as AuthenticatedRequest;
 
-      const result = await authService.getMe(userId);
-      return success(result);
+    const result = await authService.getMe(userId);
+    return result;
   }
 
   @Security("jwt")
   @Patch("me")
   @SuccessResponse(200, "OK")
-  public async updateMe(
-    @Request() request: any,
-    @Body() body: unknown
-  ){
+  public async updateMe(@Request() request: any, @Body() body: unknown) {
     const { userId } = request as AuthenticatedRequest;
 
-    const dto = parseUpdateNickname(body)
+    const dto = parseUpdateNickname(body);
     const result = await authService.updateNickname(userId, dto);
-    return success(result)
+    return result;
   }
 
   @Security("jwt")
@@ -211,6 +213,6 @@ export class AuthController extends Controller {
     const { userId } = request as AuthenticatedRequest;
 
     await authService.withdraw(userId);
-    return success(null);
+    return null;
   }
 }
