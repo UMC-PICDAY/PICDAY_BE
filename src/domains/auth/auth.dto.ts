@@ -1,7 +1,12 @@
 import { z, ZodError } from "zod";
 import { AppError } from "../../common/error.js";
 import type { ErrorCodeType } from "../../common/errorCode.js";
+import { isValidApiIdNumber } from "../../common/apiId.js";
 import type { Provider } from "../../generated/prisma/client.js";
+
+const agreedTermsIdSchema = z
+  .number()
+  .refine(isValidApiIdNumber, "약관 ID는 안전한 양의 정수여야 합니다.");
 
 export const signupRequestSchema = z.object({
   loginId: z
@@ -23,7 +28,7 @@ export const signupRequestSchema = z.object({
   phoneNumber: z
     .string()
     .regex(/^\d+$/, "휴대폰 번호는 하이픈 없이 숫자만 입력해 주세요."),
-  agreedTermsIds: z.array(z.number()),
+  agreedTermsIds: z.array(agreedTermsIdSchema),
 });
 
 export type SignupRequestDto = z.infer<typeof signupRequestSchema>;
@@ -70,7 +75,7 @@ export type SocialLoginResponseData =
 // 소셜 회원가입 완료 요청
 export const completeSocialSignupRequestSchema = z
   .object({
-    agreedTermsIds: z.array(z.number()),
+    agreedTermsIds: z.array(agreedTermsIdSchema),
   })
   .strict();
 
