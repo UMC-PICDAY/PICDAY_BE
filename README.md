@@ -1,6 +1,6 @@
-# PICKDAY_BE
+# PICDAY_BE
 
-PICKDAY 백엔드 API 서버 레포지토리입니다.
+PICDAY 백엔드 API 서버 레포지토리입니다.
 
 Express + TypeScript + Prisma 기반으로, 도메인 단위(`domains`)로 기능을 분리합니다.
 
