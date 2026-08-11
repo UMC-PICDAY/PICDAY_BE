@@ -54,14 +54,15 @@ export async function findSocialAccountWithUser(
   });
 }
 
-/** 로그인/로그아웃 시 refreshToken 저장 또는 삭제(null) */
+/** 로그인/로그아웃 시 refreshToken·만료 시각 저장 또는 삭제(null) */
 export async function updateRefreshToken(
   userId: bigint,
   refreshToken: string | null,
+  refreshTokenExpiresAt: Date | null,
 ) {
   return prisma.user.update({
     where: { id: userId },
-    data: { refreshToken },
+    data: { refreshToken, refreshTokenExpiresAt },
   });
 }
 
@@ -225,6 +226,7 @@ export async function withdrawUser(userId: bigint) {
       status: "WITHDRAWN",
       deletedAt: new Date(),
       refreshToken: null,
+      refreshTokenExpiresAt: null,
     },
   });
 }
@@ -253,6 +255,7 @@ export async function anonymizeUser(userId: bigint) {
       email: null,
       phoneNumber: null,
       refreshToken: null,
+      refreshTokenExpiresAt: null,
     },
   });
 }
