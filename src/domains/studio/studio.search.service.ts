@@ -29,6 +29,7 @@ import type {
   FindRecommendedStudiosResult,
 } from "./studio.search.repository.js";
 import { toDomainId } from "../../common/apiId.js";
+import { isSameKstDate } from "../../common/kstDateTime.js";
 
 import { LocationCategory } from "../../generated/prisma/enums.js";
 
@@ -612,16 +613,20 @@ async function buildSearchResponse(
 export async function searchStudios(
   authHeader: string | undefined,
   rawQuery: RawSearchStudiosRequestDto,
+  nowProvider: () => Date = () => new Date(),
 ): Promise<StudioSearchResponseDto> {
   try {
     const query = parseSearchStudiosRequest(rawQuery);
 
     const { userId } = resolveOptionalUser(authHeader);
+    const now = nowProvider();
 
     return await buildSearchResponse(
       {
         locationCategory: query.locationCategory,
         date: query.dbDate,
+        now:
+          query.dbDate && isSameKstDate(query.dbDate, now) ? now : undefined,
         shootingCategories: query.shootingCategory,
         minPrice: query.minPrice,
         maxPrice: query.maxPrice,

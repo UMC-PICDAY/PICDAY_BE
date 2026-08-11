@@ -10,6 +10,7 @@ import type {
   ShootingCategory,
 } from "../../generated/prisma/enums.js";
 import type { Prisma } from "../../generated/prisma/client.js";
+import { isPastKstTimeSlot } from "../../common/kstDateTime.js";
 //   | "HONGDAE"
 //   | "GANGNAM"
 //   | "SEONGSU"
@@ -277,6 +278,7 @@ export async function findWishlistedStudioIds(
 export type StudioSearchFilters = {
   locationCategory?: LocationCategory | undefined;
   date?: Date | undefined;
+  now?: Date | undefined;
   shootingCategories?: ShootingCategory[] | undefined;
   studioId?: bigint | undefined;
   minPrice?: number | undefined;
@@ -291,6 +293,29 @@ export type StudioSearchFilters = {
 // 그래서 AND 배열의 개별 항목으로 나눠 두 조건이 각각 최소 1개 상품에 매칭되도록 한다.
 export async function findStudiosBySearchFilters(filters: StudioSearchFilters) {
   const productConditions: Prisma.StudioProductWhereInput[] = [];
+
+  let bookableStudioIds: bigint[] | undefined;
+  if (filters.date && filters.now) {
+    const availableSlots = await prisma.timeSlot.findMany({
+      where: { date: filters.date, isAvailable: true },
+      select: { studioId: true, date: true, startTime: true },
+    });
+
+    bookableStudioIds = [
+      ...new Set(
+        availableSlots
+          .filter(
+            (slot) =>
+              !isPastKstTimeSlot(slot.date, slot.startTime, filters.now),
+          )
+          .map((slot) => slot.studioId),
+      ),
+    ];
+
+    if (bookableStudioIds.length === 0) {
+      return [];
+    }
+  }
 
   if (filters.shootingCategories?.length) {
     productConditions.push({
@@ -310,6 +335,7 @@ export async function findStudiosBySearchFilters(filters: StudioSearchFilters) {
   return prisma.studio.findMany({
     where: {
       ...(filters.studioId !== undefined && { id: filters.studioId }),
+      ...(bookableStudioIds && { id: { in: bookableStudioIds } }),
       ...(filters.locationCategory && {
         location: { locationCategory: filters.locationCategory },
       }),
