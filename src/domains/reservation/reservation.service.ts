@@ -396,23 +396,22 @@ export async function detail(
     canceledAt: reservation.canceledAt,
   });
 }
+// 왼쪽 = 예약한 컨셉 자신의 대표 이미지, 오른쪽 = 컨셉 목록(id asc)상 바로 다음 컨셉의 대표 이미지
+type ConceptRow = { id: bigint; productImages: { url: string }[] };
 
-// 대표 썸네일 = studio_thumbnail_order가 가장 낮은 상품 이미지
-type ProductImageRow = { url: string; studioThumbnailOrder: number | null };
+function pickConceptThumbnails(
+  currentProductId: bigint,
+  products: ConceptRow[],
+): [string | null, string | null] {
+  const currentIndex = products.findIndex((p) => p.id === currentProductId);
+  const currentProduct = products[currentIndex];
+  if (!currentProduct) return [null, null];
 
-function pickThumbnails(
-  products: Array<{ productImages: ProductImageRow[] }>,
-  count: number,
-): (string | null)[] {
-  const orderedImages = products
-    .flatMap((product) => product.productImages)
-    .filter((image) => image.studioThumbnailOrder !== null)
-    .sort((a, b) => a.studioThumbnailOrder! - b.studioThumbnailOrder!);
+  const thumbnailUrl = currentProduct.productImages[0]?.url ?? null;
+  const secondThumbnailUrl =
+    products[currentIndex + 1]?.productImages[0]?.url ?? null;
 
-  return Array.from(
-    { length: count },
-    (_, index) => orderedImages[index]?.url ?? null,
-  );
+  return [thumbnailUrl, secondThumbnailUrl];
 }
 
 // ====== 내 예약 조회 ======
@@ -426,10 +425,10 @@ export async function list(
   );
 
   const data = reservations.map((reservation) => {
-  const [thumbnailUrl, secondThumbnailUrl] = pickThumbnails(
-    reservation.studioProduct.studio.products,
-    2,
-  );
+    const [thumbnailUrl, secondThumbnailUrl] = pickConceptThumbnails(
+      reservation.studioProduct.id,
+      reservation.studioProduct.studio.products,
+    );
 
   return {
     reservationId: reservation.id,

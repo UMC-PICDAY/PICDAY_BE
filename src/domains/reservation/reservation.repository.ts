@@ -360,12 +360,16 @@ export const getReservationsByUserId = async (
         include: {
           studio: {
             include: {
+              // 컨셉 목록 화면(studio.detail의 findStudioProducts)과 동일하게
+              // id 오름차순 = 컨셉 순서, 각 컨셉의 대표 이미지는 order 최솟값
               products: {
+                orderBy: { id: "asc" },
                 select: {
+                  id: true,
                   productImages: {
-                    where: { studioThumbnailOrder: { not: null } },
-                    orderBy: [{ studioThumbnailOrder: "asc" }, { id: "asc" }],
-                    select: { url: true, studioThumbnailOrder: true },
+                    orderBy: { order: "asc" },
+                    take: 1,
+                    select: { url: true },
                   },
                 },
               },
