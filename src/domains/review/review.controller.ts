@@ -26,9 +26,17 @@ type AuthenticatedRequest = { userId: bigint };
 @Tags("Review")
 @Security("jwt")
 export class ReviewController extends Controller {
-  /** 리뷰 작성 */
+  /**
+   * 리뷰 작성
+   *
+   * 촬영이 완료된 본인의 예약에 리뷰를 작성한다.
+   * 하나의 예약에는 리뷰를 한 번만 작성할 수 있다.
+   *
+   * @summary 리뷰 작성
+   * @param body 리뷰 작성 정보
+   */
   @Post()
-  @SuccessResponse(201, "Created")
+  @SuccessResponse(201, "리뷰 작성 성공")
   public async create(
     @Body() body: CreateReviewRequestDto,
     @Request() request: any,
@@ -41,9 +49,16 @@ export class ReviewController extends Controller {
     return data;
   }
 
-  /** 리뷰 단건 조회 (마이페이지 "내 리뷰", 본인 리뷰만) */
+  /**
+   * 내 리뷰 상세 조회
+   *
+   * 로그인한 사용자가 작성한 리뷰 한 건의 상세 정보를 조회한다.
+   *
+   * @summary 내 리뷰 상세 조회
+   * @param reviewId 조회할 리뷰 ID
+   */
   @Get("{reviewId}")
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "리뷰 상세 조회 성공")
   public async detail(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.getReviewDetail(userId, reviewId);
@@ -52,9 +67,18 @@ export class ReviewController extends Controller {
     return data;
   }
 
-  /** 리뷰 수정 (부분 수정, imageUrls는 전체 교체) */
+  /**
+   * 리뷰 수정
+   *
+   * 로그인한 사용자가 작성한 리뷰를 부분 수정한다.
+   * imageUrls를 전달하면 기존 이미지 목록 전체를 교체한다.
+   *
+   * @summary 리뷰 수정
+   * @param reviewId 수정할 리뷰 ID
+   * @param body 수정할 리뷰 정보
+   */
   @Patch("{reviewId}")
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "리뷰 수정 성공")
   public async update(
     @Path() reviewId: number,
     @Body() body: UpdateReviewRequestDto,
@@ -67,9 +91,16 @@ export class ReviewController extends Controller {
     return data;
   }
 
-  /** 리뷰 삭제 */
+  /**
+   * 리뷰 삭제
+   *
+   * 로그인한 사용자가 작성한 리뷰를 삭제한다.
+   *
+   * @summary 리뷰 삭제
+   * @param reviewId 삭제할 리뷰 ID
+   */
   @Delete("{reviewId}")
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "리뷰 삭제 성공")
   public async remove(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.removeReview(userId, reviewId);
@@ -78,9 +109,16 @@ export class ReviewController extends Controller {
     return data;
   }
 
-  /** 리뷰 추천 (도움돼요) */
+  /**
+   * 리뷰 추천
+   *
+   * 지정한 리뷰에 도움돼요를 등록한다.
+   *
+   * @summary 리뷰 추천
+   * @param reviewId 추천할 리뷰 ID
+   */
   @Post("{reviewId}/like")
-  @SuccessResponse(201, "Created")
+  @SuccessResponse(201, "리뷰 추천 성공")
   public async addLike(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.addLike(userId, reviewId);
@@ -90,9 +128,16 @@ export class ReviewController extends Controller {
     return data;
   }
 
-  /** 리뷰 추천 취소 */
+  /**
+   * 리뷰 추천 취소
+   *
+   * 지정한 리뷰에 등록한 도움돼요를 취소한다.
+   *
+   * @summary 리뷰 추천 취소
+   * @param reviewId 추천을 취소할 리뷰 ID
+   */
   @Delete("{reviewId}/like")
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "리뷰 추천 취소 성공")
   public async removeLike(@Path() reviewId: number, @Request() request: any) {
     const { userId } = request as AuthenticatedRequest;
     const data = await reviewService.removeLike(userId, reviewId);

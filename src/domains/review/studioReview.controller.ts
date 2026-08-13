@@ -20,9 +20,21 @@ type AuthenticatedRequest = { userId: bigint };
 @Tags("Review")
 @Security("jwt")
 export class StudioReviewController extends Controller {
-  /** 사진관 리뷰 목록 조회 */
+  /**
+   * 사진관 리뷰 목록 조회
+   *
+   * 지정한 사진관의 리뷰와 평점 요약을 페이지 단위로 조회한다.
+   * 정렬 기준과 사진 리뷰 여부를 선택할 수 있다.
+   *
+   * @summary 사진관 리뷰 목록 조회
+   * @param studioId 조회할 사진관 ID
+   * @param sort 정렬 기준 (recent, recommend, ratingHigh, ratingLow)
+   * @param photoOnly 사진 리뷰만 조회할지 여부
+   * @param page 페이지 번호 (기본값: 1)
+   * @param size 페이지당 항목 수 (기본값: 10, 최대: 50)
+   */
   @Get("{studioId}/reviews")
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "사진관 리뷰 목록 조회 성공")
   public async listByStudio(
     @Path() studioId: number,
     @Request() request: any,

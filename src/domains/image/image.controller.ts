@@ -15,9 +15,17 @@ import * as imageService from "./image.service.js";
 @Tags("Image")
 @Security("jwt")
 export class ImageController extends Controller {
-  /** 이미지 업로드 (multipart/form-data, 필드명 file, jpg/png/webp, 최대 10MB) */
+  /**
+   * 이미지 업로드
+   *
+   * multipart/form-data의 file 필드로 jpg, png, webp 이미지를 업로드한다.
+   * 최대 파일 크기는 10MB이다.
+   *
+   * @summary 이미지 업로드
+   * @param file 업로드할 이미지 파일
+   */
   @Post()
-  @SuccessResponse(201, "Created")
+  @SuccessResponse(201, "이미지 업로드 성공")
   public async upload(
     @UploadedFile("file") file?: Express.Multer.File,
   ): Promise<UploadImageResponseDto> {

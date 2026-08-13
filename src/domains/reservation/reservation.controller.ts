@@ -64,10 +64,11 @@ export class ReservationController extends Controller {
    * 결제 정보와 함께 예약을 확정한다.
    *
    * @summary 예약 생성
+   * @param body 예약 생성 정보
    */
   @Post()
   @Middlewares(validateCreateReservationRequest)
-  @SuccessResponse(201, "Created")
+  @SuccessResponse(201, "예약 생성 성공")
   public async create(
     @Body() body: CreateReservationRequestDto,
     @Request() request: any,
@@ -94,7 +95,7 @@ export class ReservationController extends Controller {
    */
   @Patch("{reservationId}/cancel")
   @Middlewares(validateReservationId)
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "예약 취소 성공")
   public async cancel(
     @Path() reservationId: number,
     @Request() request: any,
@@ -122,7 +123,7 @@ export class ReservationController extends Controller {
    */
   @Get("{reservationId}")
   @Middlewares(validateReservationId)
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "예약 상세 조회 성공")
   public async detail(
     @Path() reservationId: number,
     @Request() request: any,
@@ -145,7 +146,7 @@ export class ReservationController extends Controller {
    * @param status 예약 상태 필터 (미지정 시 전체 조회)
    */
   @Get()
-  @SuccessResponse(200, "OK")
+  @SuccessResponse(200, "내 예약 목록 조회 성공")
   public async list(
     @Request() request: any,
     @Query() status?: string,
